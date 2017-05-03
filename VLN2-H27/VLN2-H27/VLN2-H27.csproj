@@ -213,13 +213,13 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="elFinder\.gitignore" />
-    <Content Include="elFinder\elfinder.html" />
-    <Content Include="elFinder\main.default.js" />
     <Content Include="favicon.ico" />
+    <Content Include="FileTree\sample\sample.c" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="jQueryFileTree\.gitignore" />
+    <Content Include="jQueryFileTree\gulpfile.js" />
     <Content Include="Monaco\ThirdPartyNotices.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -230,13 +230,12 @@
     <Content Include="Monaco\LICENSE" />
     <Content Include="Monaco\package.json" />
     <Content Include="Monaco\README.md" />
-    <Content Include="elFinder\bower.json" />
-    <Content Include="elFinder\Changelog" />
-    <Content Include="elFinder\composer.json" />
-    <Content Include="elFinder\LICENSE.md" />
-    <Content Include="elFinder\package.json" />
-    <Content Include="elFinder\README.md" />
+    <Content Include="jQueryFileTree\bower.json" />
+    <Content Include="jQueryFileTree\CHANGELOG.md" />
+    <Content Include="jQueryFileTree\package.json" />
+    <Content Include="jQueryFileTree\README.md" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\FileTree.js" />
     <Content Include="Scripts\MonacoScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

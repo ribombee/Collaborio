@@ -1,8 +1,7 @@
-﻿window.onload = function () {
-    $(document).ready(function () {
+﻿    $(document).ready(function () {
         require.config({ paths: { 'vs': '../../Monaco/dev/vs' } });
         require(['vs/editor/editor.main'], function () {
-            var editor = monaco.editor.create(document.getElementById('container'),
+            var editor = monaco.editor.create(document.getElementById('monaco-editor'),
                 {
                     value: [
                         'function x() {',
@@ -51,7 +50,6 @@
             });
         });
     });
-}
 
 function changeTheme(theme, editor) {
     var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
