@@ -213,6 +213,9 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="elFinder\.gitignore" />
+    <Content Include="elFinder\elfinder.html" />
+    <Content Include="elFinder\main.default.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -227,6 +230,12 @@
     <Content Include="Monaco\LICENSE" />
     <Content Include="Monaco\package.json" />
     <Content Include="Monaco\README.md" />
+    <Content Include="elFinder\bower.json" />
+    <Content Include="elFinder\Changelog" />
+    <Content Include="elFinder\composer.json" />
+    <Content Include="elFinder\LICENSE.md" />
+    <Content Include="elFinder\package.json" />
+    <Content Include="elFinder\README.md" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\MonacoScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
