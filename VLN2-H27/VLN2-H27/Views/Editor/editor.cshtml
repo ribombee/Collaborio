@@ -8,23 +8,23 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 </head>
 <body>
-
     <h2>Monaco Editor Sample</h2>
+
+    <label class="control-label">Language</label>
+    <select class="language-picker"></select>
+
+    <label class="control-label">Theme</label>
+    <select class="theme-picker">
+        <option>Visual Studio</option>
+        <option>Visual Studio Dark</option>
+        <option>High Contrast Dark</option>
+    </select>
+
     <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
 
-    <script src="../../monaco/min/vs/loader.js"></script>
-    <script>
-	require.config({ paths: { 'vs': '../../monaco/min/vs' }});
-
-	require(['vs/editor/editor.main'], function() {
-		var editor = monaco.editor.create(document.getElementById('container'), {
-			value: [
-				'function x() {',
-				'\tconsole.log("Hello world!");',
-				'}'
-			].join('\n'),
-			language: 'javascript'
-		});
-	});
-    </script>
+    <!-- Monaco Editor Scripts -->
+    <script src="../../Monaco/dev/vs/loader.js"></script>
+    <script src="../../Monaco/dev/vs/editor.main.nls.js"></script>
+    <script src="../../Monaco/dev/vs/editor.main.js"></script>
+    <script data-inline="yes-please" src="../../Scripts/MonacoScripts.js" type="text/javascript"></script>
 </body>
