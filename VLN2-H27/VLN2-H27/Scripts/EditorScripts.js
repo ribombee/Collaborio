@@ -4,8 +4,7 @@ var editor = null;
 $(document).ready(function () {
     require.config({ paths: { 'vs': '../../Monaco/dev/vs' } });
     require(['vs/editor/editor.main'], function () {
-        editor = monaco.editor.create(document.getElementById('monaco-editor'),
-            {
+        editor = monaco.editor.create(document.getElementById('monaco-editor'),{
                 value: [
                     'function x() {',
                     '\tconsole.log("Hello world!");',
@@ -54,12 +53,12 @@ $(document).ready(function () {
     });
 });
 
-function changeTheme(theme, editor) {
+function changeTheme(theme) {
     var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
     editor.updateOptions({ 'theme': newTheme });
 }
 
-function changeLanguage(mode, editor) {
+function changeLanguage(mode) {
     var oldModel = editor.getModel();
     var newModel = monaco.editor.createModel(oldModel.getValue(), mode.modeId);
 
@@ -80,12 +79,15 @@ $(document).ready(function () {
     }, function (file) {
         openFileInMonaco(file);
     });
+
+    $('.filetree').contextmenu(function () {
+        alert(clicked);
+    });
 });
 
 
 //MISC HELPER FUNCTIONS
-function readFile(file)
-{
+function readFile(file) {
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
     xmlhttp.open('GET', file, false);
@@ -94,8 +96,7 @@ function readFile(file)
     return xmlhttp.responseText;
 }
 
-function openFileInMonaco(file)
-{
+function openFileInMonaco(file) {
     //TODO: Fetch file mode automagicalliy
     var mode = 'javascript';
 
