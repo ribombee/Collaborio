@@ -160,7 +160,7 @@ function addTab(title, file, newModel) {
     });
     
     //set tab to active
-    $('#tabs').tabs({ active: tabCounter-1 });
+    $('#tabs').tabs({ active: tabIdToIndex(id) });
 }
 
 //Selecting a tab
