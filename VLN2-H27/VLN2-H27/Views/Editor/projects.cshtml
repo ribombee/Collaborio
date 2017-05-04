@@ -1,7 +1,78 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "projects";
 }
 
-<h2>projects</h2>
+<style>
+    .flex-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
 
+    .col {
+        display: inline-block;
+        border: 1px solid black;
+        padding: 10px 40px 120px 100px;
+        width: 22%;
+        margin: 10px;
+    }
+
+    .button {
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        padding-right: 30px;
+        padding-left: 70px;
+        position: relative;
+        background-color: rgb(41,127,184);
+        color: rgb(255,255,255);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
+    }
+
+        .button span {
+            position: absolute;
+            left: 0;
+            width: 50px;
+            background-color: rgba(0,0,0,0.5);
+            font-size: 50px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-right: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .button:hover span, .button.active span {
+            border-right: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .button:active {
+            margin-top: 2px;
+            margin-bottom: 13px;
+        }
+</style>
+
+<h2>Projects</h2>
+
+<div class="container">
+    <a href="#" class="button"><span>＋</span>Add a new project</a>
+</div>
+
+
+<div class="flex-grid">
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+    <div class="col">Cell</div>
+</div>
