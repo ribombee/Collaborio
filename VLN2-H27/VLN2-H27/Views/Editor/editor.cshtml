@@ -21,11 +21,11 @@
 
 </head>
 <body>
-    <h2>Monaco Editor Sample</h2>
-
+    <!-- Editor language/mode picker -->
     <label class="control-label">Language</label>
     <select class="language-picker"></select>
 
+    <!-- Editor theme picker -->
     <label class="control-label">Theme</label>
     <select class="theme-picker">
         <option>Visual Studio</option>
@@ -34,17 +34,19 @@
     </select>
 
     <!-- Monaco editor window -->
-    <div id="monaco-editor" style="width:800px;height:600px;border:1px solid grey"></div>
+    <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
 
-    <!-- BASIC FILE TREE -->
-    <div id= "filetree-test" class="filetree" style="border:1px solid grey"></div>
+    <!-- File tree applet -->
+    <div id="filetree" class="filetree" style="border:1px solid grey"></div>
 
-    <!-- Monaco Editor Scripts -->
+    <!-- Load Monaco Editor -->
     <script src="../../Monaco/dev/vs/loader.js"></script>
     <!-- <script src="../../Monaco/dev/vs/editor/editor.main.nls.js"></script>
-    <script src="../../Monaco/dev/vs/editor/editor.main.js"></script> -->
-    <script data-inline="yes-please" src="../../Scripts/MonacoScripts.js" type="text/javascript"></script>
+    <script src="../../Monaco/dev/vs/editor/editor.main.js"></script>  -->
 
+    <!-- Load jQueryFileTree -->
     <script src="../../jQueryFileTree/dist/jQueryFileTree.min.js"></script>
-    <script data-inline="yes-please" src="../../Scripts/FileTree.js" type="text/javascript"></script>
+
+    <!-- JS CODE GOES HERE -->
+    <script data-inline="yes-please" src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
 </body>
