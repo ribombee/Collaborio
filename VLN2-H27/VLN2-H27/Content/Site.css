@@ -37,9 +37,12 @@ textarea {
 }
 
 
-
-#loginForm {
-    
+.jumbotron + .row
+{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 100px;
 }
 
 .loginFrontPage{
@@ -48,21 +51,60 @@ textarea {
     display:flex;
     justify-content: center;
     flex-direction:column;
-    border: 2px dotted grey;
+    border: 2px solid grey;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
-.loginFrontPage input, .loginFrontPage label {
-    width: 100%;
-    display: block;
+.loginFrontPage * {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     margin: auto;
 }
 
-.checkbox *{
+.loginFrontPage label{
+    margin:inherit;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.form-group{
+    width: 100%;
+}
+
+.form-control{
+    width: 80%;
+    margin: auto;
+}
+
+.checkbox-frontpage{
+    width: 40%;
+    padding: 10px;
+    flex-direction: row;
+}
+
+.checkbox-frontpage *{
     display: inline;
-    width: 40%;}
+    position:relative;
+    background-color: blue;
+    float: clear;
+    margin: 2px;
+}
+
+
+.form-group .btn{
+    width: 50%;
+    margin: auto;
+    background-color: lightgrey;
+}
 
 #main{
     display: flex;
+}
+
+body-content{
+    margin: auto;
 }
 
 #monaco-editor {
