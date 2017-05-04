@@ -13,7 +13,7 @@ namespace VLN2_H27.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult DeleteMe()
         {
             ViewBag.Message = "Your application description page.";
 
