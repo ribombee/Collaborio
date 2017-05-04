@@ -260,14 +260,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="jQueryFileTree\.gitignore" />
-    <Content Include="jQueryFileTree\dist\jQueryFileTree.min.css" />
-    <Content Include="jQueryFileTree\dist\jQueryFileTree.min.js" />
     <Content Include="jQueryFileTree\gulpfile.js" />
-<<<<<<< HEAD
-    <Content Include="jQuerySimpleContextMenu\jquery.contextmenu.css" />
-    <Content Include="jQuerySimpleContextMenu\jquery.contextmenu.js" />
-    <Content Include="jQuerySimpleContextMenu\LICENSE.txt" />
-=======
     <Content Include="Models\Project.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Project.edmx</DependentUpon>
@@ -278,7 +271,6 @@
       <DependentUpon>Project.edmx</DependentUpon>
       <LastGenOutput>Project1.cs</LastGenOutput>
     </Content>
->>>>>>> 4e0b6ac6a3b0c8b16f12efc922fffee975cf07cd
     <Content Include="Monaco\ThirdPartyNotices.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -293,10 +285,6 @@
     <Content Include="jQueryFileTree\CHANGELOG.md" />
     <Content Include="jQueryFileTree\package.json" />
     <Content Include="jQueryFileTree\README.md" />
-<<<<<<< HEAD
-    <Content Include="jQuerySimpleContextMenu\README.md" />
-    <Content Include="jQuerySimpleContextMenu\simplecontextmenu.jquery.json" />
-=======
     <EntityDeploy Include="Models\Project.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Project.Designer.cs</LastGenOutput>
@@ -304,7 +292,6 @@
     <Content Include="Models\Project.edmx.diagram">
       <DependentUpon>Project.edmx</DependentUpon>
     </Content>
->>>>>>> 4e0b6ac6a3b0c8b16f12efc922fffee975cf07cd
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\EditorScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
