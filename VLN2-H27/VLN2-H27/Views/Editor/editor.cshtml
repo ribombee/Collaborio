@@ -21,32 +21,34 @@
 
 </head>
 <body>
-    <!-- Editor language/mode picker -->
-    <label class="control-label">Language</label>
-    <select class="language-picker"></select>
+    <main>
+        <!-- Editor language/mode picker -->
+        <div id="editorWithPickers">
+            <label class="control-label">Language</label>
+            <select class="language-picker"></select>
 
-    <!-- Editor theme picker -->
-    <label class="control-label">Theme</label>
-    <select class="theme-picker">
-        <option>Visual Studio</option>
-        <option>Visual Studio Dark</option>
-        <option>High Contrast Dark</option>
-    </select>
+            <!-- Editor theme picker -->
+            <label class="control-label">Theme</label>
+            <select class="theme-picker">
+                <option>Visual Studio</option>
+                <option>Visual Studio Dark</option>
+                <option>High Contrast Dark</option>
+            </select>
 
-    <!-- Monaco editor window -->
-    <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
+            <!-- Monaco editor window -->
+            <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
+        </div>
+        <!-- File tree applet -->
+        <div id="filetree" class="filetree" style="border:1px solid grey"></div>
 
-    <!-- File tree applet -->
-    <div id="filetree" class="filetree" style="border:1px solid grey"></div>
+        <!-- Load Monaco Editor -->
+        <script src="../../Monaco/dev/vs/loader.js"></script>
+        <!-- <script src="../../Monaco/dev/vs/editor/editor.main.nls.js"></script>
+        <script src="../../Monaco/dev/vs/editor/editor.main.js"></script>  -->
+        <!-- Load jQueryFileTree -->
+        <script src="../../jQueryFileTree/dist/jQueryFileTree.min.js"></script>
 
-    <!-- Load Monaco Editor -->
-    <script src="../../Monaco/dev/vs/loader.js"></script>
-    <!-- <script src="../../Monaco/dev/vs/editor/editor.main.nls.js"></script>
-    <script src="../../Monaco/dev/vs/editor/editor.main.js"></script>  -->
-
-    <!-- Load jQueryFileTree -->
-    <script src="../../jQueryFileTree/dist/jQueryFileTree.min.js"></script>
-
-    <!-- JS CODE GOES HERE -->
-    <script data-inline="yes-please" src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
+        <!-- JS CODE GOES HERE -->
+        <script data-inline="yes-please" src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
+    </main>
 </body>
