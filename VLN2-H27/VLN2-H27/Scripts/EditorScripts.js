@@ -2,7 +2,7 @@
 var editor = null;
 
 $(document).ready(function () {
-    require.config({ paths: { 'vs': '../../Monaco/dev/vs' } });
+    require.config({ paths: { 'vs': '../../EditorLibraries/Monaco/dev/vs' } });
     require(['vs/editor/editor.main'], function () {
         editor = monaco.editor.create(document.getElementById('monaco-editor'),{
                 value: [
@@ -63,19 +63,18 @@ function changeLanguage(mode) {
     var newModel = monaco.editor.createModel(oldModel.getValue(), mode.modeId);
 
     editor.setModel(newModel);
-
+    //TODO UPDATE TAB MODEL
     oldModel.dispose();
 }
-
 
 //JQUERYFILETREE SPECIFIC CODE
 $(document).ready(function () {
     $('.filetree').fileTree({
         root: '/FileTree/sample/',
-        script: '/jQueryFileTree/dist/connectors/jqueryFileTree.asp',
+        script: '/EditorLibraries/jQueryFileTree/dist/connectors/jqueryFileTree.asp',
         expandSpeed: 1000,
         collapseSpeed: 1000,
-        multiFolder: false
+        multiFolder: true
     }, function (file) {
         openFileInMonaco(file);
     });
@@ -119,6 +118,89 @@ $('.filetree').contextPopup({
     ]
 });
 
+//TABS SPECIFIC CODE
+var tabInfo = [];
+var tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+      tabCounter = 0;
+var tabs = $("#tabs").tabs();
+$(document).ready(function() {
+    var tabTitle = $("#tab_title"),
+      tabContent = $("#tab_content");
+
+    // Close icon: removing the tab on click
+    tabs.on("click", "span.ui-icon-close", function () {
+        var panelId = $(this).closest("li").remove().attr("aria-controls");
+        $("#" + panelId).remove();
+        tabs.tabs("refresh");
+    });
+
+    tabs.on("keyup", function (event) {
+        if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {
+            var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            tabs.tabs("refresh");
+        }
+    });
+});
+
+function addTab(title, file, newModel) {
+    var label = title,
+      id = "tabs-" + tabCounter,
+      li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label)),
+      tabContentHtml = file;
+
+    tabs.find(".ui-tabs-nav").append(li);
+    tabs.append("<div id='" + id + "' class='tabcontent'><p>" + tabContentHtml + "</p></div>");
+    tabs.tabs("refresh");
+    tabCounter++;
+
+    tabInfo.push({
+        tabId: id,  tabModel: newModel, filePath: file
+    });
+    
+    //set tab to active
+    $('#tabs').tabs({ active: tabCounter-1 });
+}
+
+//Selecting a tab
+$('#tabs').tabs({
+    activate: function (event, ui) {
+        var tabId = ui.newPanel[0].id
+        openTabInMonaco(tabId);
+    }
+});
+
+function openTabInMonaco(tabId) {
+    //TODO: Fetch file mode automagicalliy
+    var mode = 'javascript';
+
+    var newModel = getEditorModelOfTab(tabId);
+    editor.setModel(newModel);
+}
+
+function getEditorModelOfTab(tabId) {
+    for (i = 0; i < tabInfo.length; i++) {
+        if (tabInfo[i].tabId == tabId) {
+            return tabInfo[i].tabModel;
+        }
+    }
+}
+
+function fileAlreadyOpenInTab(file) {
+    for (i = 0; i < tabInfo.length; i++) {
+        if (tabInfo[i].filePath == file) {
+            return tabInfo[i].tabId;
+        }
+    }
+
+    return null;
+}
+
+function tabIdToIndex(tabId) {
+    var tabIndex = $('#tabs a[href="#' + tabId + '"]').parent().index();
+    return tabIndex;
+}
+
 //MISC HELPER FUNCTIONS
 function readFile(file) {
     var xmlhttp;
@@ -130,23 +212,34 @@ function readFile(file) {
 }
 
 function openFileInMonaco(file) {
+    //is the file already open in a tab?
+    var tabId = fileAlreadyOpenInTab(file);
+    if (tabId != null) {
+        var tabIndex = tabIdToIndex(tabId);
+        $('#tabs').tabs({ active: tabIndex });
+        return;
+    }
+
     //TODO: Fetch file mode automagicalliy
     var mode = 'javascript';
 
-    var oldModel = editor.getModel();
     var newModel = monaco.editor.createModel(readFile(file), mode);
-
     editor.setModel(newModel);
 
-    oldModel.dispose();
+    var filename = file.replace(/^.*[\\\/]/, '')
+    addTab(filename, file, newModel);
 }
 
 function deleteFile(file) {
     //TODO IMPLEMENT
+    //remember to update tabInfo array
+
     alert(file + ' would be deleted now');
 }
 
 function renameFile(file) {
     //TODO IMPLEMENT
+    //remember to update tabInfo array
+
     alert(file + ' would be renamed now');
 }
