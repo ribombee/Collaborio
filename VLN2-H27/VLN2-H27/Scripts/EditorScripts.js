@@ -131,6 +131,7 @@ $(document).ready(function() {
     tabs.on("click", "span.ui-icon-close", function () {
         var panelId = $(this).closest("li").remove().attr("aria-controls");
         $("#" + panelId).remove();
+        tabRemovalCleanup(panelId);
         tabs.tabs("refresh");
     });
 
@@ -199,6 +200,20 @@ function fileAlreadyOpenInTab(file) {
 function tabIdToIndex(tabId) {
     var tabIndex = $('#tabs a[href="#' + tabId + '"]').parent().index();
     return tabIndex;
+}
+
+function tabRemovalCleanup(tabId) {
+    //find editor model and remove from tabInfo
+    var oldModel;
+    for (i = 0; i < tabInfo.length; i++) {
+        if (tabInfo[i].tabId == tabId) {
+            oldModel = tabInfo[i].tabModel;
+            tabInfo.splice(i, 1);
+        }
+    }
+
+    //dispose of editor model
+    oldModel.dispose();
 }
 
 //MISC HELPER FUNCTIONS
