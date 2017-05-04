@@ -219,7 +219,12 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="jQueryFileTree\.gitignore" />
+    <Content Include="jQueryFileTree\dist\jQueryFileTree.min.css" />
+    <Content Include="jQueryFileTree\dist\jQueryFileTree.min.js" />
     <Content Include="jQueryFileTree\gulpfile.js" />
+    <Content Include="jQuerySimpleContextMenu\jquery.contextmenu.css" />
+    <Content Include="jQuerySimpleContextMenu\jquery.contextmenu.js" />
+    <Content Include="jQuerySimpleContextMenu\LICENSE.txt" />
     <Content Include="Monaco\ThirdPartyNotices.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -234,6 +239,8 @@
     <Content Include="jQueryFileTree\CHANGELOG.md" />
     <Content Include="jQueryFileTree\package.json" />
     <Content Include="jQueryFileTree\README.md" />
+    <Content Include="jQuerySimpleContextMenu\README.md" />
+    <Content Include="jQuerySimpleContextMenu\simplecontextmenu.jquery.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\EditorScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

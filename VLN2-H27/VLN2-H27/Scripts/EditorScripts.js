@@ -80,11 +80,44 @@ $(document).ready(function () {
         openFileInMonaco(file);
     });
 
-    $('.filetree').contextmenu(function () {
-        alert(clicked);
-    });
 });
 
+//right click handling
+var rightClickedFile = "";
+
+var contextMenuSettings = {
+    title: 'Empty',
+    items: [
+      { label: 'Some Item', icon: 'icons/shopping-basket.png', action: function () { alert('clicked 1') } },
+      { label: 'Another Thing', icon: 'icons/receipt-text.png', action: function () { alert('clicked 2') } },
+      null, /* null can be used to add a separator to the menu items */
+      { label: 'Blah Blah', icon: 'icons/book-open-list.png', action: function () { alert('clicked 3') }, isEnabled: function () { return false; } },
+    ]
+}
+
+
+$('.filetree').mousedown(function (event) {
+    switch (event.which) {
+        case 2:
+            //middle mouse
+            break;
+        case 3:
+            rightClickedFile = $('a:hover').attr('rel');
+            if (typeof rightClickedFile == 'undefined') {
+                rightClickedFile = "nofile";
+            }
+            break;
+    }
+});
+
+$('.filetree').contextPopup({
+    title: '',
+    items: [
+      { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
+      { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
+      { label: 'Blah Blah', icon: 'icons/book-open-list.png', action: function () { alert('clicked 3') }, isEnabled: function () { return false; } },
+    ]
+});
 
 //MISC HELPER FUNCTIONS
 function readFile(file) {
@@ -106,4 +139,14 @@ function openFileInMonaco(file) {
     editor.setModel(newModel);
 
     oldModel.dispose();
+}
+
+function deleteFile(file) {
+    //TODO IMPLEMENT
+    alert(file + ' would be deleted now');
+}
+
+function renameFile(file) {
+    //TODO IMPLEMENT
+    alert(file + ' would be renamed now');
 }
