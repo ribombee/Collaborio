@@ -282,6 +282,7 @@
     <Content Include="Views\Editor\projects.cshtml" />
     <Content Include="Views\Editor\editor.cshtml" />
     <Content Include="Views\Home\DeleteMe.cshtml" />
+    <Content Include="Views\Shared\RegisterPopupPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
