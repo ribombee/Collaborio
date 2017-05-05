@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -27,10 +28,16 @@ namespace VLN2_H27.Controllers
         [AllowAnonymous]
         public ActionResult updateFile(string filePath, int column, int row, string textValue, int updateMode)
         {
+            string path = filePath;
+            path = Server.MapPath(path);
 
-            string path = Server.MapPath(filePath);
+            column--;
+            row--;
+            Debug.WriteLine("Column: " + column + " Row: " + row);
+            Debug.WriteLine("FilePath: " + path);
 
-            var fileLines = System.IO.File.ReadAllLines(filePath);
+            var fileLines = System.IO.File.ReadAllLines(path);
+            
             if (updateMode == 0)
             {
                 fileLines[row] = fileLines[row].Insert(column, textValue);
@@ -39,7 +46,7 @@ namespace VLN2_H27.Controllers
             {
                 fileLines[row] = fileLines[row].Remove(column);
             }
-            System.IO.File.WriteAllLines(filePath, fileLines);
+            System.IO.File.WriteAllLines(path, fileLines);
 
             return null;
         }
