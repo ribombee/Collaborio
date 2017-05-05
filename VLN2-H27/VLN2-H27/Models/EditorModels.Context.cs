@@ -13,10 +13,10 @@ namespace VLN2_H27.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class VLN2_2017_H27Entities : DbContext
+    public partial class VLN2_2017_H27Entities2 : DbContext
     {
-        public VLN2_2017_H27Entities()
-            : base("name=VLN2_2017_H27Entities")
+        public VLN2_2017_H27Entities2()
+            : base("name=VLN2_2017_H27Entities2")
         {
         }
     
@@ -25,13 +25,13 @@ namespace VLN2_H27.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<File> Files { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
     }
 }

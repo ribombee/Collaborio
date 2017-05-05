@@ -107,7 +107,7 @@ START
 //jQueryFileTree initialization function
 function initFileTree() {
     $('.filetree').fileTree({
-        root: '/FileTree/sample/',
+        root: '/UserProjects/' + projectId,
         script: '/EditorLibraries/jQueryFileTree/dist/connectors/jqueryFileTree.asp',
         folderEvent: 'dblclick',
         expandSpeed: 1,

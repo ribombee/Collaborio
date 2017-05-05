@@ -19,6 +19,6 @@ namespace VLN2_H27.Models
         public System.DateTime DateAdded { get; set; }
         public int NrOfUsers { get; set; }
         public int NrOfFiles { get; set; }
-        public System.DateTime LastModified { get; set; }
+        public System.DateTime LastModified { get; set; } 
     }
 }
