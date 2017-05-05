@@ -104,6 +104,7 @@ function changeLanguage(mode) {
 }
 
 //Open file in monaco, adds tab
+var currentlyOpeningFile = '';
 function openFileInMonaco(file) {
     //is the file already open in a tab?
     var tabId = fileAlreadyOpenInTab(file);
@@ -116,11 +117,46 @@ function openFileInMonaco(file) {
     //TODO: Fetch file mode automagicalliy
     var mode = 'javascript';
 
-    var newModel = monaco.editor.createModel(readFile(file), mode);
-    editor.setModel(newModel);
+    currentlyOpeningFile = file;
+    requestFile(file);
+}
 
-    var filename = file.replace(/^.*[\\\/]/, '')
-    addTab(filename, file, newModel);
+function requestFile(file) {
+    var sendData = {
+        'filePath': file,
+    };
+
+    $.ajax({
+        type: "POST",
+        url: 'getFileValue',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            openDataInMonaco(data);
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+    /*
+    var xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('GET', file, false);
+    xmlhttp.send();
+
+    return xmlhttp.responseText;
+    */
+}
+
+function openDataInMonaco(data) {
+    var mode = 'javascript';
+    var newModel = monaco.editor.createModel(data, mode);
+    editor.setModel(newModel);
+    var filename = currentlyOpeningFile.replace(/^.*[\\\/]/, '')
+
+    addTab(filename, currentlyOpeningFile, newModel);
 }
 
 /*****************************************************
@@ -358,15 +394,6 @@ END
 MISC CODE
 START
 ******************************************************/
-//Read text from file
-function readFile(file) {
-    var xmlhttp;
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('GET', file, false);
-    xmlhttp.send();
-
-    return xmlhttp.responseText;
-}
 
 //Set tab of file to active and set currentlyEditingFile to current file
 function setActiveFileAndTab(file, tabIndex) {
