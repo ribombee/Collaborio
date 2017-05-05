@@ -20,6 +20,8 @@
         cursor: pointer;
     }
 
+.ui-tabs .ui-tabs-nav li a {font-size:7pt !important;}
+
 #add_tab {
     cursor: pointer;
 }

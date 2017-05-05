@@ -210,6 +210,24 @@ $(document).ready(function() {
             tabs.tabs("refresh");
         }
     });
+    
+    //make tabs sortable
+    tabs.find(".ui-tabs-nav").sortable({
+        axis: "x",
+        stop: function () {
+            tabs.tabs("refresh");
+        }
+    });
+
+    //make tabs drag-n-droppable
+    $('#tabs').droppable({
+        activeClass: "ui-state-highlight",
+        drop: function (event, ui) {
+            $("#tabs ul").append("<li>" + ui.draggable.html() + "</li>");
+            tabs.tabs("refresh");
+            $(ui.draggable).remove()
+        }
+    });
 });
 
 //Add new tab
