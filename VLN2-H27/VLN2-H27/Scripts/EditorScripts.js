@@ -68,32 +68,26 @@ function changeLanguage(mode) {
 }
 
 //JQUERYFILETREE SPECIFIC CODE
-$(document).ready(function () {
+function initFileTree() {
     $('.filetree').fileTree({
         root: '/FileTree/sample/',
         script: '/EditorLibraries/jQueryFileTree/dist/connectors/jqueryFileTree.asp',
-        expandSpeed: 1000,
-        collapseSpeed: 1000,
+        folderEvent: 'dblclick',
+        expandSpeed: 1,
+        collapseSpeed: 1,
         multiFolder: true
     }, function (file) {
         openFileInMonaco(file);
     });
+}
 
+$(document).ready(function () {
+    initFileTree();
+    initFileTreeContextMenu();
 });
 
 //right click handling
-var rightClickedFile = "";
-
-var contextMenuSettings = {
-    title: 'Empty',
-    items: [
-      { label: 'Some Item', icon: 'icons/shopping-basket.png', action: function () { alert('clicked 1') } },
-      { label: 'Another Thing', icon: 'icons/receipt-text.png', action: function () { alert('clicked 2') } },
-      null, /* null can be used to add a separator to the menu items */
-      { label: 'Blah Blah', icon: 'icons/book-open-list.png', action: function () { alert('clicked 3') }, isEnabled: function () { return false; } },
-    ]
-}
-
+var rightClickedFile = '';
 
 $('.filetree').mousedown(function (event) {
     switch (event.which) {
@@ -109,14 +103,41 @@ $('.filetree').mousedown(function (event) {
     }
 });
 
-$('.filetree').contextPopup({
-    title: '',
-    items: [
-      { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
-      { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
-      { label: 'Blah Blah', icon: 'icons/book-open-list.png', action: function () { alert('clicked 3') }, isEnabled: function () { return false; } },
-    ]
-});
+function initFileTreeContextMenu() {
+    $('.filetree').contextPopup({
+        title: '',
+        items: [
+          { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
+          { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
+          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }
+        ]
+    });
+}
+
+function refreshFileTree() {
+    //scan for expanded folders
+    var expandedFolders = [];
+    $('li.directory.expanded').each(function (index) {
+        console.log("expanded dir");
+        var expandedFolder = $(this).find('a').attr('rel');
+        console.log(expandedFolder);
+        expandedFolders.push(expandedFolder);
+    });
+
+    //reload the tree
+    var tree = $('.filetree').data('fileTree');
+    $('.filetree').empty();
+    tree.showTree($('.filetree'), escape(tree.options.root), function () {});
+
+    //re-expand the folders
+    setTimeout(function () {
+        for (i = 0; i < expandedFolders.length; i++) {
+            var folderElement = $("a[rel='" + expandedFolders[i] + "']");
+            folderElement.trigger('dblclick');
+        }
+    }, 500);
+}
+
 
 //TABS SPECIFIC CODE
 var tabInfo = [];
