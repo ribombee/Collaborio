@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "demoEditor";
+}
+
+<h2>demoEditor</h2>
+
+<body>
+
+    <h2>Monaco Editor Shared Models Sample</h2>
+    <div id="container1" style="width:400px;height:200px;border:1px solid grey"></div>
+    <div id="container2" style="width:400px;height:200px;border:1px solid grey"></div>
+
+    <script src="../../EditorLibraries/Monaco/dev/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': '../../EditorLibraries/Monaco/dev/vs' } });
+	require(['vs/editor/editor.main'], function() {
+		var model = monaco.editor.createModel([
+				'function x() {',
+				'\tconsole.log("Hello world!");',
+				'}'
+			].join('\n'),
+			'javascript'
+		);
+		var editor1 = monaco.editor.create(document.getElementById('container1'), {
+			model: model
+		});
+		var editor2 = monaco.editor.create(document.getElementById('container2'), {
+			model: model
+		});
+	});
+    </script>
+</body>
