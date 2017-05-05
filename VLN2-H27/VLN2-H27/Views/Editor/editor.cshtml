@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "editor";
+    int projectId = ViewBag.projectId;
 }
 
 <head>
@@ -63,8 +64,8 @@
         <script src="../../EditorLibraries/jQuerySimpleContextMenu/jquery.contextmenu.js"></script>
 
         <!-- Declaring global variables from viewbag-->
-        <script> var projectId = @(ViewBag.projectId);</script>
+        <script> var projectId = @(projectId); </script>
         <!-- JS CODE GOES HERE -->
-        <script data-inline="yes-please" src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
+        <script src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
     </main>
 </body>
