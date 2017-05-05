@@ -19,6 +19,7 @@ namespace VLN2_H27.Controllers
         }
         public ActionResult editor()
         {
+            ViewBag.projectId = 0;
             return View();
         }
 
