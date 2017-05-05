@@ -9,9 +9,11 @@ using VLN2_H27.Models;
 
 namespace VLN2_H27.Controllers
 {
+    
+
     public class EditorController : Controller
     {
-        
+        static private List<VLN2_H27.Helpers.openFile> openFiles;
 
         // GET: Editor
         public ActionResult projects()
@@ -33,6 +35,30 @@ namespace VLN2_H27.Controllers
 
             column--;
             row--;
+
+            for (int i = 0; i < openFiles.Count; i++)
+            {
+                Debug.WriteLine(i + " iterations");
+
+                if(openFiles[i].isThisFile(path))
+                {
+                    Debug.WriteLine("open file found!");
+                    openFiles[i].updateFile(updateMode, textValue, row, column);
+                    Debug.WriteLine(openFiles[i].getValue());
+                    return null;
+                }
+            }
+            
+            Debug.WriteLine(openFiles.Count + " open files");
+
+            return null;
+
+            /*
+            string path = filePath;
+            path = Server.MapPath(path);
+
+            column--;
+            row--;
             Debug.WriteLine("Column: " + column + " Row: " + row);
             Debug.WriteLine("FilePath: " + path);
 
@@ -49,6 +75,34 @@ namespace VLN2_H27.Controllers
             System.IO.File.WriteAllLines(path, fileLines);
 
             return null;
+            */
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult getFileValue(string filePath)
+        {
+            string path = filePath;
+            path = Server.MapPath(path);
+
+            if(openFiles == null)
+            {
+                openFiles = new List<Helpers.openFile>(0);
+            }
+
+            for (int i = 0; i < openFiles.Count; i++)
+            {
+                if(openFiles[i].isThisFile(path))
+                {
+                    return Json(openFiles[i].getValue());
+                }
+            }
+
+            Debug.WriteLine("NO open file found!");
+            var newFile = new Helpers.openFile(path);
+            openFiles = new List<Helpers.openFile>(0);
+            openFiles.Add(newFile);
+            return Json(newFile.getValue());
         }
 
         [HttpPost]
