@@ -23,10 +23,19 @@ namespace VLN2_H27.Controllers
             return View();
         }
 
-        //demo
-        public ActionResult demoEditor()
+        public ActionResult updateFile(string filePath, int column, int row, string textValue, Boolean updateMode)
         {
-            return View();
+            var fileLines = System.IO.File.ReadAllLines(filePath);
+            if (updateMode == false)
+            {
+                fileLines[row] = fileLines[row].Insert(column, textValue);
+            }
+            else
+            {
+                fileLines[row] = fileLines[row].Remove(column);
+            }
+            System.IO.File.WriteAllLines(filePath, fileLines);
+            return View("editor");
         }
 
         [HttpPost]
