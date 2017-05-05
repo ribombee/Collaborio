@@ -4,6 +4,8 @@ START
 ******************************************************/
 //Editor variable, access editor with this
 var editor = null;
+//Filename of file currently being edited
+var currentlyEditingFile = "";
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
@@ -55,8 +57,14 @@ $(document).ready(function () {
         $(".theme-picker").change(function () {
             changeTheme(this.selectedIndex, editor);
         });
+
+        //UPDATES IN BROWSER - FOR SAVING
+        editor.onDidChangeModelContent(function (e) {
+            console.log(e);
+        })
     });
 });
+
 
 //Change monaco editor theme
 function changeTheme(theme) {
@@ -227,7 +235,7 @@ $(document).ready(function() {
             tabs.tabs("refresh");
             $(ui.draggable).remove()
             var tabId = ui.draggable.attr('id');
-            $('#tabs').tabs({ active: tabIdToIndex(tabId) });
+            $('#tabs').tabs({ active: tabIdToIndex(tabId)});
         }
     });
 });
@@ -257,6 +265,8 @@ $('#tabs').tabs({
     activate: function (event, ui) {
         var tabId = ui.newPanel[0].id
         openTabInMonaco(tabId);
+        currentlyEditingFile = getFileFromTabId(tabId);
+        console.log('Currently editing ' + currentlyEditingFile);
     }
 });
 
@@ -274,6 +284,15 @@ function getEditorModelOfTab(tabId) {
     for (i = 0; i < tabInfo.length; i++) {
         if (tabInfo[i].tabId == tabId) {
             return tabInfo[i].tabModel;
+        }
+    }
+}
+
+//Get file from tabId
+function getFileFromTabId(tabId) {
+    for (i = 0; i < tabInfo.length; i++) {
+        if (tabInfo[i].tabId == tabId) {
+            return tabInfo[i].filePath;
         }
     }
 }
@@ -326,6 +345,15 @@ function readFile(file) {
     xmlhttp.send();
 
     return xmlhttp.responseText;
+}
+
+//Set tab of file to active and set currentlyEditingFile to current file
+function setActiveFileAndTab(file, tabIndex) {
+    if (tabIndex != null) {
+        $('#tabs').tabs({ active: tabIndex });
+    }
+    currentlyEditingFile = file;
+    console.log('Currently editing ' + currentlyEditingFile);
 }
 
 function deleteFile(file) {

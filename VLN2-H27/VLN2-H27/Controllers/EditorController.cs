@@ -23,6 +23,12 @@ namespace VLN2_H27.Controllers
             return View();
         }
 
+        //demo
+        public ActionResult demoEditor()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult createProject(FormCollection data)
         {
