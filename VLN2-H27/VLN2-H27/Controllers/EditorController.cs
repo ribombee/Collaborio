@@ -23,10 +23,15 @@ namespace VLN2_H27.Controllers
             return View();
         }
 
-        public ActionResult updateFile(string filePath, int column, int row, string textValue, Boolean updateMode)
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult updateFile(string filePath, int column, int row, string textValue, int updateMode)
         {
+
+            string path = Server.MapPath(filePath);
+
             var fileLines = System.IO.File.ReadAllLines(filePath);
-            if (updateMode == false)
+            if (updateMode == 0)
             {
                 fileLines[row] = fileLines[row].Insert(column, textValue);
             }
@@ -35,7 +40,8 @@ namespace VLN2_H27.Controllers
                 fileLines[row] = fileLines[row].Remove(column);
             }
             System.IO.File.WriteAllLines(filePath, fileLines);
-            return View("editor");
+
+            return null;
         }
 
         [HttpPost]
