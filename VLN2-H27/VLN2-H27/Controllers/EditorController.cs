@@ -23,6 +23,13 @@ namespace VLN2_H27.Controllers
             return View();
         }
 
+        public ActionResult updateFile(string filePath, int linePosX, int linePosY, char charValue)
+        {
+            string fileLine = System.IO.File.ReadAllLines(filePath)[linePosY];
+            fileLine.Insert(linePosX, Convert.ToString(charValue));
+            return View("editor");
+        }
+
         [HttpPost]
         public ActionResult createProject(FormCollection data)
         {
