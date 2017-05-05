@@ -16,6 +16,10 @@ namespace VLN2_H27.Controllers
         }
         public ActionResult editor()
         {
+            ViewBag.projectId = 0;
+            string path = "~/UserProjects/" + 0;
+            ViewBag.projectPath = Server.MapPath(path);
+            
             return View();
         }
 
@@ -32,7 +36,6 @@ namespace VLN2_H27.Controllers
             {
                 DirectoryInfo di = Directory.CreateDirectory(folderPath);
             }
-
             
             var filePath = "~/FileTree/sample/" + fileName + "/" + fileName + ".cpp";
             filePath = Server.MapPath(filePath);
