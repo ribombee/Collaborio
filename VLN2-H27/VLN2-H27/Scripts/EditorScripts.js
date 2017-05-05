@@ -61,9 +61,14 @@ $(document).ready(function () {
         //UPDATES IN BROWSER - FOR SAVING
         editor.onDidChangeModelContent(function (e) {
             console.log(e);
+            saveEdit(e)
         })
     });
 });
+
+function saveEdit(edits) {
+
+}
 
 
 //Change monaco editor theme
