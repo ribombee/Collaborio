@@ -226,6 +226,8 @@ $(document).ready(function() {
             $("#tabs ul").append("<li>" + ui.draggable.html() + "</li>");
             tabs.tabs("refresh");
             $(ui.draggable).remove()
+            var tabId = ui.draggable.attr('id');
+            $('#tabs').tabs({ active: tabIdToIndex(tabId) });
         }
     });
 });
