@@ -94,25 +94,18 @@ namespace VLN2_H27.Controllers
         {
             string path = filePath;
             path = Server.MapPath(path);
+            string fileText = "";
 
-            if(openFiles == null)
+            try
             {
-                openFiles = new List<Helpers.openFile>(0);
+                fileText = System.IO.File.ReadAllText(path);
             }
-
-            for (int i = 0; i < openFiles.Count; i++)
+            catch
             {
-                if(openFiles[i].isThisFile(path))
-                {
-                    return Json(openFiles[i].getValue());
-                }
+                Debug.WriteLine("File read error");
             }
-
             
-            Debug.WriteLine("NO open file found!");
-            var newFile = new Helpers.openFile(path);
-            //openFiles.Add(newFile);        UNCOMMENT TO ENABLE STACKING OF OPENFILES
-            return Json(newFile.getValue());
+            return Json(fileText);
         }
 
         [HttpPost]
@@ -121,6 +114,7 @@ namespace VLN2_H27.Controllers
         {
             string path = filePath;
             path = Server.MapPath(path);
+            Debug.WriteLine(textValue);
             try
             { 
                 System.IO.File.WriteAllText(path, textValue);

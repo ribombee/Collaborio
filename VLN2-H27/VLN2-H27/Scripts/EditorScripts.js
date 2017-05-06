@@ -122,6 +122,7 @@ function openFileInMonaco(file) {
     var mode = 'javascript';
 
     currentlyOpeningFile = file;
+    $(document).trigger("requestingfile", file);
     requestFile(file);
 }
 
@@ -412,6 +413,14 @@ $(function () {
     // Reference the auto-generated proxy for the hub.  
     var hubProxy = $.connection.editorHub;
 
+    //a new user has connected to current project
+    hubProxy.client.newUserConnected = function (user) {
+        console.log(user + " CONNECTED");
+        $(document).trigger("userconnected");
+        saveAllFiles();
+    }
+
+    //somebody updated their editor
     hubProxy.client.updateEditorModel = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
         var editOperation = createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
 
@@ -440,6 +449,16 @@ $(function () {
 
     // Start the connection.
     $.connection.hub.start().done(function () {
+        //advertise that you connected
+        hubProxy.server.userConnected($('#displayname').val());
+
+        //a new user has connected, send your data to him
+        $(document).on("userconnected", function () {
+            console.log("detected new user");
+            //TODO
+        });
+
+        //Editor model changed
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
                 suppressModelChangedEvent = false;
@@ -493,6 +512,37 @@ function renameFile(file) {
     //remember to update tabInfo array
 
     alert(file + ' would be renamed now');
+}
+
+function saveFile(file, text) {
+    if (editor == null) {
+        return false;
+    }
+
+    var sendData = {
+        'filePath': file,
+        'textValue': text,
+    };
+
+    $.ajax({
+        type: "POST",
+        url: 'saveFile',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            console.log("FILE SAVED");
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+}
+
+function saveAllFiles() {
+    for (var i = 0; i < tabInfo.length; i++) {
+        saveFile(tabInfo[i].filePath, tabInfo[i].tabModel.getValue());
+    }
 }
 
 //periodically save file -- TEMPORARILY DISABLED

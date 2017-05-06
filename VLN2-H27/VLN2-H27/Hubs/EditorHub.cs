@@ -19,5 +19,10 @@ namespace VLN2_H27.Hubs
             Clients.Others.updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
         }
 
+        public void userConnected(string user)
+        {
+            Clients.Others.newUserConnected(user);
+        }
+
     }
 }
