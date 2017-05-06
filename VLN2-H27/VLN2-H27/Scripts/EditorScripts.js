@@ -58,13 +58,15 @@ $(document).ready(function () {
             changeTheme(this.selectedIndex, editor);
         });
 
-        //UPDATES IN BROWSER - FOR SAVING
-        /*
+        //update tabInfo model when working in editor
         editor.onDidChangeModelContent(function (e) {
-            console.log(e);
-            saveEdit(e)
+            for (var i = 0; i < tabInfo.length; i++) {
+                if (tabInfo[i].filePath == currentlyEditingFile) {
+                    //tabInfo[i].tabModel.pushEditOperations(null, );
+                }
+            }
         })
-        */
+        
     });
 });
 
@@ -122,8 +124,9 @@ function openFileInMonaco(file) {
     var mode = 'javascript';
 
     currentlyOpeningFile = file;
-    $(document).trigger("requestingfile", file);
+    //trigger requestingfile so SignalR can handle the rest
     requestFile(file);
+    $(document).trigger("requestingfile", [file]);
 }
 
 function requestFile(file) {
@@ -417,7 +420,38 @@ $(function () {
     hubProxy.client.newUserConnected = function (user) {
         console.log(user + " CONNECTED");
         $(document).trigger("userconnected");
-        saveAllFiles();
+        //saveAllFiles();
+    }
+
+    //somebody requested a file
+    hubProxy.client.userHasRequestedFile = function (file, connectionId) {
+        console.log('searching for requested file ' + file);
+        if (file == currentlyEditingFile) {
+            console.log("its the file currently being edited");
+            console.log(editor.getModel().getValue());
+            $(document).trigger("requestedfilefound", [file, editor.getModel().getValue(), connectionId]);
+        }
+        else {
+            for (var i = 0; i < tabInfo.length; i++) {
+                console.log(tabInfo[i].filePath);
+                if (tabInfo[i].filePath == file) {
+                    $(document).trigger("requestedfilefound", [file, tabInfo[i].tabModel.getValue(), connectionId]);
+                }
+            }
+        }
+        
+    }
+
+    //receive file you previously requested
+    hubProxy.client.receiveRequestedFile = function (file, text) {
+        console.log('received requested file');
+        for (var i = 0; i < tabInfo.length; i++) {
+            if (tabInfo[i].filePath == file) {
+                suppressModelChangedEvent = true;
+                tabInfo[i].tabModel.setValue(text);
+                editor.setModel(tabInfo[i].tabModel);
+            }
+        }
     }
 
     //somebody updated their editor
@@ -431,7 +465,6 @@ $(function () {
         else {
             for(var i = 0; i < tabInfo.length; i++) {
                 if (tabInfo[i].filePath == filePath) {
-                    console.log("teswt");
                     tabInfo[i].tabModel.pushEditOperations(null, editOperation);
                 }
             }
@@ -456,6 +489,18 @@ $(function () {
         $(document).on("userconnected", function () {
             console.log("detected new user");
             //TODO
+        });
+
+        //requesting a file
+        $(document).on("requestingfile", function (e, file) {
+            hubProxy.server.requestFile(file);
+            console.log("requesting file: " + file);
+        });
+
+        //found previously requested file
+        $(document).on("requestedfilefound", function (e, file, text, connectionId) {
+            hubProxy.server.sendRequestedFile(file, text, connectionId);
+            console.log("found requested file: " + file + " for:" + connectionId);
         });
 
         //Editor model changed
@@ -574,4 +619,4 @@ var intervalID = setInterval(function () {
 /*****************************************************
 MISC CODE
 END
-******************************************************/
+*********************************/

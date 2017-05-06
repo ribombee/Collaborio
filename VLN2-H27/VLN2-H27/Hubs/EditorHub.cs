@@ -24,5 +24,15 @@ namespace VLN2_H27.Hubs
             Clients.Others.newUserConnected(user);
         }
 
+        public void RequestFile(string file)
+        {
+            Clients.Others.userHasRequestedFile(file, Context.ConnectionId);
+        }
+
+        public void SendRequestedFile(string file, string text, string connectionId)
+        {
+            Clients.Client(connectionId).receiveRequestedFile(file, text);
+        }
+
     }
 }
