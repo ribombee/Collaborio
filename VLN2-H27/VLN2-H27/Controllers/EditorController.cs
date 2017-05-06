@@ -121,7 +121,14 @@ namespace VLN2_H27.Controllers
         {
             string path = filePath;
             path = Server.MapPath(path);
-            System.IO.File.WriteAllText(path, textValue);
+            try
+            { 
+                System.IO.File.WriteAllText(path, textValue);
+            }
+            catch
+            {
+                Debug.WriteLine("Writing to " + filePath + "failed");
+            }
 
             return null;
         }

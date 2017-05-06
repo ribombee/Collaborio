@@ -136,8 +136,7 @@ function requestFile(file) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(sendData),
         dataType: "json",
-        success: function (data) {
-            console.log(data);
+        success: function (data) {;
             openDataInMonaco(data);
         },
         error: function (xhr, status, error) {
@@ -161,6 +160,16 @@ function openDataInMonaco(data) {
     var filename = currentlyOpeningFile.replace(/^.*[\\\/]/, '')
 
     addTab(filename, currentlyOpeningFile, newModel);
+}
+
+function createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
+    var line = editor.getPosition();
+    var range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
+    var id = { major: 1, minor: 1 };
+    var text = textValue;
+    var op = [{ identifier: id, range: range, text: text, forceMoveMarkers: false }];
+
+    return op;
 }
 
 /*****************************************************
@@ -404,12 +413,19 @@ $(function () {
     var hubProxy = $.connection.editorHub;
 
     hubProxy.client.updateEditorModel = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
+        var editOperation = createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+
         if (currentlyEditingFile == filePath) {
             suppressModelChangedEvent = true;
-            editor.executeEdits("dude", [
-                { range: new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn), text: textValue }
-            ]);
-            suppressModelChangedEvent = false;
+            editor.executeEdits("dude", editOperation);
+        }
+        else {
+            for(var i = 0; i < tabInfo.length; i++) {
+                if (tabInfo[i].filePath == filePath) {
+                    console.log("teswt");
+                    tabInfo[i].tabModel.pushEditOperations(null, editOperation);
+                }
+            }
         }
     }
     // Create a function that the hub can call back to display messages.
@@ -426,6 +442,7 @@ $(function () {
     $.connection.hub.start().done(function () {
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
+                suppressModelChangedEvent = false;
                 return;
             }
             hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
@@ -462,7 +479,6 @@ function setActiveFileAndTab(file, tabIndex) {
         $('#tabs').tabs({ active: tabIndex });
     }
     currentlyEditingFile = file;
-    console.log('Currently editing ' + currentlyEditingFile);
 }
 
 function deleteFile(file) {
@@ -479,7 +495,8 @@ function renameFile(file) {
     alert(file + ' would be renamed now');
 }
 
-//periodically save file
+//periodically save file -- TEMPORARILY DISABLED
+/*
 var intervalID = setInterval(function () {
     if (editor == null) {
         return false;
