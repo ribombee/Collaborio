@@ -395,6 +395,63 @@ END
 ******************************************************/
 
 /*****************************************************
+SIGNALR CODE
+START
+******************************************************/
+var suppressModelChangedEvent = false;
+$(function () {
+    // Reference the auto-generated proxy for the hub.  
+    var hubProxy = $.connection.editorHub;
+
+    hubProxy.client.updateEditorModel = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
+        if (currentlyEditingFile == filePath) {
+            suppressModelChangedEvent = true;
+            editor.executeEdits("dude", [
+                { range: new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn), text: textValue }
+            ]);
+            suppressModelChangedEvent = false;
+        }
+    }
+    // Create a function that the hub can call back to display messages.
+    hubProxy.client.addNewMessageToPage = function (name, message) {
+        // Add the message to the page. 
+        $('#discussion').append('<li><strong>' + htmlEncode(name)
+            + '</strong>: ' + htmlEncode(message) + '</li>');
+    };
+
+    // Get the user name and store it to prepend to messages.
+    $('#displayname').val(prompt('Enter your name:', ''));
+
+    // Start the connection.
+    $.connection.hub.start().done(function () {
+        editor.onDidChangeModelContent(function (e) {
+            if (suppressModelChangedEvent) {
+                return;
+            }
+            hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
+        });
+
+        $('#sendmessage').click(function () {
+            // Call the Send method on the hub. 
+            hubProxy.server.sendChat($('#displayname').val(), $('#message').val());
+            // Clear text box and reset focus for next comment. 
+            $('#message').val('').focus();
+        });
+    });
+});
+// This optional function html-encodes messages for display in the page.
+function htmlEncode(value) {
+    var encodedValue = $('<div />').text(value).html();
+    return encodedValue;
+}
+
+
+/*****************************************************
+SIGNALR CODE
+END
+******************************************************/
+
+/*****************************************************
 MISC CODE
 START
 ******************************************************/
