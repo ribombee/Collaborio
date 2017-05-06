@@ -13,7 +13,6 @@ namespace VLN2_H27.Controllers
 
     public class EditorController : Controller
     {
-        static public List<VLN2_H27.Helpers.openFile> openFiles;
 
         // GET: Editor
         public ActionResult projects()
@@ -24,68 +23,6 @@ namespace VLN2_H27.Controllers
         {
             ViewBag.projectId = 0;
             return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult updateFile(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
-        {
-            string path = filePath;
-            path = Server.MapPath(path);
-
-            startColumn--;
-            endColumn--;
-            startLineNumber--;
-            endLineNumber--;
-
-            if (openFiles == null)
-            {
-                openFiles = new List<Helpers.openFile>(0);
-            }
-
-            for (int i = 0; i < openFiles.Count; i++)
-            {
-                if(openFiles[i].isThisFile(path))
-                {
-                    Debug.WriteLine("open file found!");
-                    openFiles[i].updateFile(startColumn, endColumn, startLineNumber, endLineNumber, textValue);
-                    Debug.WriteLine(openFiles[i].getValue());
-                    return null;
-                }
-            }
-
-            Debug.WriteLine("NO open file found!");
-            var newFile = new Helpers.openFile(path);
-            newFile.updateFile(startColumn, endColumn, startLineNumber, endLineNumber, textValue);
-            openFiles.Add(newFile);
-
-            Debug.WriteLine(openFiles.Count + " open files");
-
-            return null;
-
-            /*
-            string path = filePath;
-            path = Server.MapPath(path);
-
-            column--;
-            row--;
-            Debug.WriteLine("Column: " + column + " Row: " + row);
-            Debug.WriteLine("FilePath: " + path);
-
-            var fileLines = System.IO.File.ReadAllLines(path);
-            
-            if (updateMode == 0)
-            {
-                fileLines[row] = fileLines[row].Insert(column, textValue);
-            }
-            else
-            {
-                fileLines[row] = fileLines[row].Remove(column);
-            }
-            System.IO.File.WriteAllLines(path, fileLines);
-
-            return null;
-            */
         }
 
         [HttpPost]

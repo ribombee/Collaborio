@@ -57,15 +57,6 @@ $(document).ready(function () {
         $(".theme-picker").change(function () {
             changeTheme(this.selectedIndex, editor);
         });
-
-        //update tabInfo model when working in editor
-        editor.onDidChangeModelContent(function (e) {
-            for (var i = 0; i < tabInfo.length; i++) {
-                if (tabInfo[i].filePath == currentlyEditingFile) {
-                    //tabInfo[i].tabModel.pushEditOperations(null, );
-                }
-            }
-        })
         
     });
 });
@@ -147,14 +138,6 @@ function requestFile(file) {
             console.log(xhr.responseText);
         }
     });
-    /*
-    var xmlhttp;
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('GET', file, false);
-    xmlhttp.send();
-
-    return xmlhttp.responseText;
-    */
 }
 
 function openDataInMonaco(data) {
@@ -420,7 +403,6 @@ $(function () {
     hubProxy.client.newUserConnected = function (user) {
         console.log(user + " CONNECTED");
         $(document).trigger("userconnected");
-        //saveAllFiles();
     }
 
     //somebody requested a file
@@ -511,9 +493,9 @@ $(function () {
             }
             hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
         });
-
+        
+        //Send chat message
         $('#sendmessage').click(function () {
-            // Call the Send method on the hub. 
             hubProxy.server.sendChat($('#displayname').val(), $('#message').val());
             // Clear text box and reset focus for next comment. 
             $('#message').val('').focus();
@@ -590,32 +572,6 @@ function saveAllFiles() {
     }
 }
 
-//periodically save file -- TEMPORARILY DISABLED
-/*
-var intervalID = setInterval(function () {
-    if (editor == null) {
-        return false;
-    }
-
-    var sendData = {
-        'filePath': currentlyEditingFile,
-        'textValue': editor.getModel().getValue(),
-    };
-
-    $.ajax({
-        type: "POST",
-        url: 'saveFile',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(sendData),
-        dataType: "json",
-        success: function (data) {
-            console.log("FILE SAVED");
-        },
-        error: function (xhr, status, error) {
-            console.log(xhr.responseText);
-        }
-    });
-}, 5000);
 /*****************************************************
 MISC CODE
 END
