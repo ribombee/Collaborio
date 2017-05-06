@@ -9,6 +9,7 @@ namespace VLN2_H27
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }

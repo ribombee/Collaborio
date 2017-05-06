@@ -424,6 +424,10 @@ function renameFile(file) {
 
 //periodically save file
 var intervalID = setInterval(function () {
+    if (editor == null) {
+        return false;
+    }
+
     var sendData = {
         'filePath': currentlyEditingFile,
         'textValue': editor.getModel().getValue(),
