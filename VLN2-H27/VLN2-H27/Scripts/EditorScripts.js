@@ -59,19 +59,23 @@ $(document).ready(function () {
         });
 
         //UPDATES IN BROWSER - FOR SAVING
+        /*
         editor.onDidChangeModelContent(function (e) {
             console.log(e);
             saveEdit(e)
         })
+        */
     });
 });
 
 function saveEdit(edits) {
+    
     var sendData = { 'filePath': currentlyEditingFile,
-                       'column': edits.range.startColumn,
-                       'row': edits.range.startLineNumber,
-                       'textValue': edits.text,
-                       'updateMode': edits.rangeLength };
+        'startColumn': edits.range.startColumn,
+        'endColumn' : edits.range.endColumn,
+        'startLineNumber': edits.range.startLineNumber,
+        'endLineNumber' : edits.range.endLineNumber,
+        'textValue': edits.text };
 
     $.ajax({
         type: "POST",
@@ -417,6 +421,28 @@ function renameFile(file) {
 
     alert(file + ' would be renamed now');
 }
+
+//periodically save file
+var intervalID = setInterval(function () {
+    var sendData = {
+        'filePath': currentlyEditingFile,
+        'textValue': editor.getModel().getValue(),
+    };
+
+    $.ajax({
+        type: "POST",
+        url: 'saveFile',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            console.log("FILE SAVED");
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+}, 5000);
 /*****************************************************
 MISC CODE
 END

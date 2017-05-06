@@ -27,10 +27,16 @@ namespace VLN2_H27.Helpers
 
         public string getValue()
         {
+
             string fileValue = "";
-            for(int i = 0; i < lineCount; i++)
+            if (lineCount != 0)
             {
-                fileValue += line[i] + '\n';
+                
+                for (int i = 0; i < lineCount; i++)
+                {
+                    fileValue += line[i];
+                }
+                //fileValue += line[lineCount - 1];
             }
 
             return fileValue;
@@ -43,29 +49,103 @@ namespace VLN2_H27.Helpers
 
         public void saveFile()
         {
-            //TODO
+            System.IO.File.WriteAllLines(filePath, line.ToArray());
         }
 
-        public void updateFile(int updateMode, string text, int lineNumber, int pos)
+        public void updateFile(int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
         {
-            if (updateMode == 0)
+            if (startColumn >= endColumn)
             {
-                addText(text, lineNumber, pos);
+                addText(startColumn, endColumn, startLineNumber, endLineNumber, textValue);
             }
             else
             {
-                removeAt(lineNumber, pos);
+                removeAt(startColumn, endColumn, startLineNumber, endLineNumber);
             }
         }
 
-        private void addText(string text, int lineNumber, int pos)
+        private void addText(int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
         {
-            line[lineNumber] = line[lineNumber].Insert(pos, text);
+            if(startLineNumber == endLineNumber)
+            {
+                if (startLineNumber >= lineCount)
+                {
+                    line.Add(textValue);
+                    lineCount++;
+                }
+                else
+                {
+                    if(startColumn == line[startLineNumber].Length)
+                    {
+                        line[startLineNumber] = line[startLineNumber] + textValue;
+                    }
+                    else
+                    {
+                        line[startLineNumber] = line[startLineNumber].Insert(startColumn, textValue);
+                    }      
+                }
+            }
+            else
+            {
+                String text = textValue;
+                var textLines = text.Split('\n');
+
+                if(startLineNumber >= lineCount)
+                {
+                    line.Add(textLines[0]);
+                    lineCount++;
+                }
+                else
+                {
+                    if(startColumn == line[startLineNumber].Length)
+                    {
+                        line[startLineNumber] = line[startLineNumber] + textValue;
+                    }
+                    line[startLineNumber] = line[startLineNumber].Insert(startColumn, textLines[0]);
+                }
+                
+                for(int i = 1; i < textLines.Length; i++)
+                {
+                    if (endLineNumber >= lineCount)
+                    {
+                        line.Add(textLines[startLineNumber+i]);
+                        lineCount++;
+                    }
+                    else
+                    {
+                        line[startLineNumber + i] = line[startLineNumber + i].Insert(0, textLines[i]);
+                    }
+                }
+
+                if (endLineNumber >= lineCount)
+                {
+                    line.Add(textLines[textLines.Length-1]);
+                    lineCount++;
+                }
+                else
+                {
+                    line[endLineNumber] = line[startLineNumber].Insert(0, textLines[textLines.Length-1]);
+                }
+            }
+            
         }
 
-        private void removeAt(int lineNumber, int pos)
+        private void removeAt(int startColumn, int endColumn, int startLineNumber, int endLineNumber)
         {
-            line[lineNumber] = line[lineNumber].Remove(pos);
+            if (startLineNumber == endLineNumber)
+            {
+                line[startLineNumber] = line[startLineNumber].Remove(startColumn, endColumn-startColumn);
+            }
+            else
+            {
+                line[startLineNumber] = line[startLineNumber].Remove(startColumn);
+                for (int i = startLineNumber + 1; i < endLineNumber; i++)
+                {
+                    line[i] = line[i].Remove(0);
+                }
+                line[endLineNumber] = line[endLineNumber].Remove(0, endColumn);
+            }
+            
         }
     }
 }

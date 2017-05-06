@@ -13,7 +13,7 @@ namespace VLN2_H27.Controllers
 
     public class EditorController : Controller
     {
-        static private List<VLN2_H27.Helpers.openFile> openFiles;
+        static public List<VLN2_H27.Helpers.openFile> openFiles;
 
         // GET: Editor
         public ActionResult projects()
@@ -28,27 +28,37 @@ namespace VLN2_H27.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult updateFile(string filePath, int column, int row, string textValue, int updateMode)
+        public ActionResult updateFile(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
         {
             string path = filePath;
             path = Server.MapPath(path);
 
-            column--;
-            row--;
+            startColumn--;
+            endColumn--;
+            startLineNumber--;
+            endLineNumber--;
+
+            if (openFiles == null)
+            {
+                openFiles = new List<Helpers.openFile>(0);
+            }
 
             for (int i = 0; i < openFiles.Count; i++)
             {
-                Debug.WriteLine(i + " iterations");
-
                 if(openFiles[i].isThisFile(path))
                 {
                     Debug.WriteLine("open file found!");
-                    openFiles[i].updateFile(updateMode, textValue, row, column);
+                    openFiles[i].updateFile(startColumn, endColumn, startLineNumber, endLineNumber, textValue);
                     Debug.WriteLine(openFiles[i].getValue());
                     return null;
                 }
             }
-            
+
+            Debug.WriteLine("NO open file found!");
+            var newFile = new Helpers.openFile(path);
+            newFile.updateFile(startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+            openFiles.Add(newFile);
+
             Debug.WriteLine(openFiles.Count + " open files");
 
             return null;
@@ -98,11 +108,22 @@ namespace VLN2_H27.Controllers
                 }
             }
 
+            
             Debug.WriteLine("NO open file found!");
             var newFile = new Helpers.openFile(path);
-            openFiles = new List<Helpers.openFile>(0);
-            openFiles.Add(newFile);
+            //openFiles.Add(newFile);        UNCOMMENT TO ENABLE STACKING OF OPENFILES
             return Json(newFile.getValue());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult saveFile(string filePath, string textValue)
+        {
+            string path = filePath;
+            path = Server.MapPath(path);
+            System.IO.File.WriteAllText(path, textValue);
+
+            return null;
         }
 
         [HttpPost]
