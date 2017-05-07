@@ -104,7 +104,11 @@ function changeLanguage(mode) {
 var currentlyOpeningFile = '';
 function openFileInMonaco(file) {
     //is the file already open in a tab?
-    var tabId = fileAlreadyOpenInTab(file);
+    var tabFound = fileAlreadyOpenInTab(file),
+        tabId = null;
+    if (tabFound != null) {
+        tabId = tabFound.tabId;
+    }
     if (tabId != null) {
         var tabIndex = tabIdToIndex(tabId);
         $('#tabs').tabs({ active: tabIndex });
@@ -132,7 +136,7 @@ function requestFile(file) {
         data: JSON.stringify(sendData),
         dataType: "json",
         success: function (data) {;
-            openDataInMonaco(data, false);
+            openDataInMonaco(data, file, false);
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -140,10 +144,12 @@ function requestFile(file) {
     });
 }
 
-function openDataInMonaco(data, bypassSuppress) {
-    if (suppressAjaxRequestUpdate && !bypassSuppress) {
-        suppressAjaxRequestUpdate = false;
-        return;
+function openDataInMonaco(data, file, signalR) {
+    if (!signalR) {
+        if (fileAlreadyOpenInTab(file) != null) {
+            //file is already open in a tab, no need to re-request it from server
+            return;
+        }
     }
     var mode = 'javascript';
     var newModel = monaco.editor.createModel(data, mode);
@@ -173,7 +179,8 @@ JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 START
 ******************************************************/
 
-//jQueryFileTree initialization function
+//jQueryFileTree initialization function - this is called when SignalR connects to the hub
+var fileTreeHtml = "";
 function initFileTree() {
     $('.filetree').fileTree({
         root: '/UserProjects/' + projectId + '/',
@@ -185,13 +192,8 @@ function initFileTree() {
     }, function (file) {
         openFileInMonaco(file);
     });
+    fileTreeHtml = $('#filetree-parent')
 }
-
-//When document is ready, initialize FileTree and context menu
-$(document).ready(function () {
-    initFileTree();
-    initFileTreeContextMenu();
-});
 
 //Right click handling
 var rightClickedFile = '';
@@ -209,7 +211,7 @@ $('.filetree').mousedown(function (event) {
     }
 });
 
-//Initialize file tree context menu function
+//Initialize file tree context menu function - this is called when signalR connects to the hub
 function initFileTreeContextMenu() {
     $('.filetree').contextPopup({
         title: '',
@@ -220,6 +222,14 @@ function initFileTreeContextMenu() {
         ]
     });
 }
+
+//Hide file tree
+function hideFileTree() {
+    //TODO make this work
+    var fileTreeHtml = $('#filetree-parent').html();
+    $('#filetree').html('');
+}
+
 
 //Refresh File Tree
 function refreshFileTree() {
@@ -358,11 +368,11 @@ function getFileFromTabId(tabId) {
     }
 }
 
-//Checks is file is already open in a tab, returns tabId of aldready open tab if it is.
+//Checks if file is already open in a tab, returns tabInfo of aldready open tab if it is.
 function fileAlreadyOpenInTab(file) {
     for (i = 0; i < tabInfo.length; i++) {
         if (tabInfo[i].filePath == file) {
-            return tabInfo[i].tabId;
+            return tabInfo[i];
         }
     }
 
@@ -399,7 +409,6 @@ SIGNALR CODE
 START
 ******************************************************/
 var suppressModelChangedEvent = false;
-var suppressAjaxRequestUpdate = false;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     var hubProxy = $.connection.editorHub;
@@ -422,11 +431,9 @@ $(function () {
             $(document).trigger("requestedfilefound", [file, editor.getModel().getValue(), connectionId]);
         }
         else {
-            for (var i = 0; i < tabInfo.length; i++) {
-                console.log(tabInfo[i].filePath);
-                if (tabInfo[i].filePath == file) {
-                    $(document).trigger("requestedfilefound", [file, tabInfo[i].tabModel.getValue(), connectionId]);
-                }
+            var fileTabFound = fileAlreadyOpenInTab(file);
+            if (fileTabFound != null) {
+                $(document).trigger("requestedfilefound", [file, fileTabFound.tabModel.getValue(), connectionId]);
             }
         }
         
@@ -437,17 +444,16 @@ $(function () {
         console.log('received requested file');
         console.log(text);
         console.log(editor.getModel());
+        suppressModelChangedEvent = true;
         if (editor.getModel() == null) {
-            suppressAjaxRequestUpdate = true;
-            openDataInMonaco(file, true);
+            openDataInMonaco(text, file, true);
         }
         else {
-            for (var i = 0; i < tabInfo.length; i++) {
-                if (tabInfo[i].filePath == file) {
-                    suppressModelChangedEvent = true;
-                    tabInfo[i].tabModel.setValue(text);
-                    editor.setModel(tabInfo[i].tabModel);
-                }
+            if (currentlyEditingFile == file) {
+                editor.getModel().setValue(text);
+            }
+            else {
+                openDataInMonaco(text, file, true);
             }
         }
     }
@@ -461,10 +467,10 @@ $(function () {
             editor.executeEdits("dude", editOperation);
         }
         else {
-            for(var i = 0; i < tabInfo.length; i++) {
-                if (tabInfo[i].filePath == filePath) {
-                    tabInfo[i].tabModel.pushEditOperations(null, editOperation);
-                }
+            var tab = fileAlreadyOpenInTab(filePath);
+            if (tab != null);
+            {
+                tabInfo.tabModel.pushEditOperations(null, editOperation)
             }
         }
     }
@@ -480,6 +486,10 @@ $(function () {
 
     // Start the connection.
     $.connection.hub.start().done(function () {
+        //Initialize things
+        initFileTree();
+        initFileTreeContextMenu();
+
         //advertise that you connected
         hubProxy.server.userConnected();
 
