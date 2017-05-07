@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,17 @@ namespace VLN2_H27.Controllers
         // GET: Editor
         public ActionResult projects()
         {
+            var userId = User.Identity.GetUserId();
+            VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+            var queryResult = from rel in db.Project_Users_Relations
+                              where rel.UserId == userId
+                              join pro in db.Projects on rel.ProjectId equals pro.Id
+                              select pro;
+            foreach(Project p in queryResult)
+            {
+                Debug.WriteLine("Testing: " + p.ProjectName);
+            }
+            ViewBag.projects = queryResult;
             return View();
         }
         public ActionResult editor()

@@ -66,6 +66,10 @@
 @Html.Partial("NewProjectPartial")
 
 <div class="flex-grid">
+    @foreach(VLN2_H27.Models.Project p in ViewBag.projects)
+    {
+        @Html.ActionLink(("My name is" + p.ProjectName), "editor", "Editor", new { @class = "col", id = "project-0", data_editing = 0 })
+    }
     @Html.ActionLink("Click me", "editor", "Editor", new { @class="col", id="project-0", data_editing=0})
     <div class="col">Cell</div>
     <div class="col">Cell</div>

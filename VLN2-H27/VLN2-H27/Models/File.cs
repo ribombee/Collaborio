@@ -18,6 +18,7 @@ namespace VLN2_H27.Models
         public int ProjectId { get; set; }
         public System.DateTime DateAdded { get; set; }
         public System.DateTime LastModified { get; set; }
-        public string @string { get; set; }
+        public string FileType { get; set; }
+        public string FileName { get; set; }
     }
 }
