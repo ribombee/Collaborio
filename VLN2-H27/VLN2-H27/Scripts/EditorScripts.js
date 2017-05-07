@@ -6,6 +6,8 @@ START
 var editor = null;
 //Filename of file currently being edited
 var currentlyEditingFile = "";
+//available languages in monaco
+var availableLanguages = [];
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
@@ -21,38 +23,19 @@ $(document).ready(function () {
                 language: 'javascript'
             });
 
-        //Language modes
-        var MODES = (function () {
-            var modesIds = monaco.languages.getLanguages().map(function (lang) { return lang.id; });
-            modesIds.sort();
-
-            return modesIds.map(function (modeId) {
-                return {
-                    modeId: modeId,
-                    sampleURL: 'index/samples/sample.' + modeId + '.txt'
-                };
-            });
-        })();
-
         //Get available programming languages
-        var languages = monaco.languages.getLanguages().map(function(language) { return language.id });
-        console.log(languages);
-        languages.sort();
+        availableLanguages = monaco.languages.getLanguages().map(function(language) { return language.id });
+        availableLanguages.sort();
 
         //Populate language list
-        var startModeIndex = 0;
-        for (var i = 0; i < languages.length; i++) {
+        for (var i = 0; i < availableLanguages.length; i++) {
             var o = document.createElement('option');
-            o.textContent = languages[i];
+            o.textContent = availableLanguages[i];
             $(".language-picker").append(o);
         }
 
-        //Hardcoded for now, will need to be fetched later
-        //$(".language-picker")[0].selectedIndex = startModeIndex;
-
         $(".language-picker").change(function () {
-            console.log(languages[this.selectedIndex])
-            monaco.editor.setModelLanguage(editor.getModel(), languages[this.selectedIndex]);
+            monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
         });
 
 
@@ -63,38 +46,10 @@ $(document).ready(function () {
     });
 });
 
-//DEPRECATED - ONLY KEEPING THIS AROUND FOR REFERENCE
-//TODO DELETE
-function saveEdit(edits) {
-    var sendData = { 'filePath': currentlyEditingFile,
-        'startColumn': edits.range.startColumn,
-        'endColumn' : edits.range.endColumn,
-        'startLineNumber': edits.range.startLineNumber,
-        'endLineNumber' : edits.range.endLineNumber,
-        'textValue': edits.text };
-
-    $.ajax({
-        type: "POST",
-        url: 'updateFile',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(sendData),
-        dataType: "json",
-        success: function (data) { console.log('Successfully updated'); },
-        error: function (xhr, status, error) {
-            console.log(xhr.responseText);
-        }
-    });
-}
-
 //Change monaco editor theme
 function changeTheme(theme) {
     var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
     editor.updateOptions({ 'theme': newTheme });
-}
-
-//Change monaco editor current document mode/language
-function changeLanguage(mode) {
-    monaco.editor.setModelLanguage(editor.getModel(), 'javascript');
 }
 
 //returns the name of the language that corresponds to the file extension
@@ -161,15 +116,16 @@ function requestFileFromServer(file) {
 function openDataInMonaco(data, file, signalR) {
     if (!signalR) {
         if (fileAlreadyOpenInTab(file) != null) {
-            //file is already open in a tab, no need to re-request it from server
+            //file is already open in a tab, no need to get the server's outdated version
             return;
         }
     }
 
     //changes the language so that the syntax highlighting is correct
-    var mode = getLanguage(file);
+    var language = getLanguage(file);
+    setLanguagePicker(language);
 
-    var newModel = monaco.editor.createModel(data, mode);
+    var newModel = monaco.editor.createModel(data, language);
     editor.setModel(newModel);
     var filename = currentlyOpeningFile.replace(/^.*[\\\/]/, '')
 
@@ -187,6 +143,12 @@ function createNewEditOperation(filePath, startColumn, endColumn, startLineNumbe
     return op;
 }
 
+//Set language picker dropdown
+function setLanguagePicker(language) {
+    console.log(availableLanguages.indexOf(language));
+    console.log(availableLanguages)
+    $(".language-picker")[0].selectedIndex = availableLanguages.indexOf(language);
+}
 /*****************************************************
 MONACO EDITOR SPECIFIC CODE
 END
@@ -361,11 +323,9 @@ $('#tabs').tabs({
 
 //Open tab in monaco
 function openTabInMonaco(tabId) {
-    //TODO: Fetch file mode automagicalliy
-    var mode = 'javascript';
-
     var newModel = getEditorModelOfTab(tabId);
     editor.setModel(newModel);
+    setLanguagePicker(newModel.getModeId());
 }
 
 //Get monaco model of tab
