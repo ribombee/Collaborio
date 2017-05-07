@@ -417,8 +417,6 @@ $(function () {
     hubProxy.client.receiveRequestedFile = function (file, text) {
         console.log('received requested file');
         console.log(text);
-        //Dont react to edit events when inserting the new file
-        suppressModelChangedEvent = true;
         //is the editor completely empty? just insert the text and open a new tab
         if (editor.getModel() == null) {
             openDataInMonaco(text, file, true);
@@ -426,6 +424,8 @@ $(function () {
         else {
             //have you already opened the file from server?
             if (currentlyEditingFile == file) {
+                //Dont react to edit events when inserting the new file
+                suppressModelChangedEvent = true;
                 editor.getModel().setValue(text);
             }
             //you havent opened the file and your editor isnt empty? just insert the text and open a new tab.
