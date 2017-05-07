@@ -9,10 +9,10 @@ namespace VLN2_H27.Hubs
 {
     public class EditorHub : Hub
     {
-        public void SendChat(string name, string message)
+        public void SendChat(string name, string message, string projectId)
         {
             // Call the addNewMessageToPage method to update clients.
-            Clients.Group(Clients.CallerState.projectId).addNewMessageToPage(name, message);
+            Clients.Group(projectId).addNewMessageToPage(name, message);
         }
 
         public void SendEditorUpdate(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)

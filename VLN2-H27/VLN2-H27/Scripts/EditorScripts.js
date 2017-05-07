@@ -425,7 +425,6 @@ $(function () {
     //a new user has connected to current project
     hubProxy.client.newUserConnected = function (user) {
         console.log(user + " CONNECTED");
-        $(document).trigger("userconnected");
     }
 
     //somebody requested a file
@@ -497,7 +496,12 @@ $(function () {
     // Somebody posted a chat message
     hubProxy.client.addNewMessageToPage = function (name, message) {
         // Add the message to the page. 
-        $('#discussion').append('<li><strong>' + htmlEncode(name)
+        var currentDate = new Date();
+        var hours = currentDate.getHours(),
+            minutes = currentDate.getMinutes(),
+            seconds = currentDate.getSeconds();
+        var timeStamp = hours + ':' + minutes + ':' + seconds;
+        $('#discussion').append('<li><i>' + htmlEncode(timeStamp) + '</i><strong>' + htmlEncode(name)
             + '</strong>: ' + htmlEncode(message) + '</li>');
     };
 
@@ -513,12 +517,6 @@ $(function () {
         //advertise that you connected
         hubProxy.server.userConnected();
 
-        //a new user has connected, send your data to him
-        $(document).on("userconnected", function () {
-            console.log("detected new user");
-            //TODO
-        });
-
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
@@ -530,7 +528,7 @@ $(function () {
         
         //Send chat message
         $('#sendmessage').click(function () {
-            hubProxy.server.sendChat($('#displayname').val(), $('#message').val());
+            hubProxy.server.sendChat($('#displayname').val(), $('#message').val(), projectId.toString());
             // Clear text box and reset focus for next comment. 
             $('#message').val('').focus();
         });
