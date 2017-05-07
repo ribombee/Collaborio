@@ -93,11 +93,28 @@ function changeTheme(theme) {
 //Change monaco editor current document mode/language
 function changeLanguage(mode) {
     var oldModel = editor.getModel();
+    console.log(mode);
     var newModel = monaco.editor.createModel(oldModel.getValue(), mode.modeId);
-
+    console.log(newModel);
     editor.setModel(newModel);
     //TODO UPDATE TAB MODEL
     oldModel.dispose();
+}
+
+//returns the name of the language that corresponds to the file extension
+function getLanguage(file)
+{
+    var fileEnding = '.' + file.split('.').pop();
+    var languages = monaco.languages.getLanguages();
+    for(var i = 0; i < languages.length; i++){
+        for(var j = 0; j < languages[i].extensions.length; j++){
+            if (languages[i].extensions[j] == fileEnding){
+                return languages[i].id;
+            }
+        }
+    }
+    //if its is not a supported filetype we default to plaintext (no highlighting)
+    return 'plaintext';
 }
 
 //Open file in monaco, adds tab
@@ -115,8 +132,8 @@ function openFileInMonaco(file) {
         return;
     }
 
-    //TODO: Fetch file mode automagicalliy
-    var mode = 'javascript';
+    //changes the language so that the syntax highlighting is correct
+    changeLanguage(getLanguage(file));
 
     currentlyOpeningFile = file;
     //Request file from server, so if no other client is working on the file it opens from server.
@@ -154,7 +171,11 @@ function openDataInMonaco(data, file, signalR) {
             return;
         }
     }
-    var mode = 'javascript';
+
+    //changes the language so that the syntax highlighting is correct
+    var mode = getLanguage(file);
+    changeLanguage(mode);
+
     var newModel = monaco.editor.createModel(data, mode);
     editor.setModel(newModel);
     var filename = currentlyOpeningFile.replace(/^.*[\\\/]/, '')
