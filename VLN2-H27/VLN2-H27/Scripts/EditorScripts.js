@@ -34,28 +34,30 @@ $(document).ready(function () {
             });
         })();
 
+        //Get available programming languages
+        var languages = monaco.languages.getLanguages().map(function(language) { return language.id });
+        console.log(languages);
+        languages.sort();
+
         //Populate language list
         var startModeIndex = 0;
-        for (var i = 0; i < MODES.length; i++) {
+        for (var i = 0; i < languages.length; i++) {
             var o = document.createElement('option');
-            //like everywhere, default language is hardcoded
-            if (MODES[i].modeId === 'javascript') {
-                startModeIndex = i;
-            }
-            o.textContent = MODES[i].modeId;
+            o.textContent = languages[i];
             $(".language-picker").append(o);
         }
 
         //Hardcoded for now, will need to be fetched later
-        $(".language-picker")[0].selectedIndex = startModeIndex;
+        //$(".language-picker")[0].selectedIndex = startModeIndex;
 
         $(".language-picker").change(function () {
-            changeLanguage(MODES[this.selectedIndex], editor);
+            console.log(languages[this.selectedIndex])
+            monaco.editor.setModelLanguage(editor.getModel(), languages[this.selectedIndex]);
         });
 
 
         $(".theme-picker").change(function () {
-            changeTheme(this.selectedIndex, editor);
+            changeTheme(this.selectedIndex);
         });
         
     });
@@ -92,7 +94,7 @@ function changeTheme(theme) {
 
 //Change monaco editor current document mode/language
 function changeLanguage(mode) {
-    monaco.editor.setModelLanguage(editor.getModel(), mode);
+    monaco.editor.setModelLanguage(editor.getModel(), 'javascript');
 }
 
 //returns the name of the language that corresponds to the file extension
