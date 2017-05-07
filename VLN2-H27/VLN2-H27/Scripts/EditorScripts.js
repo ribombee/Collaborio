@@ -450,7 +450,7 @@ $(function () {
             var tab = fileAlreadyOpenInTab(filePath);
             if (tab != null);
             {
-                tabInfo.tabModel.pushEditOperations(null, editOperation)
+                tab.tabModel.pushEditOperations(null, editOperation)
             }
         }
     }
