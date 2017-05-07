@@ -93,15 +93,6 @@ function changeTheme(theme) {
 //Change monaco editor current document mode/language
 function changeLanguage(mode) {
     monaco.editor.setModelLanguage(editor.getModel(), mode);
-    /*
-    var oldModel = editor.getModel();
-    console.log(mode);
-    var newModel = monaco.editor.createModel(oldModel.getValue(), mode.modeId);
-    console.log(newModel);
-    editor.setModel(newModel);
-    //TODO UPDATE TAB MODEL
-    oldModel.dispose();
-    */
 }
 
 //returns the name of the language that corresponds to the file extension
@@ -134,9 +125,6 @@ function openFileInMonaco(file) {
         $('#tabs').tabs({ active: tabIndex });
         return;
     }
-
-    //changes the language so that the syntax highlighting is correct
-    changeLanguage(getLanguage(file));
 
     currentlyOpeningFile = file;
     //Request file from server, so if no other client is working on the file it opens from server.
@@ -178,7 +166,6 @@ function openDataInMonaco(data, file, signalR) {
 
     //changes the language so that the syntax highlighting is correct
     var mode = getLanguage(file);
-    changeLanguage(mode);
 
     var newModel = monaco.editor.createModel(data, mode);
     editor.setModel(newModel);
