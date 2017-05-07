@@ -71,7 +71,6 @@
         @Html.ActionLink(("Click here to edit " + p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
     }
 
-
     @Html.ActionLink("For testing purposes", "editor", "Editor", new { @Id = 0 }, new { @class="col", id="project-0", data_editing=0})
     
 </div>
