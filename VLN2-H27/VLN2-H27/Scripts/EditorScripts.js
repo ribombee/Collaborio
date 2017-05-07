@@ -146,7 +146,6 @@ function createNewEditOperation(filePath, startColumn, endColumn, startLineNumbe
 //Set language picker dropdown
 function setLanguagePicker(language) {
     console.log(availableLanguages.indexOf(language));
-    console.log(availableLanguages)
     $(".language-picker")[0].selectedIndex = availableLanguages.indexOf(language);
 }
 /*****************************************************
@@ -216,9 +215,7 @@ function refreshFileTree() {
     //scan for expanded folders
     var expandedFolders = [];
     $('li.directory.expanded').each(function (index) {
-        console.log("expanded dir");
         var expandedFolder = $(this).find('a').attr('rel');
-        console.log(expandedFolder);
         expandedFolders.push(expandedFolder);
     });
 
@@ -397,7 +394,7 @@ $(function () {
 
     //a new user has connected to current project
     hubProxy.client.newUserConnected = function (user) {
-        console.log(user + " CONNECTED");
+        console.log(user + " connected");
     }
 
     //somebody requested a file
@@ -421,7 +418,6 @@ $(function () {
     hubProxy.client.receiveRequestedFile = function (file, text) {
         console.log('received requested file');
         console.log(text);
-        console.log(editor.getModel());
         //Dont react to edit events when inserting the new file
         suppressModelChangedEvent = true;
         //is the editor completely empty? just insert the text and open a new tab
@@ -564,7 +560,7 @@ function saveFile(file, text) {
         data: JSON.stringify(sendData),
         dataType: "json",
         success: function (data) {
-            console.log("FILE SAVED");
+            console.log(file + ' saved');
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
