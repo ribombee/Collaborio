@@ -474,7 +474,7 @@ $(function () {
             minutes = currentDate.getMinutes(),
             seconds = currentDate.getSeconds();
         var timeStamp = hours + ':' + minutes + ':' + seconds;
-        $('#discussion').append('<li><i>' + htmlEncode(timeStamp) + '</i><strong>' + htmlEncode(name)
+        $('#discussion').append('<li><i>' + htmlEncode(timeStamp) + '  </i><strong>' + htmlEncode(name)
             + '</strong>: ' + htmlEncode(message) + '</li>');
     };
 
