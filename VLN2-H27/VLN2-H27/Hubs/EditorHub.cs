@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using System.Threading.Tasks;
 
 namespace VLN2_H27.Hubs
 {
@@ -11,22 +12,23 @@ namespace VLN2_H27.Hubs
         public void SendChat(string name, string message)
         {
             // Call the addNewMessageToPage method to update clients.
-            Clients.All.addNewMessageToPage(name, message);
+            Clients.Group(Clients.CallerState.projectId).addNewMessageToPage(name, message);
         }
 
         public void SendEditorUpdate(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
         {
-            Clients.Others.updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+            Clients.OthersInGroup(Clients.Caller.projectId).updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
         }
 
-        public void userConnected(string user)
+        public async Task userConnected()
         {
-            Clients.Others.newUserConnected(user);
+            await Groups.Add(Context.ConnectionId, Clients.Caller.projectId);
+            Clients.OthersInGroup(Clients.CallerState.projectId).newUserConnected(Clients.CallerState.userName);
         }
 
         public void RequestFile(string file)
         {
-            Clients.Others.userHasRequestedFile(file, Context.ConnectionId);
+            Clients.OthersInGroup(Clients.CallerState.projectId).userHasRequestedFile(file, Context.ConnectionId);
         }
 
         public void SendRequestedFile(string file, string text, string connectionId)

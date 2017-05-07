@@ -132,7 +132,7 @@ function requestFile(file) {
         data: JSON.stringify(sendData),
         dataType: "json",
         success: function (data) {;
-            openDataInMonaco(data);
+            openDataInMonaco(data, false);
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -140,7 +140,11 @@ function requestFile(file) {
     });
 }
 
-function openDataInMonaco(data) {
+function openDataInMonaco(data, bypassSuppress) {
+    if (suppressAjaxRequestUpdate && !bypassSuppress) {
+        suppressAjaxRequestUpdate = false;
+        return;
+    }
     var mode = 'javascript';
     var newModel = monaco.editor.createModel(data, mode);
     editor.setModel(newModel);
@@ -395,9 +399,13 @@ SIGNALR CODE
 START
 ******************************************************/
 var suppressModelChangedEvent = false;
+var suppressAjaxRequestUpdate = false;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     var hubProxy = $.connection.editorHub;
+    //user info
+    hubProxy.state.userName = "";
+    hubProxy.state.projectId = projectId.toString();
 
     //a new user has connected to current project
     hubProxy.client.newUserConnected = function (user) {
@@ -427,11 +435,19 @@ $(function () {
     //receive file you previously requested
     hubProxy.client.receiveRequestedFile = function (file, text) {
         console.log('received requested file');
-        for (var i = 0; i < tabInfo.length; i++) {
-            if (tabInfo[i].filePath == file) {
-                suppressModelChangedEvent = true;
-                tabInfo[i].tabModel.setValue(text);
-                editor.setModel(tabInfo[i].tabModel);
+        console.log(text);
+        console.log(editor.getModel());
+        if (editor.getModel() == null) {
+            suppressAjaxRequestUpdate = true;
+            openDataInMonaco(file, true);
+        }
+        else {
+            for (var i = 0; i < tabInfo.length; i++) {
+                if (tabInfo[i].filePath == file) {
+                    suppressModelChangedEvent = true;
+                    tabInfo[i].tabModel.setValue(text);
+                    editor.setModel(tabInfo[i].tabModel);
+                }
             }
         }
     }
@@ -452,7 +468,7 @@ $(function () {
             }
         }
     }
-    // Create a function that the hub can call back to display messages.
+    // Somebody posted a chat message
     hubProxy.client.addNewMessageToPage = function (name, message) {
         // Add the message to the page. 
         $('#discussion').append('<li><strong>' + htmlEncode(name)
@@ -465,7 +481,7 @@ $(function () {
     // Start the connection.
     $.connection.hub.start().done(function () {
         //advertise that you connected
-        hubProxy.server.userConnected($('#displayname').val());
+        hubProxy.server.userConnected();
 
         //a new user has connected, send your data to him
         $(document).on("userconnected", function () {
