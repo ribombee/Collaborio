@@ -38,12 +38,14 @@ namespace VLN2_H27.Hubs
 
         public void pollUsersInProject(string projectId)
         {
+            System.Diagnostics.Debug.WriteLine(Context.ConnectionId);
             Clients.Group(projectId).receiveProjectPoll(Context.ConnectionId);
         }
 
         public void answerProjectPoll(string projectId, string connectionId)
         {
-            Clients.Client(connectionId).userAnsweredPoll(projectId);
+            System.Diagnostics.Debug.WriteLine(connectionId);
+            Clients.Client(connectionId).userAnsweredProjectPoll(projectId);
         }
 
     }

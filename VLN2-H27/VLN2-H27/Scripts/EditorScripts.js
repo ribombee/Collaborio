@@ -547,8 +547,9 @@ $(function () {
         });
 
         //answer project poll
-        $(document).on("projectpollreceived", function (connectionId) {
-            hubProxy.server.answerProjectPoll(projectId, connectionId);
+        $(document).on("projectpollreceived", function (e, connectionId) {
+            console.log("answering project poll to id:" + connectionId);
+            hubProxy.server.answerProjectPoll(projectId.toString(), connectionId);
         });
     });
 });
