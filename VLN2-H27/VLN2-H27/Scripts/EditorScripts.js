@@ -145,7 +145,6 @@ function createNewEditOperation(filePath, startColumn, endColumn, startLineNumbe
 
 //Set language picker dropdown
 function setLanguagePicker(language) {
-    console.log(availableLanguages.indexOf(language));
     $(".language-picker")[0].selectedIndex = availableLanguages.indexOf(language);
 }
 /*****************************************************
@@ -448,7 +447,7 @@ $(function () {
         //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(filePath);
-            if (tab != null);
+            if (tab != null)
             {
                 tab.tabModel.pushEditOperations(null, editOperation)
             }
