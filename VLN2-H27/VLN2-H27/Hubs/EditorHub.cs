@@ -36,5 +36,15 @@ namespace VLN2_H27.Hubs
             Clients.Client(connectionId).receiveRequestedFile(file, text);
         }
 
+        public void pollUsersInProject(string projectId)
+        {
+            Clients.Group(projectId).receiveProjectPoll(Context.ConnectionId);
+        }
+
+        public void answerProjectPoll(string projectId, string connectionId)
+        {
+            Clients.Client(connectionId).userAnsweredPoll(projectId);
+        }
+
     }
 }

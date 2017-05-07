@@ -412,6 +412,7 @@ END
 SIGNALR CODE
 START
 ******************************************************/
+//NOTE - all these event triggers are probably not needed, TODO fix that spaghetti
 var suppressModelChangedEvent = false;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
@@ -486,6 +487,12 @@ $(function () {
             }
         }
     }
+
+    //somebody is polling users in your current project from projects view
+    hubProxy.client.receiveProjectPoll = function (connectionId) {
+        $(document).trigger("projectpollreceived", [connectionId]);
+    }
+
     // Somebody posted a chat message
     hubProxy.client.addNewMessageToPage = function (name, message) {
         // Add the message to the page. 
@@ -537,6 +544,11 @@ $(function () {
             hubProxy.server.sendChat($('#displayname').val(), $('#message').val());
             // Clear text box and reset focus for next comment. 
             $('#message').val('').focus();
+        });
+
+        //answer project poll
+        $(document).on("projectpollreceived", function (connectionId) {
+            hubProxy.server.answerProjectPoll(projectId, connectionId);
         });
     });
 });
