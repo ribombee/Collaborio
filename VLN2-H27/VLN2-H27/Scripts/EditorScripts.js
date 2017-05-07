@@ -92,6 +92,8 @@ function changeTheme(theme) {
 
 //Change monaco editor current document mode/language
 function changeLanguage(mode) {
+    monaco.editor.setModelLanguage(editor.getModel(), mode);
+    /*
     var oldModel = editor.getModel();
     console.log(mode);
     var newModel = monaco.editor.createModel(oldModel.getValue(), mode.modeId);
@@ -99,6 +101,7 @@ function changeLanguage(mode) {
     editor.setModel(newModel);
     //TODO UPDATE TAB MODEL
     oldModel.dispose();
+    */
 }
 
 //returns the name of the language that corresponds to the file extension
