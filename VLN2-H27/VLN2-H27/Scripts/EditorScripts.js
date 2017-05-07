@@ -121,8 +121,9 @@ function openFileInMonaco(file) {
     currentlyOpeningFile = file;
     //Request file from server, so if no other client is working on the file it opens from server.
     requestFileFromServer(file);
-    //trigger requestingfile to get the latest edits of the file from other clients
-    $(document).trigger("requestingfile", [file]);
+    //also request the file from other clients, if request from server finishes first, it overwrites it. server file will not overwrite client file
+    hubProxy.server.requestFile(file);
+    console.log("requesting file: " + file);
 }
 
 //Request file from server
@@ -412,11 +413,11 @@ END
 SIGNALR CODE
 START
 ******************************************************/
-//NOTE - all these event triggers are probably not needed, TODO fix that spaghetti
+var hubProxy;
 var suppressModelChangedEvent = false;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
-    var hubProxy = $.connection.editorHub;
+    hubProxy = $.connection.editorHub;
     //user info
     hubProxy.state.userName = "";
     hubProxy.state.projectId = projectId.toString();
@@ -432,15 +433,13 @@ $(function () {
         console.log('searching for requested file ' + file);
         //its the file youre currently working on
         if (file == currentlyEditingFile) {
-            console.log("its the file currently being edited");
-            console.log(editor.getModel().getValue());
-            $(document).trigger("requestedfilefound", [file, editor.getModel().getValue(), connectionId]);
+            hubProxy.server.sendRequestedFile(file, editor.getModel().getValue(), connectionId);
         }
         //if not, see if its open in a tab
         else {
             var fileTabFound = fileAlreadyOpenInTab(file);
             if (fileTabFound != null) {
-                $(document).trigger("requestedfilefound", [file, fileTabFound.tabModel.getValue(), connectionId]);
+                hubProxy.server.sendRequestedFile(file, fileTabFound.tabModel.getValue(), connectionId);
             }
         }
         //its not the file youre working on and not open in a tab, dont respond.
@@ -490,7 +489,9 @@ $(function () {
 
     //somebody is polling users in your current project from projects view
     hubProxy.client.receiveProjectPoll = function (connectionId) {
-        $(document).trigger("projectpollreceived", [connectionId]);
+        console.log("answering project poll to id:" + connectionId);
+        //answer poll 
+        hubProxy.server.answerProjectPoll(projectId.toString(), connectionId);
     }
 
     // Somebody posted a chat message
@@ -518,18 +519,6 @@ $(function () {
             //TODO
         });
 
-        //requesting a file
-        $(document).on("requestingfile", function (e, file) {
-            hubProxy.server.requestFile(file);
-            console.log("requesting file: " + file);
-        });
-
-        //found previously requested file
-        $(document).on("requestedfilefound", function (e, file, text, connectionId) {
-            hubProxy.server.sendRequestedFile(file, text, connectionId);
-            console.log("found requested file: " + file + " for:" + connectionId);
-        });
-
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
@@ -544,12 +533,6 @@ $(function () {
             hubProxy.server.sendChat($('#displayname').val(), $('#message').val());
             // Clear text box and reset focus for next comment. 
             $('#message').val('').focus();
-        });
-
-        //answer project poll
-        $(document).on("projectpollreceived", function (e, connectionId) {
-            console.log("answering project poll to id:" + connectionId);
-            hubProxy.server.answerProjectPoll(projectId.toString(), connectionId);
         });
     });
 });
