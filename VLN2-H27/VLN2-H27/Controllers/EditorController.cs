@@ -31,9 +31,9 @@ namespace VLN2_H27.Controllers
             ViewBag.projects = queryResult;
             return View();
         }
-        public ActionResult editor()
+        public ActionResult editor(int Id)
         {
-            ViewBag.projectId = 0;
+            ViewBag.projectId = Id;
             return View();
         }
 
@@ -104,14 +104,25 @@ namespace VLN2_H27.Controllers
                 DateAdded = DateTime.Now,
                 LastModified = DateTime.Now,
             };
+            
 
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
 
             db.Projects.Add(newProject);
+
+            Project_Users_Relations relation = new Project_Users_Relations
+            {
+                ProjectId = (from project in db.Projects
+                            orderby project.Id descending
+                            select project.Id).First(),
+                UserId = User.Identity.GetUserId()
+            };
+
+            db.Project_Users_Relations.Add(relation);
             db.SaveChanges();
 
                
-            return View("projects");
+            return RedirectToAction("projects");
         }
     }
 }
