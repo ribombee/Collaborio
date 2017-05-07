@@ -61,8 +61,9 @@ $(document).ready(function () {
     });
 });
 
+//DEPRECATED - ONLY KEEPING THIS AROUND FOR REFERENCE
+//TODO DELETE
 function saveEdit(edits) {
-    
     var sendData = { 'filePath': currentlyEditingFile,
         'startColumn': edits.range.startColumn,
         'endColumn' : edits.range.endColumn,
@@ -82,7 +83,6 @@ function saveEdit(edits) {
         }
     });
 }
-
 
 //Change monaco editor theme
 function changeTheme(theme) {
@@ -119,12 +119,14 @@ function openFileInMonaco(file) {
     var mode = 'javascript';
 
     currentlyOpeningFile = file;
-    //trigger requestingfile so SignalR can handle the rest
-    requestFile(file);
+    //Request file from server, so if no other client is working on the file it opens from server.
+    requestFileFromServer(file);
+    //trigger requestingfile to get the latest edits of the file from other clients
     $(document).trigger("requestingfile", [file]);
 }
 
-function requestFile(file) {
+//Request file from server
+function requestFileFromServer(file) {
     var sendData = {
         'filePath': file,
     };
@@ -144,6 +146,7 @@ function requestFile(file) {
     });
 }
 
+//Open data in monaco
 function openDataInMonaco(data, file, signalR) {
     if (!signalR) {
         if (fileAlreadyOpenInTab(file) != null) {
@@ -159,6 +162,7 @@ function openDataInMonaco(data, file, signalR) {
     addTab(filename, currentlyOpeningFile, newModel);
 }
 
+//create new monaco edit operation from this info.
 function createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
     var line = editor.getPosition();
     var range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
@@ -425,18 +429,20 @@ $(function () {
     //somebody requested a file
     hubProxy.client.userHasRequestedFile = function (file, connectionId) {
         console.log('searching for requested file ' + file);
+        //its the file youre currently working on
         if (file == currentlyEditingFile) {
             console.log("its the file currently being edited");
             console.log(editor.getModel().getValue());
             $(document).trigger("requestedfilefound", [file, editor.getModel().getValue(), connectionId]);
         }
+        //if not, see if its open in a tab
         else {
             var fileTabFound = fileAlreadyOpenInTab(file);
             if (fileTabFound != null) {
                 $(document).trigger("requestedfilefound", [file, fileTabFound.tabModel.getValue(), connectionId]);
             }
         }
-        
+        //its not the file youre working on and not open in a tab, dont respond.
     }
 
     //receive file you previously requested
@@ -444,28 +450,34 @@ $(function () {
         console.log('received requested file');
         console.log(text);
         console.log(editor.getModel());
+        //Dont react to edit events when inserting the new file
         suppressModelChangedEvent = true;
+        //is the editor completely empty? just insert the text and open a new tab
         if (editor.getModel() == null) {
             openDataInMonaco(text, file, true);
         }
         else {
+            //have you already opened the file from server?
             if (currentlyEditingFile == file) {
                 editor.getModel().setValue(text);
             }
+            //you havent opened the file and your editor isnt empty? just insert the text and open a new tab.
             else {
                 openDataInMonaco(text, file, true);
             }
         }
     }
 
-    //somebody updated their editor
+    //somebody made an edit in their editor
     hubProxy.client.updateEditorModel = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
         var editOperation = createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
 
+        //is it the file you're currently working on?
         if (currentlyEditingFile == filePath) {
             suppressModelChangedEvent = true;
             editor.executeEdits("dude", editOperation);
         }
+        //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(filePath);
             if (tab != null);
@@ -567,6 +579,7 @@ function renameFile(file) {
     alert(file + ' would be renamed now');
 }
 
+//Write file on server
 function saveFile(file, text) {
     if (editor == null) {
         return false;
@@ -592,6 +605,7 @@ function saveFile(file, text) {
     });
 }
 
+//Write all currently open files to server
 function saveAllFiles() {
     for (var i = 0; i < tabInfo.length; i++) {
         saveFile(tabInfo[i].filePath, tabInfo[i].tabModel.getValue());
