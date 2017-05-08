@@ -24,7 +24,7 @@ namespace VLN2_H27.Controllers
                               where rel.UserId == userId
                               join pro in db.Projects on rel.ProjectId equals pro.Id
                               select pro;
-            List<Project> projectList = queryResult.ToList();
+            var projectList = queryResult.ToArray();
             Debug.WriteLine("typeOf: " + projectList.GetType());
             ViewBag.projects = projectList;
             return View();
@@ -44,7 +44,6 @@ namespace VLN2_H27.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult getFileValue(string filePath)
         {
             string path = filePath;
@@ -64,7 +63,6 @@ namespace VLN2_H27.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult saveFile(string filePath, string textValue)
         {
             string path = filePath;

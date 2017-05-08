@@ -483,7 +483,7 @@ $(function () {
         initFileTreeContextMenu();
 
         //advertise that you connected
-        hubProxy.server.userConnected($('#displayname').val());
+        hubProxy.server.userConnected(userName);
 
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
