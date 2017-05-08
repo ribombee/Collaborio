@@ -66,21 +66,13 @@
 @Html.Partial("NewProjectPartial")
 
 <div class="flex-grid">
-    @foreach(VLN2_H27.Models.Project p in ViewBag.projects)
+    @foreach (VLN2_H27.Models.Project p in ViewBag.projects)
     {
-        @Html.ActionLink(("My name is" + p.ProjectName), "editor", "Editor", new { @class = "col", id = "project-0", data_editing = 0 })
+        @Html.ActionLink(("Click here to edit " + p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
     }
-    @Html.ActionLink("Click me", "editor", "Editor", new { @class="col", id="project-0", data_editing=0})
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
-    <div class="col">Cell</div>
+
+    @Html.ActionLink("For testing purposes", "editor", "Editor", new { @Id = 0 }, new { @class="col", id="project-0", data_editing=0})
+    
 </div>
 
 @section scripts {

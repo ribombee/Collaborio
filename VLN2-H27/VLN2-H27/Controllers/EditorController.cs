@@ -10,7 +10,6 @@ using VLN2_H27.Models;
 
 namespace VLN2_H27.Controllers
 {
-    
 
     public class EditorController : Controller
     {
@@ -19,22 +18,26 @@ namespace VLN2_H27.Controllers
         public ActionResult projects()
         {
             var userId = User.Identity.GetUserId();
+            //get all projects related to logged in user
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
             var queryResult = from rel in db.Project_Users_Relations
                               where rel.UserId == userId
                               join pro in db.Projects on rel.ProjectId equals pro.Id
                               select pro;
-            foreach(Project p in queryResult)
-            {
-                Debug.WriteLine("Testing: " + p.ProjectName);
-            }
             ViewBag.projects = queryResult;
             return View();
         }
-        public ActionResult editor()
+        public ActionResult editor(int? Id)
         {
-            ViewBag.projectId = 0;
-            return View();
+            if(Id.HasValue)
+            {
+                ViewBag.projectId = Id;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("projects");
+            }
         }
 
         [HttpPost]
@@ -80,21 +83,6 @@ namespace VLN2_H27.Controllers
         public ActionResult createProject(FormCollection data)
         {
             string fileName = data[0];
-            //first we build the folder path as a virtual path
-            var folderPath = "~/FileTree/sample/" + fileName;
-            //then we realize it as a physical path
-            folderPath = Server.MapPath(folderPath);
-
-            if (!Directory.Exists(folderPath))
-            {
-                DirectoryInfo di = Directory.CreateDirectory(folderPath);
-            }
-
-
-            var filePath = "~/FileTree/sample/" + fileName + "/" + fileName + ".cpp";
-            filePath = Server.MapPath(filePath);
-            var text = "cout << \"this is my auto-generated text!\" << endl";
-            System.IO.File.WriteAllText(filePath, text);
 
             //insert the new project into our database
 
@@ -110,8 +98,41 @@ namespace VLN2_H27.Controllers
             db.Projects.Add(newProject);
             db.SaveChanges();
 
-               
-            return View("projects");
+            var tempProject = (from project in db.Projects
+                             where project.ProjectName == newProject.ProjectName
+                             orderby project.DateAdded descending
+                             select project).First();
+            int projectId = tempProject.Id;
+
+
+            Project_Users_Relations relation = new Project_Users_Relations
+            {
+                ProjectId = projectId,
+                UserId = User.Identity.GetUserId()
+            };
+
+            db.Project_Users_Relations.Add(relation);
+            db.SaveChanges();
+
+            //we then create folder structure
+            //we build the folder path as a virtual path
+            var folderPath = "~/UserProjects/" + projectId;
+            //then we realize it as a physical path
+            folderPath = Server.MapPath(folderPath);
+
+            if (!Directory.Exists(folderPath))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(folderPath);
+            }
+
+
+            var filePath = "~/UserProjects/" + projectId + "/" + tempProject.ProjectName + ".cpp";
+            filePath = Server.MapPath(filePath);
+            var text = "cout << \"this is my auto-generated text!\" << endl";
+            System.IO.File.WriteAllText(filePath, text);
+
+
+            return RedirectToAction("projects");
         }
     }
 }
