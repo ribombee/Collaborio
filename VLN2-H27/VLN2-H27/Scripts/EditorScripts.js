@@ -99,7 +99,7 @@ function requestFileFromServer(file) {
 
     $.ajax({
         type: "POST",
-        url: 'getFileValue',
+        url: getFileValueUrl,
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(sendData),
         dataType: "json",
@@ -108,6 +108,8 @@ function requestFileFromServer(file) {
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
+            console.log("why is this horrible thing happening?");
+            alert(status);
         }
     });
 }
@@ -555,7 +557,7 @@ function saveFile(file, text) {
 
     $.ajax({
         type: "POST",
-        url: 'saveFile',
+        url: saveFile,
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(sendData),
         dataType: "json",
