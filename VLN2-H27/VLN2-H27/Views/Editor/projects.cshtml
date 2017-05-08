@@ -36,20 +36,24 @@
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
         text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
+        border: none;
+        outline: none;
     }
 
-        .button span {
+        .button p {
             position: absolute;
             left: 0;
+            top: 0;
             width: 50px;
             background-color: rgba(0,0,0,0.5);
             font-size: 50px;
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
             border-right: 1px solid rgba(0,0,0,0.15);
+            margin: 0px;
         }
 
-        .button:hover span, .button.active span {
+        .button:hover p, .button.active p {
             border-right: 1px solid rgba(0,0,0,0.3);
         }
 
@@ -61,9 +65,7 @@
 
 <h2>Projects</h2>
 
-<!--<div class="container">
-    <a href="#" class="button"><span>＋</span>Add a new project</a>
-</div>-->
+
 
 @Html.Partial("NewProjectPartial")
 
