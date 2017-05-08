@@ -7,19 +7,44 @@
 <!-- TODO PUT STYLES IN CSS SHEET -->
 <style>
     .flex-grid {
+        padding-top: 70px;
         display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
     }
+
+    .flex-grid:after {
+            content: "";
+             flex: auto;
+     }
+
+    .projects-head-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 30px;
+    }
+
+    
+ 
 
     .col {
         display: inline-block;
-        border: 1px solid black;
-        padding: 10px 40px 120px 100px;
+        border: 1px solid lightgrey;
+        padding: 10px 10px 20px 10px;
         width: 22%;
         margin: 10px;
+        border-radius: 5px;
+        text-align: center;
+        height: 150px;
+        width: 140px;
     }
 
     .button {
+        align-self: flex-end;
         display: inline-block;
         height: 50px;
         line-height: 50px;
@@ -31,7 +56,6 @@
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 15px;
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -63,19 +87,13 @@
         }
 </style>
 
-<h2>Projects</h2>
-
-
-
 @Html.Partial("NewProjectPartial")
 
 <div class="flex-grid">
     @foreach (VLN2_H27.Models.Project p in ViewBag.projects)
     {
-        @Html.ActionLink(("Click here to edit " + p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
+        @Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
     }
-
-    @Html.ActionLink("For testing purposes", "editor", "Editor", new { @Id = 0 }, new { @class="col", id="project-0", data_editing=0})
     
 </div>
 
