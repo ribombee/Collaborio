@@ -394,6 +394,9 @@ $(function () {
     //a new user has connected to current project
     hubProxy.client.newUserConnected = function (user) {
         console.log(user + " connected");
+        //display that the user connected in chat
+        $('#discussion').append('<li><i><strong>[' + getTimeStamp() + ']' + htmlEncode(user)
+            + ' connected!</strong></i></li>');
     }
 
     //somebody requested a file
@@ -464,13 +467,8 @@ $(function () {
     // Somebody posted a chat message
     hubProxy.client.addNewMessageToPage = function (name, message) {
         // Add the message to the page. 
-        var currentDate = new Date();
-        var hours = currentDate.getHours(),
-            minutes = currentDate.getMinutes(),
-            seconds = currentDate.getSeconds();
-        var timeStamp = hours + ':' + minutes + ':' + seconds;
-        $('#discussion').append('<li><i>' + htmlEncode(timeStamp) + '  </i><strong>' + htmlEncode(name)
-            + '</strong>: ' + htmlEncode(message) + '</li>');
+        $('#discussion').append('<li><strong>[' + htmlEncode(getTimeStamp()) + '] ' + htmlEncode(name)
+            + ':</strong> ' + htmlEncode(message) + '</li>');
     };
 
     // Get the user name and store it to prepend to messages.
@@ -483,7 +481,7 @@ $(function () {
         initFileTreeContextMenu();
 
         //advertise that you connected
-        hubProxy.server.userConnected();
+        hubProxy.server.userConnected($('#displayname').val());
 
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
@@ -493,13 +491,16 @@ $(function () {
             }
             hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
         });
-        
-        //Send chat message
-        $('#sendmessage').click(function () {
-            hubProxy.server.sendChat($('#displayname').val(), $('#message').val(), projectId.toString());
-            // Clear text box and reset focus for next comment. 
-            $('#message').val('').focus();
+
+        //Send chat message on enter
+        $('#message').keydown(function (event) {
+            if (event.keyCode == 13) {
+                hubProxy.server.sendChat($('#displayname').val(), $('#message').val(), projectId.toString());
+                $('#message').val('');
+                return false;
+            }
         });
+
     });
 });
 // This optional function html-encodes messages for display in the page.
@@ -572,6 +573,21 @@ function saveAllFiles() {
     for (var i = 0; i < tabInfo.length; i++) {
         saveFile(tabInfo[i].filePath, tabInfo[i].tabModel.getValue());
     }
+}
+
+function getTimeStamp() {
+    var currentDate = new Date();
+    var hours = currentDate.getHours(),
+        minutes = currentDate.getMinutes()
+
+    if (hours < 10) {
+        hours = '0' + hours;
+    }
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+
+    return hours + ':' + minutes;
 }
 
 /*****************************************************

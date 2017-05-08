@@ -20,10 +20,10 @@ namespace VLN2_H27.Hubs
             Clients.OthersInGroup(Clients.Caller.projectId).updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
         }
 
-        public async Task userConnected()
+        public async Task userConnected(string userName)
         {
             await Groups.Add(Context.ConnectionId, Clients.Caller.projectId);
-            Clients.OthersInGroup(Clients.CallerState.projectId).newUserConnected(Clients.CallerState.userName);
+            Clients.OthersInGroup(Clients.CallerState.projectId).newUserConnected(userName);
         }
 
         public void RequestFile(string file)

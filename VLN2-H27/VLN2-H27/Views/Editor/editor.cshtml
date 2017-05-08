@@ -57,11 +57,10 @@
         <!-- SignalR Chat -->
         <h2>Chat</h2>
         <div id="chatbox" class="chat">
-            <div id="discussionbox" style="height:300px;width:240px;border:1px solid grey;font:15px/20px Georgia, Garamond, Serif;overflow-y:auto">
+            <div id="discussionbox" style="height:300px;width:240px;border:1px solid grey;font:15px/20px Georgia, Garamond, Serif;overflow-y:auto;overflow-x:hidden;word-wrap:break-word">
                 <ul id="discussion" class="list-unstyled"></ul>
             </div>
-            <input type="text" id="message" />
-            <input type="button" id="sendmessage" value="Send" />
+            <textarea id="message" placeholder="Type your message" style="resize:none"></textarea>
             <input type="hidden" id="displayname" />
         </div>
 
