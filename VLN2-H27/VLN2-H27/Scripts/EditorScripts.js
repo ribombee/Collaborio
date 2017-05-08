@@ -550,10 +550,7 @@ $(function () {
         });
 
         //Update editor on intervals
-        var editorUpdateInterval = setInterval(function () {
-            hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
-            editList = [];
-        }, 1000);
+        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, 1000);
 
     });
 });
@@ -561,6 +558,11 @@ $(function () {
 function htmlEncode(value) {
     var encodedValue = $('<div />').text(value).html();
     return encodedValue;
+}
+
+function onUpdateInterval() {
+    hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
+    editList = [];
 }
 
 
