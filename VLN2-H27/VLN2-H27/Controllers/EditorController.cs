@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using VLN2_H27.Models;
 
 namespace VLN2_H27.Controllers
@@ -24,9 +25,11 @@ namespace VLN2_H27.Controllers
                               where rel.UserId == userId
                               join pro in db.Projects on rel.ProjectId equals pro.Id
                               select pro;
-            List<Project> projectList = queryResult.ToList();
-            Debug.WriteLine("typeOf: " + projectList.GetType());
-            ViewBag.projects = projectList;
+            ViewBag.projects = queryResult;
+            int[] idList = queryResult.Select(x => x.Id).ToArray();
+            var serializer = new JavaScriptSerializer();
+            var json = serializer.Serialize(idList);
+            ViewBag.projectIdsJson = json;
             return View();
         }
         public ActionResult editor(int? Id)
@@ -59,7 +62,7 @@ namespace VLN2_H27.Controllers
             {
                 Debug.WriteLine("File read error");
             }
-            
+
             return Json(fileText);
         }
 
@@ -71,7 +74,7 @@ namespace VLN2_H27.Controllers
             path = Server.MapPath(path);
             Debug.WriteLine(textValue);
             try
-            { 
+            {
                 System.IO.File.WriteAllText(path, textValue);
             }
             catch
@@ -102,9 +105,9 @@ namespace VLN2_H27.Controllers
 
             //get project Id from database
             var tempProject = (from project in db.Projects
-                             where project.ProjectName == newProject.ProjectName
-                             orderby project.DateAdded descending
-                             select project).First();
+                               where project.ProjectName == newProject.ProjectName
+                               orderby project.DateAdded descending
+                               select project).First();
             int projectId = tempProject.Id;
 
 

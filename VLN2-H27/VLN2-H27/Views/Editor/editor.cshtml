@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "editor";
     int projectId = ViewBag.projectId;
+    string userName = ViewBag.UserName;
 }
 
 <head>
@@ -82,6 +83,7 @@
 
         <!-- Declaring global variables from viewbag-->
         <script> var projectId = @(projectId),
+            userName = '@(userName)',
             baseUrl = '@Url.Content("~")',
             getFileValueUrl = '@Url.Action("getFileValue", "Editor")',
             saveFileUrl = '@Url.Action("saveFile", "Editor")'; </script>
