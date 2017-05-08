@@ -34,6 +34,8 @@ namespace VLN2_H27.Controllers
         }
         public ActionResult editor(int? Id)
         {
+            IEnumerable<SelectListItem> emptyList = new SelectListItem[] { };
+            ViewBag.emptyList = emptyList;
             ViewBag.UserName = User.Identity.GetUserName();
             if (Id.HasValue)
             {
@@ -138,7 +140,18 @@ namespace VLN2_H27.Controllers
             System.IO.File.WriteAllText(filePath, text);
 
 
-            return RedirectToAction("projects");
+            return RedirectToAction("editor", new { Id = projectId });
+        }
+
+        [HttpPost]
+        public ActionResult createFile(FormCollection data)
+        {
+            Debug.WriteLine(data[1]);
+            var filePath = "~/UserProjects/" + data[0] + "/" + data[1] + data[2];
+            filePath = Server.MapPath(filePath);
+            var text = "cout << \"this is my auto-generated text!\" << endl";
+            System.IO.File.WriteAllText(filePath, text);
+            return RedirectToAction("editor", new { Id = data[0] });
         }
 
         //TODO:  delete if not used EITHER this or the one below

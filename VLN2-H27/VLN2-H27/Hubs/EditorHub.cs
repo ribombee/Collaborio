@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace VLN2_H27.Hubs
 {
@@ -18,6 +19,11 @@ namespace VLN2_H27.Hubs
         public void SendEditorUpdate(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
         {
             Clients.OthersInGroup(Clients.Caller.projectId).updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+        }
+
+        public void SendEditorUpdates(List<string> filePaths, List<editOperation> editOperations)
+        {
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdateSet(filePaths, editOperations);
         }
 
         public async Task userConnected(string userName)
@@ -51,5 +57,44 @@ namespace VLN2_H27.Hubs
             Clients.Client(connectionId).userAnsweredProjectPoll(projectId);
         }
 
+    }
+
+    public class range
+    {
+        [JsonProperty("endColumn")]
+        public int endColumn { get; set; }
+
+        [JsonProperty("endLineNumber")]
+        public int endLineNumber { get; set; }
+
+        [JsonProperty("startColumn")]
+        public int startColumn { get; set; }
+
+        [JsonProperty("startLineNumber")]
+        public int startLineNumber { get; set; }
+    }
+
+    public class editOperation
+    {
+        [JsonProperty("eol")]
+        public string eol { get; set; }
+
+        [JsonProperty("isRedoing")]
+        public Boolean isRedoing { get; set; }
+
+        [JsonProperty("isUndoing")]
+        public Boolean isUndoing { get; set; }
+
+        [JsonProperty("range")]
+        public range editRange { get; set; }
+
+        [JsonProperty("rangeLength")]
+        public int rangeLength { get; set; }
+
+        [JsonProperty("text")]
+        public string text { get; set; }
+
+        [JsonProperty("versionId")]
+        public string versionId { get; set; }
     }
 }

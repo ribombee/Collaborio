@@ -8,6 +8,7 @@ var editor = null;
 var currentlyEditingFile = "";
 //available languages in monaco
 var availableLanguages = [];
+var languageExtensions = []
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
@@ -24,20 +25,22 @@ $(document).ready(function () {
             });
 
         //Get available programming languages
-        availableLanguages = monaco.languages.getLanguages().map(function(language) { return language.id });
-        availableLanguages.sort();
+        availableLanguages = monaco.languages.getLanguages().map(function (language) { return language.id });
+        languageExtensions = monaco.languages.getLanguages().map(function (language) { return language.extensions[0]})
+        //availableLanguages.sort();
 
         //Populate language list
         for (var i = 0; i < availableLanguages.length; i++) {
             var o = document.createElement('option');
             o.textContent = availableLanguages[i];
+            o.value = languageExtensions[i];
             $(".language-picker").append(o);
         }
 
         //change language with language picker
-        $(".language-picker").change(function () {
+        /*$(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
-        });
+        });*/
 
         //change theme with theme picker
         $(".theme-picker").change(function () {
@@ -404,6 +407,10 @@ START
 ******************************************************/
 var hubProxy;
 var suppressModelChangedEvent = false;
+var editList = [];
+var editFileList = [];
+
+const UPDATE_INTERVAL_SECONDS = 1;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
@@ -477,6 +484,30 @@ $(function () {
         }
     }
 
+    //someboy sent a set of updates
+    hubProxy.client.receiveUpdateSet = function (filePaths, editOperations) {
+        for (var i = 0; i < filePaths.length; i++) {
+            var editOperation = createNewEditOperation(filePaths[i], editOperations[i].range.startColumn,
+                    editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
+                    editOperations[i].text);
+            
+            //is it the file you're currently working on?
+            if (currentlyEditingFile == filePaths[i]) {
+                suppressModelChangedEvent = true;
+                editor.executeEdits(userName, editOperation);
+            }
+                //or is it in a tab?
+            else {
+                var tab = fileAlreadyOpenInTab(filePaths[i]);
+                if (tab != null) {
+                    for (var i = 0; i < editOperations.length; i++) {
+                        tab.tabModel.pushEditOperations(null, editOperation);
+                    }
+                }
+            }
+        }
+    }
+            
     //somebody is polling users in your current project from projects view
     hubProxy.client.receiveProjectPoll = function (connectionId) {
         console.log("answering project poll to id:" + connectionId);
@@ -506,7 +537,9 @@ $(function () {
                 suppressModelChangedEvent = false;
                 return;
             }
-            hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
+
+            editList.push(e);
+            editFileList.push(currentlyEditingFile);
         });
 
         //Send chat message on enter
@@ -518,12 +551,23 @@ $(function () {
             }
         });
 
+        //Update editor on intervals
+        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS*1000);
+
     });
 });
 // This optional function html-encodes messages for display in the page.
 function htmlEncode(value) {
     var encodedValue = $('<div />').text(value).html();
     return encodedValue;
+}
+
+function onUpdateInterval() {
+    if (editList.length > 0) {
+        hubProxy.server.sendEditorUpdates(editFileList, editList);
+        editList = [];
+        editFileList = [];
+    }
 }
 
 
