@@ -81,7 +81,9 @@
                     <div class="modal-body">
                         @using (Html.BeginForm("createFile", "Editor", FormMethod.Post))
                         {
-                            @Html.TextBox("test")
+                            @Html.Hidden("projectId", projectId)
+                            @Html.TextBox("fileName")
+                            @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" })
                             <input type="submit" value="Plumbus" class="button" />
                         }
                     </div>

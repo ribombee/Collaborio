@@ -1,29 +1,15 @@
-ddddbasdaasdsdfdddd
-
-sdfsdfsd
-
-debageasd
-
-cccccccccc testbulk sdfsdfsdfsdfdsfretgott test
-
-dsfdsfdsfsdf
-
-adsadsadasdsa
-
-asdasdsa
-sadad
-
-sdfdsfs asd
-sdfsd
+ldjfdsljflkdsjglkjfdslgkjdsflkgjsfdlkj
 
 
-fdgdfgsdfgdfg
-dsfdsfds
-fak
+ég er maður fólksins
 
-sdfsd
-
-adsadasdasdsasadas
+mér finnst gott að borða úldið kjöt en bara með kokteilsósu
 
 
-cccccccccccccccccccccccc
+ER EITTHVAÐ AÐ ÞV'I?
+
+dsaljkfhasdlkjfhksajdghkfsdlhgkjsdfhgkjsfdhgklfsdh #include kokteilsósu
+#include kokteilsósu
+lksglkdhgkjhsdkfjghdsfkjghdsfkljghkdsfljhglksdjhglksdfjhglkdsfjhgkldsjfhglkjdsfhglkjdsfhgkljsfdhglkjsdhfgkljsdhflkgjhdsfkljghdsfkljghsdlkfjghfdlksjhgkldsfjhgkldsfjhgsdlkjfhgkldfjh
+asdasdasdfasdfsadfasdfsadfsadfsdafasdfasdfsadfdsafsadfsadfasdfasdfasdfsdafasdfsadfsadfasdfsad
+FARTFARTAFAERTAFARTFARTSAFARTFARERSADAF
