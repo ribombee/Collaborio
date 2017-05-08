@@ -8,6 +8,7 @@ var editor = null;
 var currentlyEditingFile = "";
 //available languages in monaco
 var availableLanguages = [];
+var languageExtensions = []
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
@@ -24,20 +25,22 @@ $(document).ready(function () {
             });
 
         //Get available programming languages
-        availableLanguages = monaco.languages.getLanguages().map(function(language) { return language.id });
-        availableLanguages.sort();
+        availableLanguages = monaco.languages.getLanguages().map(function (language) { return language.id });
+        languageExtensions = monaco.languages.getLanguages().map(function (language) { return language.extensions[0]})
+        //availableLanguages.sort();
 
         //Populate language list
         for (var i = 0; i < availableLanguages.length; i++) {
             var o = document.createElement('option');
             o.textContent = availableLanguages[i];
+            o.value = languageExtensions[i];
             $(".language-picker").append(o);
         }
 
         //change language with language picker
-        $(".language-picker").change(function () {
+        /*$(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
-        });
+        });*/
 
         //change theme with theme picker
         $(".theme-picker").change(function () {
