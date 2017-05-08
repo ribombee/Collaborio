@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using VLN2_H27.Models;
 
 namespace VLN2_H27.Controllers
@@ -24,9 +25,17 @@ namespace VLN2_H27.Controllers
                               where rel.UserId == userId
                               join pro in db.Projects on rel.ProjectId equals pro.Id
                               select pro;
+<<<<<<< HEAD
             var projectList = queryResult.ToArray();
             Debug.WriteLine("typeOf: " + projectList.GetType());
             ViewBag.projects = projectList;
+=======
+            ViewBag.projects = queryResult;
+            int[] idList = queryResult.Select(x => x.Id).ToArray();
+            var serializer = new JavaScriptSerializer();
+            var json = serializer.Serialize(idList);
+            ViewBag.projectIdsJson = json;
+>>>>>>> 1c10eee3ed9d688971a8247c640cbb1deeae352e
             return View();
         }
         public ActionResult editor(int? Id)
