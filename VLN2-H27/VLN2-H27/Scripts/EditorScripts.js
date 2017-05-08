@@ -447,7 +447,7 @@ $(function () {
         //is it the file you're currently working on?
         if (currentlyEditingFile == filePath) {
             suppressModelChangedEvent = true;
-            editor.executeEdits("dude", editOperation);
+            editor.executeEdits(userName, editOperation);
         }
         //or is it in a tab?
         else {
@@ -474,7 +474,7 @@ $(function () {
     };
 
     // Get the user name and store it to prepend to messages.
-    $('#displayname').val(prompt('Enter your name:', ''));
+    //$('#displayname').val(prompt('Enter your name:', ''));
 
     // Start the connection.
     $.connection.hub.start().done(function () {
@@ -497,7 +497,7 @@ $(function () {
         //Send chat message on enter
         $('#message').keydown(function (event) {
             if (event.keyCode == 13) {
-                hubProxy.server.sendChat($('#displayname').val(), $('#message').val(), projectId.toString());
+                hubProxy.server.sendChat(userName, $('#message').val(), projectId.toString());
                 $('#message').val('');
                 return false;
             }
