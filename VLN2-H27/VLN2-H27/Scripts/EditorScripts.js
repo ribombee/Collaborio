@@ -34,14 +34,24 @@ $(document).ready(function () {
             $(".language-picker").append(o);
         }
 
+        //change language with language picker
         $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
         });
 
-
+        //change theme with theme picker
         $(".theme-picker").change(function () {
+            //create cookie for new theme setting
+            setCookie('theme', this.selectedIndex, 100);
             changeTheme(this.selectedIndex);
         });
+
+        var lastTheme = getCookie("theme");
+        if (lastTheme != "") {
+            lastTheme = parseInt(lastTheme);
+            changeTheme(lastTheme);
+            setThemePicker(lastTheme);
+        }
         
     });
 });
@@ -148,6 +158,11 @@ function createNewEditOperation(filePath, startColumn, endColumn, startLineNumbe
 //Set language picker dropdown
 function setLanguagePicker(language) {
     $(".language-picker")[0].selectedIndex = availableLanguages.indexOf(language);
+}
+
+//Set theme picker dropdown
+function setThemePicker(theme) {
+    $(".theme-picker")[0].selectedIndex = theme;
 }
 /*****************************************************
 MONACO EDITOR SPECIFIC CODE
@@ -595,6 +610,20 @@ function getTimeStamp() {
 //save all files on window close
 window.onbeforeunload = function () {
     saveAllFiles();
+}
+
+//get preference from cookie
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function setCookie(attribute, value, exdays) {
+    var date = new Date();
+    date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + date.toUTCString();
+    document.cookie = attribute + "=" + value + ";" + expires + ";path=/";
 }
 
 /*****************************************************
