@@ -7,29 +7,36 @@
 <!-- TODO PUT STYLES IN CSS SHEET -->
 <style>
     .flex-grid {
+        overflow: hidden;
         padding-top: 70px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
+        display: inline-block;
     }
-
-    .flex-grid:after {
-            content: "";
-             flex: auto;
-     }
 
     .projects-head-container {
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         padding-top: 30px;
+        padding-left: 0px;
+        padding-right: 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    
- 
+    #empty-div {
+        flex: 0.9;
+    }
+
+    /*.projects-head-container h2 {
+        padding-left: 0px;
+        padding-right: 600px;
+        margin-right: 0px;
+        display: inline-block;
+    }
+
+    .projects-head-container button {
+        display: inline-block
+    }*/
+
 
     .col {
         display: inline-block;
@@ -40,11 +47,14 @@
         border-radius: 5px;
         text-align: center;
         height: 150px;
-        width: 140px;
+        flex: 1 0 200px;
+    }
+
+    .col:before, .col:after {
+        box-sizing: border-box;
     }
 
     .button {
-        align-self: flex-end;
         display: inline-block;
         height: 50px;
         line-height: 50px;
@@ -94,7 +104,7 @@
     {
         @Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
     }
-    
+
 </div>
 
 @section scripts {
