@@ -477,6 +477,32 @@ $(function () {
         }
     }
 
+    //someboy sent a set of updates
+    hubProxy.client.receiveUpdateSet = function (filePath, editOperations) {
+        //is it the file you're currently working on?
+        if (currentlyEditingFile == filePath) {
+            for (var i = 0; i < editOperations.length; i++) {
+                var editOperation = createNewEditOperation(filePath, editOperations[i].range.startColumn,
+                    editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
+                    editOperations[i].text);
+                suppressModelChangedEvent = true;
+                editor.executeEdits(userName, editOperation);
+            }
+        }
+        //or is it in a tab?
+        else {
+            var tab = fileAlreadyOpenInTab(filePath);
+            if (tab != null) {
+                for (var i = 0; i < editOperations.length; i++) {
+                    var editOperation = createNewEditOperation(filePath, editOperations[i].range.startColumn,
+                        editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
+                        editOperations[i].text);
+                    tab.tabModel.pushEditOperations(null, editOperation);
+                }
+            }
+        }
+    }
+
     //somebody is polling users in your current project from projects view
     hubProxy.client.receiveProjectPoll = function (connectionId) {
         console.log("answering project poll to id:" + connectionId);
@@ -501,12 +527,17 @@ $(function () {
         hubProxy.server.userConnected(userName);
 
         //Editor model changed
+        var editList = [];
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
                 suppressModelChangedEvent = false;
                 return;
             }
-            hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
+            editList.push(e);
+
+            //hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
+
+            //hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
         });
 
         //Send chat message on enter
@@ -517,6 +548,12 @@ $(function () {
                 return false;
             }
         });
+
+        //Update editor on intervals
+        var editorUpdateInterval = setInterval(function () {
+            hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
+            editList = [];
+        }, 1000);
 
     });
 });
