@@ -6,22 +6,8 @@ cccccccccc testbulk sdfsdfsdfsdfdsfretgott test
 
 dsfdsfdsfsdf
 
-<<<<<<< HEAD
-adsadsadasdsa
-
-asdasdsa
-sadad
-
-sdfdsfs asd
-sdfsd
 
 
-fdgdfgsdfgdfg
-dsfdsfds
-=======
-
-
->>>>>>> 9c029f8bda581dfb231f86c661b0d32ddb520200
 fak
 Car car = new Car;
 
@@ -44,10 +30,13 @@ hello world i'm fagor the destroyer
 
 
 cccccccccccccccccccccccc
+<<<<<<< HEAD
 
 sdfsd
 
 adsadasdasdsasadas
+=======
+>>>>>>> 9c029f8bda581dfb231f86c661b0d32ddb520200
 
 
 jfsldjgldf-jigldfklljkasdjljhallolkjlfsdlajflsajf
