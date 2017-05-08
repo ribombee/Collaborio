@@ -404,6 +404,7 @@ START
 ******************************************************/
 var hubProxy;
 var suppressModelChangedEvent = false;
+var editList = [];
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
@@ -527,7 +528,6 @@ $(function () {
         hubProxy.server.userConnected(userName);
 
         //Editor model changed
-        var editList = [];
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
                 suppressModelChangedEvent = false;
