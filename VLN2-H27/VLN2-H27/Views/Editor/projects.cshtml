@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "projects";
     var projects = ViewBag.projects;
+    var projectIdsJson = ViewBag.projectIdsJson;
 }
 
 <!-- TODO PUT STYLES IN CSS SHEET -->
@@ -83,7 +84,8 @@
 <script src="~/signalr/hubs"></script>
 <!-- Declaring global variables from viewbag-->
 <script>
-    var projects = @(projects);
+    var projects = @(projectIdsJson);
+    alert(typeof projects);
 </script>
 <!-- JS CODE GOES HERE -->
 <script src="../../Scripts/ProjectsScripts.js" type="text/javascript"></script>
