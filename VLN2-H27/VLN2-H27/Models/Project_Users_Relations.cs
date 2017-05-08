@@ -17,5 +17,6 @@ namespace VLN2_H27.Models
         public int Id { get; set; }
         public int ProjectId { get; set; }
         public string UserId { get; set; }
+        public bool EditPermission { get; set; }
     }
 }

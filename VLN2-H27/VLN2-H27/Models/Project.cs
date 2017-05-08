@@ -11,11 +11,9 @@ namespace VLN2_H27.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class Project
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string ProjectName { get; set; }
         public System.DateTime DateAdded { get; set; }

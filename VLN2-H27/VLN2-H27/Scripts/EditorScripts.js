@@ -626,6 +626,43 @@ function setCookie(attribute, value, exdays) {
     document.cookie = attribute + "=" + value + ";" + expires + ";path=/";
 }
 
+function addUserToProject(projectId, user, editPermission)
+{
+    var sendData = {
+        'projectId': projectId,
+        'userName': user,
+        'permission': editPermission
+    }
+
+    $.ajax({
+        type: "POST",
+        url: addUserUrl,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            console.log(file + ' saved');
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+}
+
+$('#addUsers').click(function () {
+
+    //THIS IS HARDCODED TEST DATA
+    var user1 = prompt("Enter the first email", "test@test.hello");
+    var user2 = prompt("Enter the second email", "test@test.hello");
+    var user3 = prompt("Enter the first email", "test@test.hello");
+
+    addUserToProject(projectId, user1, 1);
+    addUserToProject(projectId, user2, 1);
+    addUserToProject(projectId, user3, 0);
+});
+
+
+
 /*****************************************************
 MISC CODE
 END
