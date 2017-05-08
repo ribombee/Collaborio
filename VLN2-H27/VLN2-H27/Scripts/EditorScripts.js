@@ -254,9 +254,10 @@ var tabs = $("#tabs").tabs();
 $(document).ready(function() {
     // Close icon: removing the tab on click
     tabs.on("click", "span.ui-icon-close", function () {
+        var closeTabFile = currentlyEditingFile;
         var panelId = $(this).closest("li").remove().attr("aria-controls");
         $("#" + panelId).remove();
-        tabRemovalCleanup(panelId);
+        tabRemovalCleanup(panelId, closeTabFile);
         tabs.tabs("refresh");
     });
 
@@ -362,7 +363,7 @@ function tabIdToIndex(tabId) {
 }
 
 //Cleanup after closing a tab
-function tabRemovalCleanup(tabId) {
+function tabRemovalCleanup(tabId, closeTabFile) {
     //find editor model and remove from tabInfo
     var oldModel;
     for (i = 0; i < tabInfo.length; i++) {
@@ -371,6 +372,8 @@ function tabRemovalCleanup(tabId) {
             tabInfo.splice(i, 1);
         }
     }
+    //save file
+    saveFile(closeTabFile, oldModel.getValue());
 
     //dispose of editor model
     oldModel.dispose();
@@ -390,7 +393,7 @@ $(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
     //user info
-    hubProxy.state.userName = "";
+    hubProxy.state.userName = userName;
     hubProxy.state.projectId = projectId.toString();
 
     //a new user has connected to current project
@@ -473,9 +476,6 @@ $(function () {
             + ':</strong> ' + htmlEncode(message) + '</li>');
     };
 
-    // Get the user name and store it to prepend to messages.
-    //$('#displayname').val(prompt('Enter your name:', ''));
-
     // Start the connection.
     $.connection.hub.start().done(function () {
         //Initialize things
@@ -557,7 +557,7 @@ function saveFile(file, text) {
 
     $.ajax({
         type: "POST",
-        url: saveFile,
+        url: saveFileUrl,
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(sendData),
         dataType: "json",
@@ -590,6 +590,11 @@ function getTimeStamp() {
     }
 
     return hours + ':' + minutes;
+}
+
+//save all files on window close
+window.onbeforeunload = function () {
+    saveAllFiles();
 }
 
 /*****************************************************
