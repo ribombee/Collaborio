@@ -138,7 +138,7 @@ namespace VLN2_H27.Controllers
             System.IO.File.WriteAllText(filePath, text);
 
 
-            return RedirectToAction("projects");
+            return RedirectToAction("editor", new { Id = projectId });
         }
     }
 }
