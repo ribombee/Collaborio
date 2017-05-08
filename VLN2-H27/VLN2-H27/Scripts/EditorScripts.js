@@ -405,6 +405,9 @@ START
 var hubProxy;
 var suppressModelChangedEvent = false;
 var editList = [];
+var editFileList = [];
+
+const UPDATE_INTERVAL_SECONDS = 1;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
@@ -479,31 +482,29 @@ $(function () {
     }
 
     //someboy sent a set of updates
-    hubProxy.client.receiveUpdateSet = function (filePath, editOperations) {
-        //is it the file you're currently working on?
-        if (currentlyEditingFile == filePath) {
-            for (var i = 0; i < editOperations.length; i++) {
-                var editOperation = createNewEditOperation(filePath, editOperations[i].range.startColumn,
+    hubProxy.client.receiveUpdateSet = function (filePaths, editOperations) {
+        for (var i = 0; i < filePaths.length; i++) {
+            var editOperation = createNewEditOperation(filePaths[i], editOperations[i].range.startColumn,
                     editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
                     editOperations[i].text);
+            
+            //is it the file you're currently working on?
+            if (currentlyEditingFile == filePaths[i]) {
                 suppressModelChangedEvent = true;
                 editor.executeEdits(userName, editOperation);
             }
-        }
-        //or is it in a tab?
-        else {
-            var tab = fileAlreadyOpenInTab(filePath);
-            if (tab != null) {
-                for (var i = 0; i < editOperations.length; i++) {
-                    var editOperation = createNewEditOperation(filePath, editOperations[i].range.startColumn,
-                        editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
-                        editOperations[i].text);
-                    tab.tabModel.pushEditOperations(null, editOperation);
+                //or is it in a tab?
+            else {
+                var tab = fileAlreadyOpenInTab(filePaths[i]);
+                if (tab != null) {
+                    for (var i = 0; i < editOperations.length; i++) {
+                        tab.tabModel.pushEditOperations(null, editOperation);
+                    }
                 }
             }
         }
     }
-
+            
     //somebody is polling users in your current project from projects view
     hubProxy.client.receiveProjectPoll = function (connectionId) {
         console.log("answering project poll to id:" + connectionId);
@@ -533,11 +534,9 @@ $(function () {
                 suppressModelChangedEvent = false;
                 return;
             }
+
             editList.push(e);
-
-            //hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
-
-            //hubProxy.server.sendEditorUpdate(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber, e.text);
+            editFileList.push(currentlyEditingFile);
         });
 
         //Send chat message on enter
@@ -550,7 +549,7 @@ $(function () {
         });
 
         //Update editor on intervals
-        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, 1000);
+        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS*1000);
 
     });
 });
@@ -561,8 +560,11 @@ function htmlEncode(value) {
 }
 
 function onUpdateInterval() {
-    hubProxy.server.sendEditorUpdates(currentlyEditingFile, editList);
-    editList = [];
+    if (editList.length > 0) {
+        hubProxy.server.sendEditorUpdates(editFileList, editList);
+        editList = [];
+        editFileList = [];
+    }
 }
 
 

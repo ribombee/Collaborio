@@ -21,9 +21,9 @@ namespace VLN2_H27.Hubs
             Clients.OthersInGroup(Clients.Caller.projectId).updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
         }
 
-        public void SendEditorUpdates(string filePath, List<editOperation> editOperations)
+        public void SendEditorUpdates(List<string> filePaths, List<editOperation> editOperations)
         {
-            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdateSet(filePath, editOperations);
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdateSet(filePaths, editOperations);
         }
 
         public async Task userConnected(string userName)
