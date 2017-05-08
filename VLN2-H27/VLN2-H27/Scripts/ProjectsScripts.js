@@ -17,7 +17,7 @@ $(function () {
     $.connection.hub.start().done(function () {
         console.log("connected!");
         //Poll users in projects to see how many are working in each project
-        hubProxy.server.pollUsersInProject("0");
+        hubProxy.server.pollUsersInProjects();
     });
 });
 /*****************************************************
