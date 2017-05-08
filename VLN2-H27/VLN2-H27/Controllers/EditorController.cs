@@ -10,7 +10,7 @@ using VLN2_H27.Models;
 
 namespace VLN2_H27.Controllers
 {
-
+    [Authorize]
     public class EditorController : Controller
     {
 
@@ -24,12 +24,15 @@ namespace VLN2_H27.Controllers
                               where rel.UserId == userId
                               join pro in db.Projects on rel.ProjectId equals pro.Id
                               select pro;
-            ViewBag.projects = queryResult;
+            List<Project> projectList = queryResult.ToList();
+            Debug.WriteLine("typeOf: " + projectList.GetType());
+            ViewBag.projects = projectList;
             return View();
         }
         public ActionResult editor(int? Id)
         {
-            if(Id.HasValue)
+            ViewBag.UserName = User.Identity.GetUserName();
+            if (Id.HasValue)
             {
                 ViewBag.projectId = Id;
                 return View();
@@ -85,7 +88,6 @@ namespace VLN2_H27.Controllers
             string fileName = data[0];
 
             //insert the new project into our database
-
             Project newProject = new Project
             {
                 ProjectName = fileName,
@@ -98,6 +100,7 @@ namespace VLN2_H27.Controllers
             db.Projects.Add(newProject);
             db.SaveChanges();
 
+            //get project Id from database
             var tempProject = (from project in db.Projects
                              where project.ProjectName == newProject.ProjectName
                              orderby project.DateAdded descending
