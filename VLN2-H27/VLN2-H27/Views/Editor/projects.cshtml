@@ -7,17 +7,18 @@
 <!-- TODO PUT STYLES IN CSS SHEET -->
 <style>
     #projects-body {
-        background-color: lightsteelblue;
+        background-color: rgb(221,221,221);
     }
+
     .flex-grid {
         display: flex;
         flex-flow: row wrap;
-        justify-content: space-around;
+        justify-content: space-between;
     }
 
     .flex-grid:after {
         content: "";
-        flex: ;
+        flex: 1;
     }
 
     .projects-head-container {
@@ -37,14 +38,14 @@
 
     .col {
         display: inline-block;
-        border: 2px groove lightgrey;
+        border: 2px groove rgb(220, 121, 114);
         padding: 10px 10px 20px 10px;
         width: 200px;
         border-radius: 5px;
         text-align: center;
         height: 220px;
         margin-bottom: 20px;
-        background-color: white;
+        background-color: rgb(240,141,134);
         -o-transition:.5s;
         -moz-transition:.5s;
         -webkit-transition:.5s;
@@ -53,7 +54,7 @@
     }
 
     .col hr {
-        border: 1px solid lightgrey;
+        border: 1px solid rgb(220, 121, 114);
         margin-top: 15px;
     }
 
@@ -64,11 +65,11 @@
 
     .project-info {
         text-align: left;
-        color: grey;
+        color: rgb(77, 77, 77);
     }
 
     #col:hover {
-        background-color: gainsboro;
+        background-color: rgb(230, 131, 124);
     }
 
     .col a:hover {
@@ -100,7 +101,7 @@
         padding-right: 30px;
         padding-left: 70px;
         position: relative;
-        background-color: rgb(41,127,184);
+        background-color: rgb(166,213,225);
         color: rgb(255,255,255);
         text-decoration: none;
         text-transform: uppercase;
@@ -108,8 +109,8 @@
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
-        text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
-        border: none;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        border: 1px solid rgb(10, 119, 148);
         outline: none;
     }
 
@@ -117,22 +118,40 @@
             position: absolute;
             left: 0;
             top: 0;
+            bottom: 0;
             width: 50px;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgb(20, 129, 158);
             font-size: 50px;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
             border-right: 1px solid rgba(0,0,0,0.15);
             margin: 0px;
         }
 
+        .button:hover {
+            background-color: rgb(156, 203, 215);
+        }
+
         .button:hover p, .button.active p {
             border-right: 1px solid rgba(0,0,0,0.3);
+            background-color: rgb(10, 119, 148);
         }
 
         .button:active {
-            margin-top: 2px;
-            margin-bottom: 13px;
+            border: 2px solid rgb(0, 109, 138);
+        }
+
+        .button:active p {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+
+        #col:active {
+            -o-transition: 0s;
+            -moz-transition: 0s;
+            -webkit-transition: 0s;
+            transition: 0s;
+            border: 4px groove rgb(200, 101, 94);
         }
 </style>
 
@@ -142,7 +161,7 @@
     <div class="flex-grid">
         @foreach(VLN2_H27.Models.Project p in ViewBag.projects) {
             <div class="col" id="col">
-                <!--@Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "project-title", id = ("project-" + p.Id), data_editing = 0 })
+                <!--Html.ActionLink((p.ProjectName), "editor", "Editor", new { Id = p.Id }, new { class = "project-title", id = ("project-" + p.Id), data_editing = 0 })
                 
                 <div class="project-info">
                     <p class="project-info-line"><span class="project-info-title">Created:</span>dd/mm/yyyy</p>
