@@ -874,7 +874,7 @@ function addUserToProject(projectId, user, editPermission)
     });
 }
 
-$('#addUserButton').click(function () {
+function fetchCollaboratorsForModal() {
 
     var sendData = {
         'projectId': projectId,
@@ -887,7 +887,7 @@ $('#addUserButton').click(function () {
         dataType: "json",
         data: JSON.stringify(sendData),
         success: function (response) {
-            var collaboratorsHtml ="";
+            var collaboratorsHtml = "";
 
             for (var i in response) {
 
@@ -896,7 +896,6 @@ $('#addUserButton').click(function () {
                     continue;
                 }
                 //if it's relevant, we add it
-                console.log(i + response[i]);
                 collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId + "</div>";
             }
             //and put it in the appropriate div
@@ -906,10 +905,21 @@ $('#addUserButton').click(function () {
             console.log(xhr.responseText);
         }
     });
-    
+
+}
+
+//when we open the modal, we want to get the latest info on collaborators from the database
+$('#addUserButton').click(function () {
+    fetchCollaboratorsForModal();
 });
 
-
+//upon submitting the form we add the user entered and reload the list of collaborators
+$('#addSingleUser').click(function () {
+    console.log("adding......." + $('#userToAdd').val() + " the user to project " + projectId);
+    addUserToProject(projectId, $("#userToAdd").val(), 1);
+    console.log("added!");
+    fetchCollaboratorsForModal();
+});
 
 /*****************************************************
 MISC CODE
