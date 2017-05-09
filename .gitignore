@@ -288,4 +288,4 @@ __pycache__/
 *.xsd.cs
 
 # Project specific stuff
-/VLN2-H27/VLN2-H27/UserProjects/*
+VLN2-H27/VLN2-H27/UserProjects/*
