@@ -31,7 +31,7 @@ START
 ******************************************************/
 //Update user count in project - still a proof of concept, has no style
 function updateUserCountInProject(projectId) {
-    var projectHtmlId = '#project-' + projectId
+    var projectHtmlId = '#project-' + projectId;
     var currentlyEditingCount = $(projectHtmlId).data('editing')+1;
     $(projectHtmlId).text('Click here - ' + currentlyEditingCount + ' users currently editing');
     $(projectHtmlId).data('editing', currentlyEditingCount);
@@ -40,5 +40,5 @@ function updateUserCountInProject(projectId) {
 
 /*****************************************************
 MISC CODE
-START
+END
 ******************************************************/

@@ -130,14 +130,21 @@
     <div class="flex-grid">
         @foreach(VLN2_H27.Models.Project p in ViewBag.projects) {
             <div class="col">
-                @Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "project-title", id = ("project-" + p.Id), data_editing = 0 })
+                <!--@Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "project-title", id = ("project-" + p.Id), data_editing = 0 })
                 <hr />
                 <div class="project-info">
                     <p class="project-info-line"><span class="project-info-title">Created:</span>dd/mm/yyyy</p>
                     <p class="project-info-line"><span class="project-info-title">Size:</span>000 KB</p>
                     <p class="project-info-line"><span class="project-info-title">Collaborators:</span>5</p>
-                </div>
-                
+                </div>-->
+                <a href="@Url.Action("editor", "Editor", new { @Id = p.Id })" class="project-title" id=("project-@p.Id")>
+                    <div class="project-info">
+                        <h3 style="text-align: center">@p.ProjectName</h3>
+                        <p class="project-info-line"><span class="project-info-title">Created:</span>@p.DateAdded.Day/@p.DateAdded.Month/@p.DateAdded.Year</p>
+                        <p class="project-info-line"><span class="project-info-title">Collaborators:</span>@p.NrOfUsers</p>
+                        <p class="project-info-line"><span id=("project-@p.Id") class="project-info-title">Collaborators Online:</span></p>
+                    </div>
+                </a>
             </div>
         }
         @for(int i = 0; i < 10; i++) {
