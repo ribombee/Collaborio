@@ -12,10 +12,10 @@ body {
     justify-content: space-between;
 }
 
-    .flex-grid:after {
-        content: "";
-        flex: 1;
-    }
+.flex-grid:after {
+    content: "";
+    flex: 1;
+}
 
 .projects-head-container {
     width: 100%;
@@ -28,11 +28,11 @@ body {
     margin-bottom: 50px;
 }
 
-    .projects-head-container h2 {
-        font-size: 50px;
-        font-family: 'Courier New';
-        font-weight: bold;
-    }
+.projects-head-container h2 {
+    font-size: 50px;
+    font-family: 'Courier New';
+    font-weight: bold;
+}
 
 #empty-div {
     flex: 0.9;
@@ -57,14 +57,13 @@ body {
     margin-right: 10px;
 }
 
-    .col hr {
-        border: 1px solid rgb(20, 129, 158);
-        margin-top: 15px;
-    }
+.col hr {
+    border: 1px solid rgb(20, 129, 158);
+    margin-top: 15px;
+}
 
 .empty-col {
-    width: 150px;
-    height: 0px;
+    width: 220px;
 }
 
 .project-info {
@@ -119,42 +118,42 @@ project-info-line {
     overflow-y: hidden
 }
 
-    .button p {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 50px;
-        background-color: rgb(20, 129, 158);
-        font-size: 50px;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        border-right: 1px solid rgba(0,0,0,0.15);
-        margin: 0px;
-    }
+.button p {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    background-color: rgb(20, 129, 158);
+    font-size: 50px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-right: 1px solid rgba(0,0,0,0.15);
+    margin: 0px;
+}
 
-    .button:hover {
-        background-color: rgb(156, 203, 215);
-    }
+.button:hover {
+    background-color: rgb(156, 203, 215);
+}
 
-        .button:hover p, .button.active p {
-            border-right: 1px solid rgba(0,0,0,0.3);
-            background-color: rgb(10, 119, 148);
-        }
+.button:hover p, .button.active p {
+    border-right: 1px solid rgba(0,0,0,0.3);
+    background-color: rgb(10, 119, 148);
+}
 
-    .button:active {
-        border: 2px solid rgb(0, 109, 138);
-    }
+.button:active {
+    border: 2px solid rgb(0, 109, 138);
+}
 
-        .button:active p {
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
-        }
+.button:active p {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
 
 #col:active {
     -o-transition: 0s;
     -moz-transition: 0s;
     -webkit-transition: 0s;
     transition: 0s;
-    border: 4px groove rgb(200, 101, 94);
+    border-width: 4px;
 }
