@@ -5,4 +5,4 @@ dsfdsdsfdsfdsfdsfsd
 
 asdsadasdsadsadasdsa
 
-sælir vinur minn hvað segiru gott í dagÞ
+wat a beefy man sdfdsfdsfsdfsd

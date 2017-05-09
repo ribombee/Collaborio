@@ -409,6 +409,7 @@ START
 var hubProxy;
 var suppressModelChangedEvent = false;
 var suppressLineUpdate = false;
+var hasChanged = false;
 var editList = [];
 var editFileList = [];
 
@@ -450,7 +451,7 @@ $(function () {
 
     //receive file you previously requested
     hubProxy.client.receiveRequestedFile = function (file, text) {
-        console.log('received requested file');
+        console.log('received file');
         console.log(text);
         //is the editor completely empty? just insert the text and open a new tab
         if (editor.getModel() == null) {
@@ -525,12 +526,28 @@ $(function () {
         }
         //or is it in a tab?
         else {
-            var tab = fileAlreadyOpenInTab(filePaths[i]);
+            var tab = fileAlreadyOpenInTab(file);
             if (tab != null) {
                 var editOperation = createNewEditOperation(file, 0,
                     tab.tabModel.getLineMaxColumn(lineNumber), lineNumber, lineNumber,
                     lineText);
                 tab.tabModel.pushEditOperations(null, editOperation);
+            }
+        }
+    }
+
+    //Somebody is sending you their version of a file - sync with theirs
+    hubProxy.client.receiveFile = function (file, text) {
+        //is it the file you're currently working on?
+        if (currentlyEditingFile == file) {
+            suppressModelChangedEvent = true;
+            editor.getModel().setValue(text);
+        }
+        //or is it in a tab?
+        else {
+            var tab = fileAlreadyOpenInTab(file);
+            if (tab != null) {
+                tab.tabModel.setValue(text);
             }
         }
     }
@@ -623,7 +640,8 @@ $(function () {
             }
 
             editList.push(e);
-            editFileList.push(currentlyEditingFile);            
+            editFileList.push(currentlyEditingFile);
+            hasChanged = true;
         });
 
         //Send chat message on enter
@@ -635,21 +653,6 @@ $(function () {
             }
         });
 
-        /*  TODO SAVING THIS FOR LATER
-        editor.onDidChangeCursorPosition(function (event) {
-            if (event.position.lineNumber == 1) {
-                editor.updateOptions({
-                    readOnly: true
-                });
-            }
-            else {
-                editor.updateOptions({
-                    readOnly: false
-                });
-            }
-        });
-        */
-
         //Your cursor position changed. Send clients your new cursor line
         editor.onDidChangeCursorPosition(function (event) {
             if (currentCursorLine != event.position.lineNumber) {
@@ -659,7 +662,9 @@ $(function () {
         });
 
         //Update editor on intervals
-        var editorUpdateInterval = setInterval(function () { onUpdateInterval(currentCursorLine) }, UPDATE_INTERVAL_SECONDS*1000);
+        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS * 1000);
+        //Push sync on intervals
+        var editorSyncInterval = setInterval(function () { onSyncInterval() }, SYNC_INTERVAL_SECONDS * 1000);
 
     });
 });
@@ -669,22 +674,29 @@ function htmlEncode(value) {
     return encodedValue;
 }
 
-function onUpdateInterval(cursorLine) {
+function onUpdateInterval() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
+        var lineToUpdate = editList[editList.length-1].range.startLineNumber;
+        var fileToUpdate = editFileList[editFileList.length-1];
         editList = [];
         editFileList = [];
 
-        var cursorLine = currentCursorLine;
-        var lineFile = currentlyEditingFile;
         if (!suppressLineUpdate) {
             suppressLineUpdate = true;
             //send whole edited line after delay, to ensure sync
             setTimeout(function () {
-                hubProxy.server.sendEditorUpdatedLine(lineFile, cursorLine, editor.getModel().getLineContent(cursorLine));
+                hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
                 suppressLineUpdate = false;
             }, UPDATE_LINE_DELAY_SECONDS * 1000);
         }
+    }
+}
+
+function onSyncInterval() {
+    if (hasChanged) {
+        hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
+        hasChanged = false;
     }
 }
 
