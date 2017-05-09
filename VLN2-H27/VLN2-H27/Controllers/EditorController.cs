@@ -32,11 +32,13 @@ namespace VLN2_H27.Controllers
             ViewBag.projectIdsJson = json;
             return View();
         }
+
         public ActionResult editor(int? Id)
         {
             IEnumerable<SelectListItem> emptyList = new SelectListItem[] { };
             ViewBag.emptyList = emptyList;
             ViewBag.UserName = User.Identity.GetUserName();
+
             if (Id.HasValue)
             {
                 ViewBag.projectId = Id;
@@ -153,51 +155,27 @@ namespace VLN2_H27.Controllers
             System.IO.File.WriteAllText(filePath, text);
             return null;
         }
-
-        //TODO:  delete if not used EITHER this or the one below
-        [HttpPost]
-        public ActionResult addUsers(int projectId, IEnumerable<string> userNames, IEnumerable<bool> permissions)
+        
+        public JsonResult getUsers(int projectId)
         {
-
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
 
-            //we use this counter and the list of permissions to fetch the individual boolean values corresponding to the users.
-            int counter = 0;
-            List<bool> permissionsList = permissions.ToList();
+            IEnumerable<Project_Users_Relations> collaborators = (from relations in db.Project_Users_Relations
+                                                                          where relations.ProjectId == projectId
+                                                                          select relations).AsEnumerable();
 
-            //adding an entry to the relation table for each user with their appropriate
-            foreach(var userName in userNames)
+            foreach(var collaborator in collaborators)
             {
-                var tempUser  = (from user in db.AspNetUsers
-                                 where user.UserName == userName
-                                 select user).First();
-                //we check to see if this user already has access
-                var existingEntry = (from relation in db.Project_Users_Relations
-                                  where relation.ProjectId == projectId && relation.UserId == tempUser.Id
-                                  select relation).FirstOrDefault();
-                if(existingEntry == null)
-                {
-                    //if the user does not have access we create a new entry in the table to give them access
-                    Project_Users_Relations newRelation = new Project_Users_Relations
-                    {
-                        ProjectId = projectId,
-                        UserId = tempUser.Id,
-                        EditPermission = permissionsList[counter]
-                    };
-                    db.Project_Users_Relations.Add(newRelation);
-                }
-                else
-                {
-                    //if there is already en entry for this user, we set the permission as whatever was submitted.
-                    existingEntry.EditPermission = permissionsList[counter];
-                }   
-                counter++;
+                collaborator.UserId = (from users in db.AspNetUsers
+                                       where users.Id == collaborator.UserId
+                                       select users.UserName).FirstOrDefault();
             }
 
-            db.SaveChanges();
-            return null;
-        }
+            JsonResult collaboratorsJson = new JsonResult();
+            collaboratorsJson.Data = collaborators;
 
+            return collaboratorsJson;
+        }
 
         [HttpPost]
         public ActionResult addUser(int projectId, string userName, bool permission)
