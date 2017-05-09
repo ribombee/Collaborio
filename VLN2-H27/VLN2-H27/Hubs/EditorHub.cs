@@ -57,6 +57,11 @@ namespace VLN2_H27.Hubs
             Clients.Client(connectionId).userAnsweredProjectPoll(projectId);
         }
 
+        public void sendCursorPosition(int lineNumber, string filePath)
+        {
+            Clients.OthersInGroup(Clients.CallerState.projectId).receiveCursorPosition(lineNumber, filePath, Clients.CallerState.userName);
+        }
+
     }
 
     public class range

@@ -410,7 +410,7 @@ var suppressModelChangedEvent = false;
 var editList = [];
 var editFileList = [];
 
-const UPDATE_INTERVAL_SECONDS = 1;
+const UPDATE_INTERVAL_SECONDS = 0.1;
 $(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
@@ -522,6 +522,66 @@ $(function () {
             + ':</strong> ' + htmlEncode(message) + '</li>');
     };
 
+    //somebody sent their cursor position
+    var cursorPositions = [];
+    hubProxy.client.receiveCursorPosition = function (lineNumber, file, user) {
+        var markerInfo = {
+            startColumn: 0,
+            endColumn: editor.getModel().getLineMaxColumn(lineNumber),
+            startLineNumber: lineNumber,
+            endLineNumber: lineNumber,
+            severity: 1,
+            message: "this line is currently being edited",
+            source: user
+        }
+
+        var fileIndex = -1;
+        for (var i = 0; i < cursorPositions.length; i++) {
+            for(var j = 0; j < cursorPositions[i].markerInfos.length; j++)
+            {
+                //found users last known position, remove it
+                if (cursorPositions[i].markerInfos[j].source == user) {
+                    console.log("sup");
+                    if (cursorPositions[i].markerInfos[j].length > 1) {
+                        cursorPositions[i].markerInfos[j].splice(j, 1);
+                    }
+                    else {
+                        cursorPositions[i].markerInfos = [];
+                    }
+                }
+            }
+
+            console.log(cursorPositions[i].markerInfos);
+
+            //found file, push markerinfo
+            if (cursorPositions[i].file == file) {
+                cursorPositions[i].markerInfos.push(markerInfo);
+                fileIndex = i;
+            }
+        }
+        //file wasnt found
+        if (fileIndex < 0) {
+            fileIndex = cursorPositions.push({
+                file: file,
+                markerInfos: [markerInfo]
+            })-1;
+        }
+        //is it the file youre currently working on?
+        if (file == currentlyEditingFile) {
+            monaco.editor.setModelMarkers(editor.getModel(), "", cursorPositions[fileIndex].markerInfos);
+        }
+        //or in a tab?
+        else {
+            for (var i = 0; i < tabInfo.length; i++) {
+                if (tabInfo[i].filePath == file) {
+                    monaco.editor.setModelMarkers(tabInfo[i].tabModel, "", cursorPositions[fileIndex].markerInfos);
+                }
+            }
+        }
+
+        
+    };
+
     // Start the connection.
     $.connection.hub.start().done(function () {
         //Initialize things
@@ -549,6 +609,25 @@ $(function () {
                 $('#message').val('');
                 return false;
             }
+        });
+
+        /*  TODO SAVING THIS FOR LATER
+        editor.onDidChangeCursorPosition(function (event) {
+            if (event.position.lineNumber == 1) {
+                editor.updateOptions({
+                    readOnly: true
+                });
+            }
+            else {
+                editor.updateOptions({
+                    readOnly: false
+                });
+            }
+        });
+        */
+
+        editor.onDidChangeCursorPosition(function (event) {
+            hubProxy.server.sendCursorPosition(event.position.lineNumber, currentlyEditingFile);
         });
 
         //Update editor on intervals
