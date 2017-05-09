@@ -6,17 +6,79 @@
 
 <!-- TODO PUT STYLES IN CSS SHEET -->
 <style>
+    #projects-body {
+        background-color: #e6e6e6;
+    }
     .flex-grid {
         display: flex;
-        flex-wrap: wrap;
+        flex-flow: row wrap;
+        justify-content: space-around;
+    }
+
+    .flex-grid:after {
+        content: "";
+        flex: ;
+    }
+
+    .projects-head-container {
+        width: 100%;
+        padding-top: 30px;
+        padding-left: 0px;
+        padding-right: 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 50px;
+    }
+
+    #empty-div {
+        flex: 0.9;
     }
 
     .col {
         display: inline-block;
-        border: 1px solid black;
-        padding: 10px 40px 120px 100px;
-        width: 22%;
-        margin: 10px;
+        border: 2px groove lightgrey;
+        padding: 10px 10px 20px 10px;
+        width: 200px;
+        border-radius: 5px;
+        text-align: center;
+        height: 220px;
+        margin-bottom: 20px;
+        background-color: white;
+        font-size: 14px;
+    }
+
+    .col hr {
+        border: 1px solid lightgrey;
+        margin-top: 15px;
+    }
+
+    .empty-col {
+        width: 150px;
+        height: 0px;
+    }
+
+    .project-info {
+        text-align: left;
+        color: grey;
+    }
+    
+    .project-info-title {
+        color: black;
+        font-weight: bold;
+        padding-left: 5px;
+        padding-right: 10px;
+    }
+
+    project-info-line {
+        display: inline-block;
+    }
+
+    .project-title {
+        font-family: 'Courier New';
+        font-size: 16px;
+        font-weight: bold;
+        vertical-align: central;
     }
 
     .button {
@@ -31,7 +93,6 @@
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 15px;
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -63,20 +124,27 @@
         }
 </style>
 
-<h2>Projects</h2>
+<div id="projects-body">
+    @Html.Partial("NewProjectPartial")
 
+    <div class="flex-grid">
+        @foreach(VLN2_H27.Models.Project p in ViewBag.projects) {
+            <div class="col">
+                @Html.ActionLink((p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "project-title", id = ("project-" + p.Id), data_editing = 0 })
+                <hr />
+                <div class="project-info">
+                    <p class="project-info-line"><span class="project-info-title">Created:</span>dd/mm/yyyy</p>
+                    <p class="project-info-line"><span class="project-info-title">Size:</span>000 KB</p>
+                    <p class="project-info-line"><span class="project-info-title">Collaborators:</span>5</p>
+                </div>
+                
+            </div>
+        }
+        @for(int i = 0; i < 10; i++) {
+            <div class="empty-col"></div>
+        }
 
-
-@Html.Partial("NewProjectPartial")
-
-<div class="flex-grid">
-    @foreach (VLN2_H27.Models.Project p in ViewBag.projects)
-    {
-        @Html.ActionLink(("Click here to edit " + p.ProjectName), "editor", "Editor", new { @Id = p.Id }, new { @class = "col", id = ("project-" + p.Id), data_editing = 0 })
-    }
-
-    @Html.ActionLink("For testing purposes", "editor", "Editor", new { @Id = 0 }, new { @class="col", id="project-0", data_editing=0})
-    
+    </div>
 </div>
 
 @section scripts {

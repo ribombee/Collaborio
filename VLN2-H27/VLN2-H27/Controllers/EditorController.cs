@@ -153,5 +153,92 @@ namespace VLN2_H27.Controllers
             System.IO.File.WriteAllText(filePath, text);
             return RedirectToAction("editor", new { Id = data[0] });
         }
+
+        //TODO:  delete if not used EITHER this or the one below
+        [HttpPost]
+        public ActionResult addUsers(int projectId, IEnumerable<string> userNames, IEnumerable<bool> permissions)
+        {
+
+            VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+
+            //we use this counter and the list of permissions to fetch the individual boolean values corresponding to the users.
+            int counter = 0;
+            List<bool> permissionsList = permissions.ToList();
+
+            //adding an entry to the relation table for each user with their appropriate
+            foreach(var userName in userNames)
+            {
+                var tempUser  = (from user in db.AspNetUsers
+                                 where user.UserName == userName
+                                 select user).First();
+                //we check to see if this user already has access
+                var existingEntry = (from relation in db.Project_Users_Relations
+                                  where relation.ProjectId == projectId && relation.UserId == tempUser.Id
+                                  select relation).FirstOrDefault();
+                if(existingEntry == null)
+                {
+                    //if the user does not have access we create a new entry in the table to give them access
+                    Project_Users_Relations newRelation = new Project_Users_Relations
+                    {
+                        ProjectId = projectId,
+                        UserId = tempUser.Id,
+                        EditPermission = permissionsList[counter]
+                    };
+                    db.Project_Users_Relations.Add(newRelation);
+                }
+                else
+                {
+                    //if there is already en entry for this user, we set the permission as whatever was submitted.
+                    existingEntry.EditPermission = permissionsList[counter];
+                }   
+                counter++;
+            }
+
+            db.SaveChanges();
+            return null;
+        }
+
+
+        [HttpPost]
+        public ActionResult addUser(int projectId, string userName, bool permission)
+        {
+
+            VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+
+            var tempUser = (from user in db.AspNetUsers
+                            where user.UserName == userName
+                            select user).FirstOrDefault();
+
+            if(tempUser == null)
+            {
+                //this user does not exist, no need to do anything else.
+                return null;
+            }
+
+            //we check to see if this user already has access
+            var existingEntry = (from relation in db.Project_Users_Relations
+                                    where relation.ProjectId == projectId && relation.UserId == tempUser.Id
+                                    select relation).FirstOrDefault();
+
+            if (existingEntry == null)
+            {
+                //if the user does not have access we create a new entry in the table to give them access
+                Project_Users_Relations newRelation = new Project_Users_Relations
+                {
+                    ProjectId = projectId,
+                    UserId = tempUser.Id,
+                    EditPermission = permission
+                };
+                db.Project_Users_Relations.Add(newRelation);
+            }
+            else
+            {
+                //if there is already en entry for this user, we set the permission as whatever was submitted.
+                existingEntry.EditPermission = permission;
+            }
+
+            db.SaveChanges();
+            return null;
+        }
     }
 }

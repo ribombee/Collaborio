@@ -65,6 +65,11 @@
             <input type="hidden" id="displayname" />
         </div>
 
+
+        <!-- Adding users -->
+        <button id="addUsers" class="btn">Click me to add some users</button>
+
+
         <!-- New project button to trigger modal -->
         <button type="button" class="button" data-toggle="modal" data-target="#myModal">New File</button>
 
@@ -116,7 +121,8 @@
             userName = '@(userName)',
             baseUrl = '@Url.Content("~")',
             getFileValueUrl = '@Url.Action("getFileValue", "Editor")',
-            saveFileUrl = '@Url.Action("saveFile", "Editor")'; </script>
+            saveFileUrl = '@Url.Action("saveFile", "Editor")'
+            addUserUrl = '@Url.Action("addUser", "Editor")'; </script>
         <!-- JS CODE GOES HERE -->
         <script src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
          }
