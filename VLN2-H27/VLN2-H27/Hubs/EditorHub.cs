@@ -26,6 +26,11 @@ namespace VLN2_H27.Hubs
             Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdateSet(filePaths, editOperations);
         }
 
+        public void SendEditorUpdatedLine(string lineFile, int lineNumber, string text)
+        {
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdatedLine(lineFile, lineNumber, text);
+        }
+
         public async Task userConnected(string userName)
         {
             await Groups.Add(Context.ConnectionId, Clients.Caller.projectId);
