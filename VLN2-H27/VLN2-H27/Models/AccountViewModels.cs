@@ -49,6 +49,9 @@ namespace VLN2_H27.Models
     public class LoginViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+        
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
@@ -64,6 +67,11 @@ namespace VLN2_H27.Models
 
     public class RegisterViewModel
     {
+
+        [Required]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
