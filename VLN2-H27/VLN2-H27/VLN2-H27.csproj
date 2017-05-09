@@ -265,6 +265,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\EditorDefault.css" />
+    <Content Include="Content\ProjectStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="FileTree\sample\sample.c" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
