@@ -31,3 +31,9 @@
     display: none;
     visibility: hidden;
 }
+
+.userEditingLine {
+	background: lightblue;
+	width: 5px !important;
+	left: 3px;
+}

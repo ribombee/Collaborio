@@ -1,29 +1,32 @@
 ﻿
-    #projects-body-hr {
-        margin-bottom: 60px;
-    }
+body {
+}
 
-    .flex-grid {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-between;
-    }
+#projects-body-hr {
+    margin-bottom: 60px;
+}
+
+.flex-grid {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
 
     .flex-grid:after {
         content: "";
         flex: 1;
     }
 
-    .projects-head-container {
-        width: 100%;
-        padding-top: 60px;
-        padding-left: 0px;
-        padding-right: 0px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 50px;
-    }
+.projects-head-container {
+    width: 100%;
+    padding-top: 60px;
+    padding-left: 0px;
+    padding-right: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
 
     .projects-head-container h2 {
         font-size: 50px;
@@ -31,125 +34,127 @@
         font-weight: bold;
     }
 
-    #empty-div {
-        flex: 0.9;
-    }
+#empty-div {
+    flex: 0.9;
+}
 
-    .col {
-        display: inline-block;
-        border: 2px groove rgb(220, 121, 114);
-        padding: 10px 10px 20px 10px;
-        width: 200px;
-        text-align: center;
-        height: 220px;
-        margin-bottom: 20px;
-        background-color: rgb(240,141,134);
-        -o-transition:.5s;
-        -moz-transition:.5s;
-        -webkit-transition:.5s;
-        transition:.5s;
-        font-size: 14px;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
+.col {
+    display: inline-block;
+    border-radius: 25px;
+    border: 5px groove rgb(20, 129, 158);
+    padding: 10px 10px 20px 10px;
+    width: 200px;
+    text-align: center;
+    height: 250px;
+    margin-bottom: 20px;
+    background-color: rgb(240,240,240);
+    -o-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
+    font-size: 14px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 
     .col hr {
-        border: 1px solid rgb(220, 121, 114);
+        border: 1px solid rgb(20, 129, 158);
         margin-top: 15px;
     }
 
-    .empty-col {
-        width: 150px;
-        height: 0px;
+.empty-col {
+    width: 150px;
+    height: 0px;
+}
+
+.project-info {
+    text-align: left;
+    color: rgb(77, 77, 77);
+}
+
+#col:hover {
+    background-color: rgb(166, 213, 225);
+}
+
+.col a:hover {
+    text-decoration: none;
+}
+
+.project-info-title {
+    color: black;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+project-info-line {
+    display: inline-block;
+}
+
+.project-title {
+    font-family: 'Courier New';
+    font-size: 16px;
+    font-weight: bold;
+    vertical-align: central;
+}
+
+.button {
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    padding-right: 30px;
+    padding-left: 70px;
+    position: relative;
+    background-color: rgb(166,213,225);
+    color: rgb(255,255,255);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    text-shadow: 1px 1px 1px rgb(0,0,0);
+    border: 1px solid rgb(10, 119, 148);
+    outline: none;
+    overflow-y: hidden
+}
+
+    .button p {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        background-color: rgb(20, 129, 158);
+        font-size: 50px;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-right: 1px solid rgba(0,0,0,0.15);
+        margin: 0px;
     }
 
-    .project-info {
-        text-align: left;
-        color: rgb(77, 77, 77);
+    .button:hover {
+        background-color: rgb(156, 203, 215);
     }
-
-    #col:hover {
-        background-color: rgb(230, 131, 124);
-    }
-
-    .col a:hover {
-        text-decoration: none;
-    }
-    
-    .project-info-title {
-        color: black;
-        font-weight: bold;
-        padding-left: 5px;
-        padding-right: 10px;
-    }
-
-    project-info-line {
-        display: inline-block;
-    }
-
-    .project-title {
-        font-family: 'Courier New';
-        font-size: 16px;
-        font-weight: bold;
-        vertical-align: central;
-    }
-
-    .button {
-        display: inline-block;
-        height: 50px;
-        line-height: 50px;
-        padding-right: 30px;
-        padding-left: 70px;
-        position: relative;
-        background-color: rgb(166,213,225);
-        color: rgb(255,255,255);
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        text-shadow: 1px 1px 1px rgb(0,0,0);
-        border: 1px solid rgb(10, 119, 148);
-        outline: none;
-    }
-
-        .button p {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 50px;
-            background-color: rgb(20, 129, 158);
-            font-size: 50px;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-            border-right: 1px solid rgba(0,0,0,0.15);
-            margin: 0px;
-        }
-
-        .button:hover {
-            background-color: rgb(156, 203, 215);
-        }
 
         .button:hover p, .button.active p {
             border-right: 1px solid rgba(0,0,0,0.3);
             background-color: rgb(10, 119, 148);
         }
 
-        .button:active {
-            border: 2px solid rgb(0, 109, 138);
-        }
+    .button:active {
+        border: 2px solid rgb(0, 109, 138);
+    }
 
         .button:active p {
             border-top-left-radius: 3px;
             border-bottom-left-radius: 3px;
         }
 
-        #col:active {
-            -o-transition: 0s;
-            -moz-transition: 0s;
-            -webkit-transition: 0s;
-            transition: 0s;
-            border: 4px groove rgb(200, 101, 94);
-        }
+#col:active {
+    -o-transition: 0s;
+    -moz-transition: 0s;
+    -webkit-transition: 0s;
+    transition: 0s;
+    border: 4px groove rgb(200, 101, 94);
+}
