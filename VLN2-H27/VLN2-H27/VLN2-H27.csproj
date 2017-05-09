@@ -360,6 +360,7 @@
     <Content Include="Views\Shared\NewProjectPartial.cshtml" />
     <Content Include="Views\Editor\demoEditor.cshtml" />
     <Content Include="Views\Shared\_EditorLayout.cshtml" />
+    <Content Include="Views\Editor\addUsersPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -824,16 +824,39 @@ function addUserToProject(projectId, user, editPermission)
     });
 }
 
-$('#addUsers').click(function () {
+$('#addUserButton').click(function () {
 
-    //THIS IS HARDCODED TEST DATA
-    var user1 = prompt("Enter the first email", "test@test.hello");
-    var user2 = prompt("Enter the second email", "test@test.hello");
-    var user3 = prompt("Enter the first email", "test@test.hello");
+    var sendData = {
+        'projectId': projectId,
+    }
+    //we fetch all collaborators
+    $.ajax({
+        type: "POST",
+        url: getUserUrl,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(sendData),
+        success: function (response) {
+            var collaboratorsHtml ="";
 
-    addUserToProject(projectId, user1, 1);
-    addUserToProject(projectId, user2, 1);
-    addUserToProject(projectId, user3, 0);
+            for (var i in response) {
+
+                if (!response.hasOwnProperty(i)) {
+                    //this skips anything irrelevant to us
+                    continue;
+                }
+                //if it's relevant, we add it
+                console.log(i + response[i]);
+                collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId + "</div>";
+            }
+            //and put it in the appropriate div
+            $('#collaboratorList').html(collaboratorsHtml);
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+    
 });
 
 
