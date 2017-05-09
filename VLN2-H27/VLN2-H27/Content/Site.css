@@ -19,7 +19,7 @@
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
-textarea {
+{
     max-width: 280px;
 }
 
@@ -112,5 +112,26 @@ body-content{
 }
 
 #filetree {
-    height: 600px;
+    height: 150px;
+    overflow:scroll;
+}
+
+#discussionbox
+{
+    margin-top:5px;
+    height:300px;
+    width:340px;
+    border:1px solid grey;
+    font:15px/20px Georgia, Garamond, Serif;
+    overflow-y:auto;
+    overflow-x:hidden;
+    word-wrap:break-word;
+}
+
+#message
+{
+    resize:none;
+    height:50px;
+    width:340px;
+    overflow-x:hidden;
 }

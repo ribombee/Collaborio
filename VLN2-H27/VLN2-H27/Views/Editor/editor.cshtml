@@ -56,12 +56,11 @@
         </div>
 
         <!-- SignalR Chat -->
-        <h2>Chat</h2>
         <div id="chatbox" class="chat">
-            <div id="discussionbox" style="height:300px;width:240px;border:1px solid grey;font:15px/20px Georgia, Garamond, Serif;overflow-y:auto;overflow-x:hidden;word-wrap:break-word">
+            <div id="discussionbox" data-text="Connected to chat">
                 <ul id="discussion" class="list-unstyled"></ul>
             </div>
-            <textarea id="message" placeholder="Type your message" style="resize:none"></textarea>
+            <textarea id="message" placeholder="Type your message"></textarea>
             <input type="hidden" id="displayname" />
         </div>
 
@@ -69,9 +68,6 @@
         <!-- Adding users -->
         <button id="addUsers" class="btn">Click me to add some users</button>
 
-
-        <!-- New project button to trigger modal -->
-        <button type="button" class="button" data-toggle="modal" data-target="#myModal">New File</button>
 
         <!-- Modal container -->
         <div id="myModal" class="modal fade" role="dialog">
