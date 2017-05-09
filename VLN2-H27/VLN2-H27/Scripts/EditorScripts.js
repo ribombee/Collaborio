@@ -769,6 +769,19 @@ function renameFile(file) {
     alert(file + ' would be renamed now');
 }
 
+//create file on server when newFile post is submitted
+$('#filePost').submit(function (event) {
+    $.ajax({
+        type: "POST",
+        url: createFileUrl,
+        data: $('#filePost').serialize(),
+    })
+    setTimeout(function () { refreshFileTree(); }, 500);
+    $('#myModal').modal('hide');
+    event.preventDefault();
+    return false;
+});
+
 //Write file on server
 function saveFile(file, text) {
     if (editor == null) {
