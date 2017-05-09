@@ -612,7 +612,9 @@ $(function () {
         //is it the file you're currently working on?
         if (currentlyEditingFile == file) {
             suppressModelChangedEvent = true;
-            editor.getModel().setValue(text);
+            var fullRange = editor.getModel().getFullModelRange();
+            editor.executeEdits("", createNewEditOperation(file, fullRange.startColumn, fullRange.endColumn, fullRange.startLineNumber,
+                fullRange.endLineNumber, text));
         }
         //or is it in a tab?
         else {
