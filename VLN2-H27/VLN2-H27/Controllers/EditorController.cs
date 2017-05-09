@@ -151,7 +151,7 @@ namespace VLN2_H27.Controllers
             filePath = Server.MapPath(filePath);
             var text = "cout << \"this is my auto-generated text!\" << endl";
             System.IO.File.WriteAllText(filePath, text);
-            return RedirectToAction("editor", new { Id = data[0] });
+            return null;
         }
 
         //TODO:  delete if not used EITHER this or the one below
