@@ -274,6 +274,7 @@
     <Content Include="EditorLibraries\jQueryFileTree\.gitignore" />
     <Content Include="EditorLibraries\jQueryFileTree\gulpfile.js" />
     <Content Include="EditorLibraries\Monaco\ThirdPartyNotices.txt" />
+    <Content Include="Icons\CollaborioLogo.png" />
     <Content Include="Models\EditorModels.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EditorModels.edmx</DependentUpon>
