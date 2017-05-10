@@ -31,20 +31,29 @@ jQuery.fn.contextPopup = function(menuData) {
 		headerClass: 'header',
 		seperatorClass: 'divider',
 		title: '',
-		items: []
+		items: [],
+        secondaryItems: []
 	};
 	
 	// merge them
 	$.extend(settings, menuData);
 
   // Build popup menu HTML
-  function createMenu(e) {
+  function createMenu(e, type) {
     var menu = $('<ul class="' + settings.contextMenuClass + '"><div class="' + settings.gutterLineClass + '"></div></ul>')
       .appendTo(document.body);
     if (settings.title) {
       $('<li class="' + settings.headerClass + '"></li>').text(settings.title).appendTo(menu);
     }
-    settings.items.forEach(function(item) {
+    var items = [];
+    var clicked = $('a:hover').attr('rel');
+    if (type == 1) {
+        items = settings.secondaryItems;
+    }
+    else {
+        items = settings.items;
+    }
+    items.forEach(function(item) {
       if (item) {
         var rowCode = '<li><a href="#" class="'+settings.linkClickerClass+'"><span class="itemTitle"></span></a></li>';
         // if(item.icon)
@@ -75,11 +84,13 @@ jQuery.fn.contextPopup = function(menuData) {
   // On contextmenu event (right click)
   this.on('contextmenu', function (e) {
     var clicked = $('a:hover').attr('rel');
+    var menu;
     if (typeof clicked == 'undefined') {
-        return false;
+        menu = createMenu(e, 1).show();
     }
-    var menu = createMenu(e)
-      .show();
+    else {
+        menu = createMenu(e, 0).show();
+    }
     
     var left = e.pageX + 5, /* nudge to the right, so the pointer is covering the title */
         top = e.pageY;

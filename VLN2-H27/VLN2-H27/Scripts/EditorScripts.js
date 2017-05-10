@@ -356,10 +356,16 @@ function initFileTreeContextMenu() {
         items: [
           { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
           { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
-          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }
-        ]
+          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
+        secondaryItems: [
+          { label: 'New File', icon: '', action: function () { alert("New File") } },
+          { label: 'New Folder', icon: '', action: function () { alert("New Folder") } },
+          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
     });
 }
+
+//sma test
+$('a').click(function () { alert('sid') });
 
 //Hide file tree
 function hideFileTree() {
