@@ -688,7 +688,7 @@ $(function () {
         }
        
         suppressSync = true;
-        clearTimeout(suncSuppressTimeout)
+        clearTimeout(syncSuppressTimeout);
         syncSuppressTimeout = setTimeout(function () {
             suppressSync = false;
         }, SUPPRESS_SYNC_SECONDS * 1000)
