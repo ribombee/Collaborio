@@ -50,6 +50,7 @@ namespace VLN2_H27.Controllers
             {
                 if (Id.HasValue && (queryResult.ProjectId == Id))
                 {
+                    ViewBag.editPermission = queryResult.EditPermission;
                     ViewBag.projectId = Id;
                     return View();
                 }
