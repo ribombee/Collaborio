@@ -149,7 +149,11 @@ select,
     text-align: center;
 }
 
-.front-page-login-button{
+.loginFrontPage p{
+    text-align: center;
+}
+
+#front-page-login-button{
     display: block;
     width: 50%;
     margin-top: 50px;
