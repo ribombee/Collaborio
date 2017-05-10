@@ -84,6 +84,7 @@ $(document).ready(function () {
             $("#language-picker").append(li);
         }
 
+
         //change language with language picker
         $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);

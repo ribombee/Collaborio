@@ -27,30 +27,15 @@
 
 </head>
 <body>
-    <main>
-        <!-- Editor language/mode picker -->
-        <div id="editorWithPickers">
-            <label class="control-label">Language</label>
-            <select class="language-picker"></select>
-
-            <!-- Editor theme picker -->
-            <label class="control-label">Theme</label>
-            <select class="theme-picker">
-                <option>Visual Studio</option>
-                <option>Visual Studio Dark</option>
-                <option>High Contrast Dark</option>
-            </select>
-
             <!-- Tabs -->
-            <div id="tabs">
-                <ul>
-                       
-                </ul>           
-            </div>
-
-            <!-- Monaco editor window -->
-            <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
+        <div id="tabs">
+            <ul>
+                      
+            </ul>           
         </div>
+
+        <!-- Monaco editor window -->
+        <div id="monaco-editor" class="editor"></div>
         <!-- File tree applet -->
         <div id="filetree-parent">
             <div id="filetree" class="filetree" style="border:1px solid grey"></div>
@@ -127,5 +112,4 @@
         <!-- JS CODE GOES HERE -->
         <script src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
          }
-    </main>
 </body>
