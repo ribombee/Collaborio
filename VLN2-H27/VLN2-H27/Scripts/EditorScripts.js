@@ -73,6 +73,15 @@ $(document).ready(function () {
             $(".language-picker").append(o);
         }
 
+        for (var i = 0; i < availableLanguages.length; i++) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.setAttribute('data-index', i);
+            a.textContent = availableLanguages[i];
+            li.appendChild(a)
+            $("#language-picker").append(li);
+        }
+
         //change language with language picker
         $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
@@ -591,7 +600,7 @@ var editList = [];
 var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
-const UPDATE_LINE_DELAY_SECONDS = 1;
+const UPDATE_LINE_DELAY_SECONDS = 0.25;
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
 const EDITING_MESSAGE_TIME_SECONDS = 5;

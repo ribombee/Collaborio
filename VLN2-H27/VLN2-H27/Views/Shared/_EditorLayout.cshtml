@@ -28,17 +28,14 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Projects", "projects", "Editor")</li>
                     <li><a href="#" data-toggle="modal" data-target="#myModal">New File</a></li>
-                    <li> <!-- Editor theme and language pickers -->
-                        <div class="pickers">
-                            <label class="control-label">Theme</label>
-                            <!--<ul class="dropdown-menu">
-                                <li>Visual Studio</li>
-                                <li>Visual Studio Dark</li>
-                                <li>High Contrast Dark</li>
-                            </ul>-->
-                            <label class="control-label">Language</label>
-                            <select class="language-picker"></select>
-                        </div>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Language
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" id="language-picker">
+
+                        </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
