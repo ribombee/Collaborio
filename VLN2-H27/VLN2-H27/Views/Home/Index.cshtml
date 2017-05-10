@@ -26,7 +26,7 @@
 
 <div class="row">
         <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "loginFrontPage", role = "form" }))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "Index" }, FormMethod.Post, new { @class = "loginFrontPage", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <h2>Log in</h2>
@@ -48,10 +48,6 @@
                 <p>
                     @Html.ActionLink("Register", "Register")
                 </p>
-                @* Enable this once you have account confirmation enabled for password reset functionality
-                    <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
             }
         </section>
 </div>

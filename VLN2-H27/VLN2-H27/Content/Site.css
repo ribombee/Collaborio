@@ -69,7 +69,7 @@ select,
     color: RGB(255,66,52);
 }
 
-.loginFrontPage{
+.account-form{
     margin: auto;
     margin-top: 200px;
     width: 40%;
@@ -84,31 +84,23 @@ select,
     padding-bottom: 30px;
 }
 
-.loginFrontPage * {
+.account-form * {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: auto;
 }
 
-.loginFrontPage label{
+.account-form label{
     margin:inherit;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.loginFrontPage input[type=submit]{
+.account-form input[type=submit]{
     margin-top: 20px;
     padding: 10px;
     align-items: center;
-}
-
-.btn content {
-    background: red;
-}
-
-.loginFrontPage input[type=submit] *{
-margin: auto;
 }
 
 .logo {
@@ -148,6 +140,11 @@ margin: auto;
     width: 50%;
     margin: auto;
     background-color: lightgrey;
+}
+
+.registration-fields{
+display: flex;
+flex-direction: row;
 }
 
 #main{
