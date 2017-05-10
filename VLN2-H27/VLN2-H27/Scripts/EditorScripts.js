@@ -85,11 +85,17 @@ $(document).ready(function () {
             changeTheme(this.selectedIndex);
         });
 
+        $(".theme-item").click(function () {
+            //create cookie for new theme setting
+            setCookie('theme', this.getAttribute("data-index"), 100);
+            changeTheme(this.getAttribute("data-index"));
+        });
+
         var lastTheme = getCookie("theme");
         if (lastTheme != "") {
             lastTheme = parseInt(lastTheme);
             changeTheme(lastTheme);
-            setThemePicker(lastTheme);
+            //setThemePicker(lastTheme);
         }
         
     });
@@ -101,7 +107,7 @@ function changeTheme(theme) {
     //1 == vs-dark
     //2 == hc-black
 
-    var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
+    var newTheme = (theme == 1 ? 'vs-dark' : (theme == 0 ? 'vs' : 'hc-black'));
     editor.updateOptions({ 'theme': newTheme });
 
     setThemeToElement('#filetree', theme);
