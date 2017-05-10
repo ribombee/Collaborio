@@ -74,9 +74,9 @@ $(document).ready(function () {
         }
 
         //change language with language picker
-        /*$(".language-picker").change(function () {
+        $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
-        });*/
+        });
 
         //change theme with theme picker
         $(".theme-picker").change(function () {
@@ -97,8 +97,32 @@ $(document).ready(function () {
 
 //Change monaco editor theme
 function changeTheme(theme) {
+    //0 == normal/white
+    //1 == vs-dark
+    //2 == hc-black
+
     var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
     editor.updateOptions({ 'theme': newTheme });
+
+    setThemeToElement('#filetree', theme);
+    setThemeToElement('#discussionbox', theme);
+    setThemeToElement('#discussion', theme);
+    setThemeToElement('#message', theme);
+}
+
+function setThemeToElement(element, theme) {
+    if (theme == 1) {
+        $(element).removeClass('theme-black');
+        $(element).addClass('theme-dark');
+    }
+    else if (theme == 2) {
+        $(element).removeClass('theme-dark');
+        $(element).addClass('theme-black');
+    }
+    else {
+        $(element).removeClass('theme-dark');
+        $(element).removeClass('theme-black');
+    }
 }
 
 //returns the name of the language that corresponds to the file extension
@@ -351,14 +375,18 @@ $('.filetree').mousedown(function (event) {
 
 //Initialize file tree context menu function - this is called when signalR connects to the hub
 function initFileTreeContextMenu() {
-    $('.filetree').contextPopup({
+    contextMenu = $('.filetree').contextPopup({
         title: '',
         items: [
           { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
           { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
-          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }
-        ]
+          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
+        secondaryItems: [
+          { label: 'New File', icon: '', action: function () { alert("New File") } },
+          { label: 'New Folder', icon: '', action: function () { alert("New Folder") } },
+          { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
     });
+    //contextmenu settings can be accessed through the global variable contextMenuSettings
 }
 
 //Hide file tree
@@ -747,6 +775,9 @@ $(function () {
 
         //advertise that you connected
         hubProxy.server.userConnected(userName);
+        //display in the chat window that you connected
+        $('#discussion').append('<li><i><strong>[' + getTimeStamp() + ']' + htmlEncode(userName)
+            + ' connected!</strong></i></li>');
 
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
@@ -770,16 +801,6 @@ $(function () {
             }
         });
 
-        //Your cursor position changed. Send clients your new cursor line
-        /*
-        editor.onDidChangeCursorPosition(function (event) {
-            if (currentCursorLine != event.position.lineNumber) {
-                hubProxy.server.sendCursorPosition(event.position.lineNumber, currentlyEditingFile);
-            }
-            currentCursorLine = event.position.lineNumber;
-        });
-        */
-
         //Update editor on intervals
         var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS * 1000);
         //Push sync on intervals
@@ -793,6 +814,7 @@ function htmlEncode(value) {
     return encodedValue;
 }
 
+//This function runs on an interval to send a package of updates you have done in your editor
 function onUpdateInterval() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
@@ -812,6 +834,7 @@ function onUpdateInterval() {
     }
 }
 
+//This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
     if (hasChanged) {
         hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
