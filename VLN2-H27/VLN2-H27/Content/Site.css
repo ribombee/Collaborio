@@ -72,10 +72,10 @@ select,
     margin: auto;
     margin-top: 100px;
     margin-bottom: 100px;
-    width: 40%;
+    width: 30%;
     display:flex;
     justify-content: center;
-    flex-direction:column;
+    flex-direction: column;
     border: 2px dashed RGB(97,73,96) ;
     border-radius: 20px;
     padding-left: 50px;
@@ -132,9 +132,32 @@ select,
     margin: 15px;
 }
 
+#loginForm .loginFrontPage{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: block;
+    width: 20%;
+    margin: auto;
+}
+
+#loginForm .loginFrontPage form-control{
+    display: block;
+    width: 100%;
+}
+
+.loginFrontPage h2{
+    text-align: center;
+}
+
+.front-page-login-button{
+    display: block;
+    width: 50%;
+    margin-top: 50px;
+}
+
 .form-group{
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .form-group label{
