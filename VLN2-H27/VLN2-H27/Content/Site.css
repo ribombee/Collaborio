@@ -1,12 +1,11 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 40px;
     padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    width:100%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -72,11 +71,12 @@ select {
 /*This is used on the login and register pages to change their look*/
 .account-form{
     margin: auto;
-    margin-top: 200px;
-    width: 40%;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    width: 30%;
     display:flex;
     justify-content: center;
-    flex-direction:column;
+    flex-direction: column;
     border: 2px dashed RGB(97,73,96) ;
     border-radius: 20px;
     padding-left: 50px;
@@ -104,7 +104,6 @@ select {
     align-items: center;
 }
 
-
 .form-group{
     width: 100%;
 }
@@ -125,10 +124,15 @@ display: flex;
 flex-direction: row;
 }
 
+.account-form h2 {
+    margin-top: 20px;
+}
+
 /*Navbar adjustments*/
 
 .logo {
     height: 40px;
+    margin-top: 9px;
 }
 
 .navbar {
@@ -151,9 +155,46 @@ flex-direction: row;
     margin: 15px;
 }
 
-
-#main{
+#main {
     display: flex;
+}
+#loginForm .loginFrontPage{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: block;
+    width: 20%;
+    margin: auto;
+}
+
+#loginForm .loginFrontPage form-control{
+    display: block;
+    width: 100%;
+}
+
+.loginFrontPage h2{
+    text-align: center;
+}
+
+.front-page-login-button{
+    display: block;
+    width: 50%;
+    margin-top: 50px;
+}
+
+.form-group{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-group label{
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.form-control{
+    width: 100%;
+    margin: auto;
 }
 
 body-content{
@@ -161,12 +202,22 @@ body-content{
 }
 
 /*Misc modals*/
-
 /*Add users modal*/
-
 .collaboratingUser {
-    font-size:14pt;
+    font-size: 14pt;
+}
 
+.registration-fields{
+    display: flex;
+    flex-direction: row;
+}
+
+#registration-fields .col-md-10{
+    width: 100%;
+}
+
+.col-md-10 .form-control{
+    margin: 0;
 }
 
 .icon-active {

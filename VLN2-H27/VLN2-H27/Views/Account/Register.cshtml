@@ -7,10 +7,10 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "account-form", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h2>Create a new account.</h2>
+    <h2>Create a new account</h2>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="registration-fields">
+    <div class="registration-fields" id="registration-fields">
         <div class="form-group">
             @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">

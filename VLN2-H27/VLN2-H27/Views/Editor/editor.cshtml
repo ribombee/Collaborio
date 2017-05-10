@@ -23,34 +23,20 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/atelier-cave.light.min.css">
     <link rel="stylesheet" href="../../EditorLibraries/jQuerySimpleContextMenu/jquery.contextmenu.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="../../Content/EditorDefault.css">
+    <link rel="stylesheet" href="../../Content/EditorStyle.css">
 
 </head>
 <body>
-    <main>
-        <!-- Editor language/mode picker -->
-        <div id="editorWithPickers">
-            <label class="control-label">Language</label>
-            <select class="language-picker"></select>
-
-            <!-- Editor theme picker -->
-            <label class="control-label">Theme</label>
-            <select class="theme-picker">
-                <option>Visual Studio</option>
-                <option>Visual Studio Dark</option>
-                <option>High Contrast Dark</option>
-            </select>
-
             <!-- Tabs -->
-            <div id="tabs">
-                <ul>
-                       
-                </ul>           
-            </div>
-
-            <!-- Monaco editor window -->
-            <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
+        <div id="tabs">
+            <ul>
+                      
+            </ul>           
         </div>
+
+        <!-- Monaco editor window -->
+        <div id="monaco-editor" class="editor"></div>
+
         <!-- File tree applet -->
         <div id="filetree-parent">
             <div id="filetree" class="filetree" style="border:1px solid grey"></div>
@@ -67,8 +53,10 @@
 
 
         <!-- Adding users -->
-        @Html.Partial("addUsersPartial");
+        @Html.Partial("addUsersPartial")
 
+        <!-- Downloading zip users -->
+        @Html.ActionLink("Download project", "getProjectZip", "Editor", new { projectId = ViewBag.projectId  }, null)
 
         <!-- Modal container -->
         <div id="myModal" class="modal fade" role="dialog">
@@ -116,6 +104,7 @@
 
         <!-- Declaring global variables from viewbag-->
         <script> var projectId = @(projectId),
+            permissionStatus = '@(ViewBag.editPermission)',
             userName = '@(userName)',
             baseUrl = '@Url.Content("~")',
             getFileValueUrl = '@Url.Action("getFileValue", "Editor")',
@@ -126,5 +115,4 @@
         <!-- JS CODE GOES HERE -->
         <script src="../../Scripts/EditorScripts.js" type="text/javascript"></script>
          }
-    </main>
 </body>
