@@ -26,6 +26,7 @@ body {
     display: block;
     max-width: 100%;
     width: 100%;
+    padding: 0px;
 }
 #tabs ul{
     width: 100%;
@@ -46,6 +47,32 @@ body {
 }
 
 .theme-black > ul.jqueryFileTree a {
+    color: #ffffff;
+}
+
+#tabs.theme-dark ul {
+    background: #1E1E1E;
+}
+
+#tabs.theme-black ul {
+    background: #000000;
+}
+
+#tabs.theme-dark ul li:not(.ui-tabs-active) {
+    background: #1E1E1E;
+}
+
+#tabs.theme-black ul li:not(.ui-tabs-active) {
+    background: #000000;
+}
+
+#tabs.theme-dark ul li:not(.ui-tabs-active) a {
+    background: #1E1E1E;
+    color: #ffffff;
+}
+
+#tabs.theme-black ul li:not(.ui-tabs-active) a {
+    background: #000000;
     color: #ffffff;
 }
 
