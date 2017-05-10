@@ -29,27 +29,40 @@
 <body>
     <main>
         <!-- Editor language/mode picker -->
-        <div id="editor-and-tools">
+        <div id="editorWithPickers">
+            <label class="control-label">Language</label>
+            <select class="language-picker"></select>
+
+            <!-- Editor theme picker -->
+            <label class="control-label">Theme</label>
+            <select class="theme-picker">
+                <option>Visual Studio</option>
+                <option>Visual Studio Dark</option>
+                <option>High Contrast Dark</option>
+            </select>
+
             <!-- Tabs -->
             <div id="tabs">
-                <ul></ul>
+                <ul>
+                       
+                </ul>           
             </div>
 
             <!-- Monaco editor window -->
             <div id="monaco-editor" class="editor" style="width:800px;height:600px;border:1px solid grey"></div>
-            <!-- File tree applet -->
-            <div id="filetree-parent">
-                <div id="filetree" class="filetree" style="border:1px solid grey"></div>
-            </div>
+        </div>
+        <!-- File tree applet -->
+        <div id="filetree-parent">
+            <div id="filetree" class="filetree" style="border:1px solid grey"></div>
+        </div>
 
-            <!-- SignalR Chat -->
-            <div id="chatbox" class="chat">
-                <div id="discussionbox" data-text="Connected to chat">
-                    <ul id="discussion" class="list-unstyled"></ul>
-                </div>
-                <textarea id="message" placeholder="Type your message"></textarea>
-                <input type="hidden" id="displayname" />
+        <!-- SignalR Chat -->
+        <div id="chatbox" class="chat">
+            <div id="discussionbox" data-text="Connected to chat">
+                <ul id="discussion" class="list-unstyled"></ul>
             </div>
+            <textarea id="message" placeholder="Type your message"></textarea>
+            <input type="hidden" id="displayname" />
         </div>
 
 
@@ -65,15 +78,16 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Register new user</h4>
+                        <h4 class="modal-title">Add a new file to project</h4>
                     </div>
                     <div class="modal-body">
                         @using (Html.BeginForm("createFile", "Editor", FormMethod.Post, new { Id = "filePost" }))
                         {
                             @Html.Hidden("projectId", projectId)
-                            @Html.TextBox("fileName")
-                            @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" })
-                            <input type="submit" value="Plumbus" class="button" id="filePostBtn"/>
+                            @Html.TextBox("fileName","" , new { @class = "input-form" , @placeholder = "Enter filename" })
+                            <input type="submit" value="Create file" class="btn" id="filePostBtn"/> <br />
+                            <p>File type: @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" }) </p>
+
                         }
                     </div>
                     <div class="modal-footer">
