@@ -268,6 +268,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\EditorDefault.css" />
     <Content Include="Content\EditorStyle.css" />
     <Content Include="Content\ProjectStyle.css" />
     <Content Include="favicon.ico" />
@@ -279,8 +280,6 @@
     <Content Include="EditorLibraries\jQueryFileTree\gulpfile.js" />
     <Content Include="EditorLibraries\Monaco\ThirdPartyNotices.txt" />
     <Content Include="Icons\CollaborioLogo.png" />
-    <Content Include="Icons\collaborioLogoLarge.png" />
-    <Content Include="Icons\pointClick.png" />
     <Content Include="Models\EditorModels.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EditorModels.edmx</DependentUpon>
