@@ -598,7 +598,7 @@ SIGNALR CODE
 START
 ******************************************************/
 var hubProxy;
-var suppressModelChangedEvent = false;
+var suppressModelChangedEvent = 0;
 var hasChanged = false;
 var suppressSync = false;
 var editList = [];
@@ -607,7 +607,7 @@ var editFileList = [];
 const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
 const SEND_UPDATE_DELAY_SECONDS = 0.5;
-const SYNC_INTERVAL_SECONDS = 15;
+const SYNC_INTERVAL_SECONDS = 150;
 const SYNC_SUPPRESS_SECONDS = 2;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
 
@@ -655,7 +655,7 @@ $(function () {
             //have you already opened the file from server?
             if (currentlyEditingFile == file) {
                 //Dont react to edit events when inserting the new file
-                suppressModelChangedEvent = true;
+                suppressModelChangedEvent++;
                 editor.getModel().setValue(text);
             }
             //you havent opened the file and your editor isnt empty? just insert the text and open a new tab.
@@ -671,7 +671,7 @@ $(function () {
 
         //is it the file you're currently working on?
         if (currentlyEditingFile == filePath) {
-            suppressModelChangedEvent = true;
+            suppressModelChangedEvent++;
             editor.executeEdits(userName, editOperation);
         }
         //or is it in a tab?
@@ -694,7 +694,7 @@ $(function () {
             
             //is it the file you're currently working on?
             if (currentlyEditingFile == filePaths[i]) {
-                suppressModelChangedEvent = true;
+                suppressModelChangedEvent++;
                 editor.executeEdits(userName, editOperation);
             }
             //or is it in a tab?
@@ -719,7 +719,7 @@ $(function () {
     hubProxy.client.receiveUpdatedLine = function (file, lineNumber, lineText) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == file) {
-            suppressModelChangedEvent = true;
+            suppressModelChangedEvent++;
             var editOperation = createNewEditOperation(file, 0,
                     editor.getModel().getLineMaxColumn(lineNumber), lineNumber, lineNumber,
                     lineText);
@@ -741,7 +741,7 @@ $(function () {
     hubProxy.client.receiveFile = function (file, text) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == file) {
-            suppressModelChangedEvent = true;
+            suppressModelChangedEvent++;
             var fullRange = editor.getModel().getFullModelRange();
             editor.executeEdits("", createNewEditOperation(file, fullRange.startColumn, fullRange.endColumn, fullRange.startLineNumber,
                 fullRange.endLineNumber, text));
@@ -789,16 +789,17 @@ $(function () {
         }
 
         decorateUsersInLines();
-
+        suppressSync = true;
         //remove cursor position after
         clearTimeout(editingMessageTimeout);
         editingMessageTimeout = setTimeout(function () {
             removeFromCursorPositions(lineNumber, file, user);
+            suppressSync = false;
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
     };
 
-    // tart the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
+    // start the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
     $.connection.hub.start().done(function () {
         //Initialize things
         initFileTree();
@@ -813,8 +814,8 @@ $(function () {
         //Editor model changed
         var updateTimeout;
         editor.onDidChangeModelContent(function (e) {
-            if (suppressModelChangedEvent) {
-                suppressModelChangedEvent = false;
+            if (suppressModelChangedEvent > 0) {
+                suppressModelChangedEvent--;
                 return;
             }
 
