@@ -71,7 +71,8 @@ select,
 
 .account-form{
     margin: auto;
-    margin-top: 200px;
+    margin-top: 100px;
+    margin-bottom: 100px;
     width: 40%;
     display:flex;
     justify-content: center;
@@ -103,8 +104,13 @@ select,
     align-items: center;
 }
 
+.account-form h2 {
+    margin-top: 20px;
+}
+
 .logo {
     height: 40px;
+    margin-top: 9px;
 }
 
 .navbar {
@@ -129,10 +135,17 @@ select,
 
 .form-group{
     width: 100%;
+    margin-top: 30px;
+}
+
+.form-group label{
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .form-control{
-    width: 80%;
+    width: 100%;
     margin: auto;
 }
 
@@ -143,8 +156,16 @@ select,
 }
 
 .registration-fields{
-display: flex;
-flex-direction: row;
+    display: flex;
+    flex-direction: row;
+}
+
+#registration-fields .col-md-10{
+    width: 100%;
+}
+
+.col-md-10 .form-control{
+    margin: 0;
 }
 
 #main{
