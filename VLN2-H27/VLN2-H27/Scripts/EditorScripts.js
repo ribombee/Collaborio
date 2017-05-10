@@ -1,4 +1,23 @@
-﻿/*****************************************************
+﻿var startingText = []
+startingText.push("             .oo-                                                                                                                                                                      :oo`             ");
+startingText.push("           :/+//.    `:::::::-                    `:::::` `:::::                  `::`                                                    .--                                     ::-  -+++/:           ");
+startingText.push("        `..ss+     ``:sssssss+``                  `sssyy. .sssyy`                 -yy-                                                    /++                                     yhs     sso..`        ");
+startingText.push("      ``/yy.       yyo       :yy-                    /yy.    +yy`                 -yy-                                                                                            yys       :yy:``      ");
+startingText.push("     .ss/..        yyo       :yy-                    /yy.    +yy`                 -yy-                                                                                         :ss:-.       `..+ss`     ");
+startingText.push("+   +o::.          yyo       .::`    .///////-       /yy.    +yy`    -///////.    -yyo///////.       :///////`    -//` ./////`            -::     -:::::::`                    /hh.            -::o+/   ");
+startingText.push(".--++/             yyo             ../ooooooo/..     /yy.    +yy`    /ooooooo/..  -yyoooooooo:..  `..+ooooooo:..  /yy:.:ooooo`            /oo  `..////////-..               `../oo.               +++--`");
+startingText.push("/yy-               yyo            `yy+       /yy.    /yy.    +yy`    ````````oyy  -yy-       oys  :yy-       syo  /yyss+                  /oo  .oo-       +oo               -hh:                    :hh-");
+startingText.push("/yy-               yyo            `yy+       /yy.    /yy.    +yy`    /ssssssssyy  -yy-       oys  :yy-       syo  /yy-``                  /oo  .oo-       +oo               -hh:                    /hh-");
+startingText.push("`..oso             yyo            `yy+       /yy.    /yy.    +yy` .oo/-------oyy  -yy-       oys  :yy-       syo  /yy.                    /oo  .oo-       +oo             ooo--`                  sso..`");
+startingText.push("   :/+//.          yyo       .::` `yy+       /yy.    /yy.    +yy` .yy:       +yy  -yy-       oys  :yy-       syo  /yy.                    /oo  .oo-       +oo             yhs                  -////-   ");
+startingText.push("     .oo/--`       yyo       :yy- `yy+       /yy.    /yy.    +yy` .yy:       +yy  -yy-       oys  :yy-       syo  /yy.          `````     /oo  .oo-       +oo          `..sso               `--+ss`     ");
+startingText.push("        /yy-``     yyo       :yy- `yy+       /yy.    /yy.    +yy` .yy:       +yy  -yy-       oys  :yy-       syo  /yy.         .ooooo`    /oo  .oo-       +oo          /yy-``             ``:yy:        ");
+startingText.push("         ``syo     ``:sssssss+``   ``/sssssss+``     /yy.    +yy`  ``+sssssssyyy  -yyssssssss:``  ```osssssss-``  /yy.         .ooooo`    /oo   ``/+++++++-``          /hh-               yyo``         ");
+startingText.push("           --/++-    `:::::::-       .:::::::.       .::`    .::     .::::::::::  `::::::::::`       -:::::::`    .::`         `-----     .--     .-------`            .::`            :++:-.           ");
+startingText.push("             .++-                                                                                                                                                                      :++`             ");
+             
+
+/*****************************************************
 MONACO EDITOR SPECIFIC CODE
 START
 ******************************************************/
@@ -6,25 +25,40 @@ START
 var editor = null;
 //Filename of file currently being edited
 var currentlyEditingFile = "";
+//cursor info
 var currentCursorLine = -1;
 var cursorPositions = [];
 //available languages in monaco
 var availableLanguages = [];
-var languageExtensions = []
+var languageExtensions = [];
+
+var opening = true;
+const EDITOR_DEFAULT_SETTINGS = {
+    readOnly: false,
+    lineNumbers: true,
+    fontSize: 12
+}
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
     require.config({ paths: { 'vs': '../../EditorLibraries/Monaco/dev/vs' } });
     require(['vs/editor/editor.main'], function () {
         editor = monaco.editor.create(document.getElementById('monaco-editor'),{
-                value: [
-                    'function x() {',
-                    '\tconsole.log("Hello world!");',
-                    '}'
-                ].join('\n'),
-                //Hardcoded for now
-                language: 'javascript'
-            });
+            value: startingText.join('\n'),
+            //Hardcoded for now
+            language: 'plaintext',
+            readOnly: true,
+            lineNumbers: false,
+            fontWeight: 'bolder',
+            fontSize: 7            
+        });
+        //set logo colors
+        var decorations = [];
+        decorations = inlineDecorateLines(decorations, 1, 16, 1, 18, "collaborio-logo-purple");
+        decorations = inlineDecorateLines(decorations, 1, 16, 17, 127, "collaborio-logo-blue");
+        decorations = inlineDecorateLines(decorations, 1, 16, 128, 160, "collaborio-logo-orange");
+        decorations = inlineDecorateLines(decorations, 1, 16, 161, 250, "collaborio-logo-purple");
+        editor.deltaDecorations([], decorations);
 
         //Get available programming languages
         availableLanguages = monaco.languages.getLanguages().map(function (language) { return language.id });
@@ -68,8 +102,7 @@ function changeTheme(theme) {
 }
 
 //returns the name of the language that corresponds to the file extension
-function getLanguage(file)
-{
+function getLanguage(file) {
     var fileEnding = '.' + file.split('.').pop();
     var languages = monaco.languages.getLanguages();
     for(var i = 0; i < languages.length; i++){
@@ -170,6 +203,7 @@ function setThemePicker(theme) {
     $(".theme-picker")[0].selectedIndex = theme;
 }
 
+//Decorate lines other users are editing
 var oldDecorations = [];
 function decorateUsersInLines() {
     var fileDecorations = [];
@@ -182,6 +216,7 @@ function decorateUsersInLines() {
         });
     }
 
+    //create decorations from user positions
     for (var i = 0; i < cursorPositions.length; i++) {
         var fileFound = false;
         for (var j = 0; j < fileDecorations.length; j++) {
@@ -199,6 +234,7 @@ function decorateUsersInLines() {
         }
     }
 
+    //decorate the lines
     for (var i = 0; i < fileDecorations.length; i++) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == fileDecorations[i].file) {
@@ -219,13 +255,28 @@ function decorateUsersInLines() {
         }
     }
 
+    //is fileDecorations empty?
+    if (fileDecorations.length == 0) {
+        newDecorations.push({
+            decorations: editor.deltaDecorations(oldDecorations[findOldDecorationsOfFile(currentlyEditingFile)].decorations, []),
+            file: currentlyEditingFile
+        })
+        for (var i = 0; i < tabInfo.length; i++) {
+            newDecorations.push({
+                decorations: tabInfo[i].tabModel.deltaDecorations(oldDecorations[findOldDecorationsOfFile(tabInfo[i].filePath)].decorations, []),
+                file: tabInfo[i].filePath
+            })
+        }
+    }
+
     oldDecorations = newDecorations;
 }
 
 function createDecoration(user, lineNumber) {
     var decoration = {
         id: user, isForValidation: false, ownerId: 1,
-        range: new monaco.Range(lineNumber, 1, lineNumber, 3000), options: { isWholeLine: true, linesDecorationsClassName: 'userEditingLine', hoverMessage: user + ' is editing this line' }
+        range: new monaco.Range(lineNumber, 1, lineNumber, 3000),
+        options: { isWholeLine: true, inlineClassName: 'user-editing-inline', linesDecorationsClassName: 'user-editing-line', hoverMessage: user + ' is editing this line' }
     }
     return decoration;
 }
@@ -238,6 +289,23 @@ function findOldDecorationsOfFile(file) {
     }
 }
 
+function inlineDecorateLines(decorations, lineFrom, lineTo, startColumn, endColumn, classType) {
+    for (var i = lineFrom; i <= lineTo; i++) {
+        decorations.push({ range: new monaco.Range(i, startColumn, i, endColumn), options: { inlineClassName: classType } });
+    }
+
+    return decorations;
+}
+
+function removeFromCursorPositions(lineNumber, file, user) {
+    for (var i = 0; i < cursorPositions.length; i++) {
+        if (cursorPositions[i].user == user) {
+            cursorPositions.splice(i, 1);
+        }
+    }
+
+    decorateUsersInLines();
+}
 
 /*****************************************************
 MONACO EDITOR SPECIFIC CODE
@@ -412,6 +480,10 @@ $('#tabs').tabs({
 
 //Open tab in monaco
 function openTabInMonaco(tabId) {
+    if (opening) {
+        editor.updateOptions(EDITOR_DEFAULT_SETTINGS);
+    }
+
     var newModel = getEditorModelOfTab(tabId);
     editor.setModel(newModel);
     setLanguagePicker(newModel.getModeId());
@@ -487,6 +559,7 @@ var editFileList = [];
 const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
 const SYNC_INTERVAL_SECONDS = 30;
+const EDITING_MESSAGE_TIME_SECONDS = 5;
 
 $(function () {
     // Reference the auto-generated proxy for the hub.  
@@ -658,10 +731,15 @@ $(function () {
         }
 
         decorateUsersInLines();
+
+        //remove cursor position after
+        setTimeout(function () {
+            removeFromCursorPositions(lineNumber, file, user);
+        }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
     };
 
-    // Start the connection.
+    // Start the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
     $.connection.hub.start().done(function () {
         //Initialize things
         initFileTree();
@@ -679,6 +757,7 @@ $(function () {
 
             editList.push(e);
             editFileList.push(currentlyEditingFile);
+            hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
             hasChanged = true;
         });
 
@@ -692,12 +771,14 @@ $(function () {
         });
 
         //Your cursor position changed. Send clients your new cursor line
+        /*
         editor.onDidChangeCursorPosition(function (event) {
             if (currentCursorLine != event.position.lineNumber) {
                 hubProxy.server.sendCursorPosition(event.position.lineNumber, currentlyEditingFile);
             }
             currentCursorLine = event.position.lineNumber;
         });
+        */
 
         //Update editor on intervals
         var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS * 1000);
