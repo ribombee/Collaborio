@@ -579,15 +579,16 @@ START
 ******************************************************/
 var hubProxy;
 var suppressModelChangedEvent = false;
-var suppressLineUpdate = false;
 var hasChanged = false;
+var suppressSync = false;
 var editList = [];
 var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
-const SYNC_INTERVAL_SECONDS = 30;
-const EDITING_MESSAGE_TIME_SECONDS = 5;
+const SYNC_INTERVAL_SECONDS = 15;
+const SYNC_SUPPRESS_SECONDS = 2;
+const EDITING_MESSAGE_TIME_SECONDS = 10;
 
 $(function () {
     // Reference the auto-generated proxy for the hub.  
@@ -663,6 +664,7 @@ $(function () {
     }
 
     //someboy sent a set of updates
+    var syncSuppressTimeout;
     hubProxy.client.receiveUpdateSet = function (filePaths, editOperations) {
         for (var i = 0; i < filePaths.length; i++) {
             var editOperation = createNewEditOperation(filePaths[i], editOperations[i].range.startColumn,
@@ -684,6 +686,12 @@ $(function () {
                 }
             }
         }
+       
+        suppressSync = true;
+        clearTimeout(suncSuppressTimeout)
+        syncSuppressTimeout = setTimeout(function () {
+            suppressSync = false;
+        }, SUPPRESS_SYNC_SECONDS * 1000)
     }
 
     //Somebody is sending you an updated line
@@ -741,6 +749,7 @@ $(function () {
     };
 
     //somebody sent their cursor position
+    var editingMessageTimout;
     hubProxy.client.receiveCursorPosition = function (lineNumber, file, user) {
         var cursorPosition = {
             lineNumber: lineNumber,
@@ -761,7 +770,8 @@ $(function () {
         decorateUsersInLines();
 
         //remove cursor position after
-        setTimeout(function () {
+        clearTimeout(editingMessageTimeout);
+        editingMessageTimeout = setTimeout(function () {
             removeFromCursorPositions(lineNumber, file, user);
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
@@ -815,6 +825,7 @@ function htmlEncode(value) {
 }
 
 //This function runs on an interval to send a package of updates you have done in your editor
+var lineUpdateTimeout;
 function onUpdateInterval() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
@@ -823,20 +834,18 @@ function onUpdateInterval() {
         editList = [];
         editFileList = [];
 
-        if (!suppressLineUpdate) {
-            suppressLineUpdate = true;
-            //send whole edited line after delay, to ensure sync
-            setTimeout(function () {
-                hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
-                suppressLineUpdate = false;
-            }, UPDATE_LINE_DELAY_SECONDS * 1000);
-        }
+        //send whole edited line after delay, to ensure sync
+        clearTimeout(lineUpdateTimeout);
+        lineUpdateTimeout = setTimeout(function () {
+            hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
+        }, UPDATE_LINE_DELAY_SECONDS * 1000);
+
     }
 }
 
 //This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
-    if (hasChanged) {
+    if (hasChanged || !suppressSync) {
         hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
         hasChanged = false;
     }
