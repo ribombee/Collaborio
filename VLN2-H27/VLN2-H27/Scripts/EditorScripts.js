@@ -969,8 +969,17 @@ function addUserToProject(projectId, user, editPermission)
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(sendData),
         dataType: "json",
-        success: function (data) {
-            console.log(file + ' saved');
+        success: function (result) {
+            if(!result)
+            {
+                //the controller function returns false if it does not add a user.
+                alert("No such user exists");
+            }
+            else
+            {
+                fetchCollaboratorsForModal();
+            }
+
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -980,19 +989,20 @@ function addUserToProject(projectId, user, editPermission)
 
 function fetchCollaboratorsForModal() {
 
-    var sendData = {
+    var sendData = JSON.stringify({
         'projectId': projectId,
-    }
+    });
+    console.log(sendData);
     //we fetch all collaborators
     $.ajax({
         type: "POST",
         url: getUserUrl,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(sendData),
+        data: sendData,
         success: function (response) {
+            console.log(response);
             var collaboratorsHtml = "";
-
             for (var i in response) {
 
                 if (!response.hasOwnProperty(i)) {
@@ -1019,10 +1029,9 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    console.log("adding......." + $('#userToAdd').val() + " the user to project " + projectId);
     addUserToProject(projectId, $("#userToAdd").val(), 1);
-    console.log("added!");
-    fetchCollaboratorsForModal();
+    $("#userToAdd").val("");
+
 });
 
 /*****************************************************

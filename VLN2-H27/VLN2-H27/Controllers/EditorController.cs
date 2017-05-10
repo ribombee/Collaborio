@@ -163,7 +163,7 @@ namespace VLN2_H27.Controllers
             IEnumerable<Project_Users_Relations> collaborators = (from relations in db.Project_Users_Relations
                                                                           where relations.ProjectId == projectId
                                                                           select relations).AsEnumerable();
-
+            //fetching the username to display
             foreach(var collaborator in collaborators)
             {
                 collaborator.UserId = (from users in db.AspNetUsers
@@ -178,10 +178,12 @@ namespace VLN2_H27.Controllers
         }
 
         [HttpPost]
-        public ActionResult addUser(int projectId, string userName, bool permission)
+        public JsonResult addUser(int projectId, string userName, bool permission)
         {
-
+            //initialise database and jsonresult (bool)
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+            JsonResult wasEntered = new JsonResult();
+
 
             var tempUser = (from user in db.AspNetUsers
                             where user.UserName == userName
@@ -189,8 +191,9 @@ namespace VLN2_H27.Controllers
 
             if(tempUser == null)
             {
-                //this user does not exist, no need to do anything else.
-                return null;
+                //this user does not exist, we return false.
+                wasEntered.Data = false;
+                return wasEntered;
             }
 
             //we check to see if this user already has access
@@ -216,7 +219,8 @@ namespace VLN2_H27.Controllers
             }
 
             db.SaveChanges();
-            return null;
+            wasEntered.Data = true;
+            return wasEntered;
         }
     }
 }
