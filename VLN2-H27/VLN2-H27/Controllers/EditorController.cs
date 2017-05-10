@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Ionic.Zip;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -49,6 +50,7 @@ namespace VLN2_H27.Controllers
             {
                 if (Id.HasValue && (queryResult.ProjectId == Id))
                 {
+                    ViewBag.editPermission = queryResult.EditPermission;
                     ViewBag.projectId = Id;
                     return View();
                 }
@@ -240,6 +242,19 @@ namespace VLN2_H27.Controllers
             db.SaveChanges();
             wasEntered.Data = true;
             return wasEntered;
+        }
+
+        public ActionResult getProjectZip(int projectId)
+        {
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AddDirectory(Server.MapPath("~/UserProjects/" + projectId + "/"));
+
+                MemoryStream output = new MemoryStream();
+                zip.Save(output);
+                output.Seek(0, SeekOrigin.Begin);
+                return File(output, "application/zip", projectId+".zip");
+            }
         }
     }
 }

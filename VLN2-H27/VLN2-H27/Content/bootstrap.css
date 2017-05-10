@@ -36,6 +36,10 @@ summary {
   display: block;
 }
 
+footer {
+    margin-top:50px;
+}
+
 audio,
 canvas,
 video {
@@ -757,8 +761,8 @@ pre code {
 }
 
 .container {
-  padding-right: 15px;
-  padding-left: 15px;
+  /*padding-right: 15px;
+  padding-left: 15px;*/
   margin-right: auto;
   margin-left: auto;
 }
@@ -1243,7 +1247,7 @@ pre code {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1170px;
+    max-width: 1700px;
   }
   .col-lg-1,
   .col-lg-2,
