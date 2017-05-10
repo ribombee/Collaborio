@@ -77,7 +77,6 @@ $(document).ready(function () {
             var li = document.createElement('li');
             var a = document.createElement('a');
             a.setAttribute('data-index', i);
-            a.setAttribute('class', 'language-item');
             a.textContent = availableLanguages[i];
             li.appendChild(a)
             $("#language-picker").append(li);
@@ -86,10 +85,6 @@ $(document).ready(function () {
         //change language with language picker
         $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
-        });
-
-        $(".language-item").click(function () {
-            monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.getAttribute('data-index')]);
         });
 
         //change theme with theme picker
@@ -402,7 +397,7 @@ function initFileTreeContextMenu() {
           { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
           { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
         secondaryItems: [
-          { label: 'New File', icon: '', action: function () { $('#file-modal').trigger('click'); } },
+          { label: 'New File', icon: '', action: function () { alert("New File") } },
           { label: 'New Folder', icon: '', action: function () { alert("New Folder") } },
           { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
     });
@@ -605,8 +600,12 @@ var editList = [];
 var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
+<<<<<<< HEAD
+const UPDATE_LINE_DELAY_SECONDS = 0.25;
+=======
 const UPDATE_LINE_DELAY_SECONDS = 1;
 const SYNC_DELAY_SECONDS = 0.5;
+>>>>>>> 4c2bce4a9ec891ddb6d08addccd13bd31ce69954
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
