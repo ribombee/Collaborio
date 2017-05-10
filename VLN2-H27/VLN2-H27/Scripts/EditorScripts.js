@@ -691,7 +691,7 @@ $(function () {
         clearTimeout(syncSuppressTimeout);
         syncSuppressTimeout = setTimeout(function () {
             suppressSync = false;
-        }, SUPPRESS_SYNC_SECONDS * 1000)
+        }, SYNC_SUPPRESS_SECONDS * 1000)
     }
 
     //Somebody is sending you an updated line
@@ -749,7 +749,7 @@ $(function () {
     };
 
     //somebody sent their cursor position
-    var editingMessageTimout;
+    var editingMessageTimeout;
     hubProxy.client.receiveCursorPosition = function (lineNumber, file, user) {
         var cursorPosition = {
             lineNumber: lineNumber,
