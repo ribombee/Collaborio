@@ -25,6 +25,18 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Projects", "projects", "Editor")</li>
                     <li><a href="#" data-toggle="modal" data-target="#myModal">New File</a></li>
+                    <li> <!-- Editor theme and language pickers -->
+                        <div class="pickers">
+                            <label class="control-label">Theme</label>
+                            <select class="theme-picker">
+                                <option>Visual Studio</option>
+                                <option>Visual Studio Dark</option>
+                                <option>High Contrast Dark</option>
+                            </select>>
+                            <label class="control-label">Language</label>
+                            <select class="language-picker"></select>
+                        </div>
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

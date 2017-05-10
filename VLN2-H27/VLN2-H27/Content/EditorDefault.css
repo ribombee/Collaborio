@@ -1,4 +1,53 @@
-﻿#dialog label, #dialog input {
+﻿#monaco-editor {
+    float:right;
+}
+
+#filetree {
+    height: 150px;
+    overflow:scroll;
+}
+
+.theme-dark {
+    color: #ffffff;
+    background: #1E1E1E;
+}
+
+.theme-black {
+    color:#ffffff;
+    background: #000000;
+}
+
+.theme-dark > ul.jqueryFileTree a {
+    color: #ffffff;
+}
+
+.theme-black > ul.jqueryFileTree a {
+    color: #ffffff;
+}
+
+
+#discussionbox
+{
+    margin-top:5px;
+    height:300px;
+    width:340px;
+    border:1px solid grey;
+    font:15px/20px Georgia, Garamond, Serif;
+    overflow-y:auto;
+    overflow-x:hidden;
+    word-wrap:break-word;
+}
+
+#message
+{
+    resize:none;
+    height:50px;
+    width:340px;
+    overflow-x:hidden;
+}
+
+
+#dialog label, #dialog input {
     display: block;
 }
 

@@ -22,9 +22,10 @@
  *
  * MIT License: https://github.com/joewalnes/jquery-simple-context-menu/blob/master/LICENSE.txt
  */
+var contextMenuSettings;
 jQuery.fn.contextPopup = function(menuData) {
-	// Define default settings
-	var settings = {
+	// Define default contextMenuSettings
+	contextMenuSettings = {
 		contextMenuClass: 'contextMenuPlugin',
         linkClickerClass: 'contextMenuLink',
 		gutterLineClass: 'gutterLine',
@@ -36,26 +37,26 @@ jQuery.fn.contextPopup = function(menuData) {
 	};
 	
 	// merge them
-	$.extend(settings, menuData);
+	$.extend(contextMenuSettings, menuData);
 
   // Build popup menu HTML
   function createMenu(e, type) {
-    var menu = $('<ul class="' + settings.contextMenuClass + '"><div class="' + settings.gutterLineClass + '"></div></ul>')
+    var menu = $('<ul class="' + contextMenuSettings.contextMenuClass + '"></ul>')
       .appendTo(document.body);
-    if (settings.title) {
-      $('<li class="' + settings.headerClass + '"></li>').text(settings.title).appendTo(menu);
+    if (contextMenuSettings.title) {
+      $('<li class="' + contextMenuSettings.headerClass + '"></li>').text(contextMenuSettings.title).appendTo(menu);
     }
     var items = [];
     var clicked = $('a:hover').attr('rel');
     if (type == 1) {
-        items = settings.secondaryItems;
+        items = contextMenuSettings.secondaryItems;
     }
     else {
-        items = settings.items;
+        items = contextMenuSettings.items;
     }
     items.forEach(function(item) {
       if (item) {
-        var rowCode = '<li><a href="#" class="'+settings.linkClickerClass+'"><span class="itemTitle"></span></a></li>';
+        var rowCode = '<li><a href="#" class="'+contextMenuSettings.linkClickerClass+'"><span class="itemTitle"></span></a></li>';
         // if(item.icon)
         //   rowCode += '<img>';
         // rowCode +=  '<span></span></a></li>';
@@ -70,14 +71,14 @@ jQuery.fn.contextPopup = function(menuData) {
         if (item.isEnabled != undefined && !item.isEnabled()) {
             row.addClass('disabled');
         } else if (item.action) {
-            row.find('.'+settings.linkClickerClass).click(function () { item.action(e); });
+            row.find('.'+contextMenuSettings.linkClickerClass).click(function () { item.action(e); });
         }
 
       } else {
-        $('<li class="' + settings.seperatorClass + '"></li>').appendTo(menu);
+        $('<li class="' + contextMenuSettings.seperatorClass + '"></li>').appendTo(menu);
       }
     });
-    menu.find('.' + settings.headerClass ).text(settings.title);
+    menu.find('.' + contextMenuSettings.headerClass ).text(contextMenuSettings.title);
     return menu;
   }
 
