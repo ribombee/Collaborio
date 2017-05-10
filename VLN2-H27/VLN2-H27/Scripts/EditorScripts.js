@@ -594,7 +594,7 @@ const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
-const EDITING_MESSAGE_TIME_SECONDS = 10;
+const EDITING_MESSAGE_TIME_SECONDS = 5;
 
 $(function () {
     // Reference the auto-generated proxy for the hub.  
@@ -802,10 +802,12 @@ $(function () {
                 return;
             }
 
-            editList.push(e);
-            editFileList.push(currentlyEditingFile);
-            hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
-            hasChanged = true;
+            if (editor.getPosition().lineNumber == e.range.startLineNumber || editor.getPosition().lineNumber == e.range.endLineNumber) {
+                editList.push(e);
+                editFileList.push(currentlyEditingFile);
+                hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
+                hasChanged = true;
+            }
         });
 
         //Send chat message on enter
