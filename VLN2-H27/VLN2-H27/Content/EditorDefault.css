@@ -32,8 +32,26 @@
     visibility: hidden;
 }
 
-.userEditingLine {
+.user-editing-line {
 	background: lightblue;
 	width: 5px !important;
 	left: 3px;
+}
+
+.user-editing-inline {
+	background: rgb(128, 128, 128);
+	width: 5px !important;
+	left: 3px;
+}
+
+.collaborio-logo-purple {
+    color: rgb(97, 73, 96);
+}
+
+.collaborio-logo-orange {
+    color: rgb(255, 66, 52);
+}
+
+.collaborio-logo-blue {
+    color: rgb(20, 129, 158);
 }
