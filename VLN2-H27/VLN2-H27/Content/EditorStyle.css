@@ -10,7 +10,7 @@ body {
     margin-right: 0px;
     padding-right: 0px;
 }
-div.container.body-content {
+#editor-body {
     max-width: 100%;
     max-height: 80%;
     margin-left: 0px;

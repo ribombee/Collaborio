@@ -17,31 +17,31 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-{
+select {
     max-width: 280px;
 }
-
-.jumbotron{
+/*Jumbotron is on the front page, we are just adjusting the placement of it and its contents*/
+.jumbotron {
     background-color: transparent;
     margin-left: auto;
     margin-right: auto;
 }
 
-.jumbotron *{
+.jumbotron * {
     display: block;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
 }
 
-.jumbotron + .row{
+.jumbotron + .row {
     display: flex;
     justify-content: center;
     margin-top: 50px;
     margin-bottom: 100px;
 }
 
+/*This is the rounded square on the front page, adjusting its position and that of its contents*/
 #featureList {
     width: 80%;
     margin: auto;
@@ -68,6 +68,7 @@ select,
     color: RGB(255,66,52);
 }
 
+/*This is used on the login and register pages to change their look*/
 .account-form{
     margin: auto;
     margin-top: 100px;
@@ -103,9 +104,31 @@ select,
     align-items: center;
 }
 
+.form-group{
+    width: 100%;
+}
+
+.form-control{
+    width: 80%;
+    margin: auto;
+}
+
+.form-group .btn{
+    width: 50%;
+    margin: auto;
+    background-color: lightgrey;
+}
+
+.registration-fields{
+display: flex;
+flex-direction: row;
+}
+
 .account-form h2 {
     margin-top: 20px;
 }
+
+/*Navbar adjustments*/
 
 .logo {
     height: 40px;
@@ -132,6 +155,9 @@ select,
     margin: 15px;
 }
 
+#main {
+    display: flex;
+}
 #loginForm .loginFrontPage{
     padding-top: 50px;
     padding-bottom: 50px;
@@ -175,10 +201,14 @@ select,
     margin: auto;
 }
 
-.form-group .btn{
-    width: 50%;
+body-content{
     margin: auto;
-    background-color: lightgrey;
+}
+
+/*Misc modals*/
+/*Add users modal*/
+.collaboratingUser {
+    font-size: 14pt;
 }
 
 .registration-fields{
@@ -194,10 +224,22 @@ select,
     margin: 0;
 }
 
-#main{
-    display: flex;
+.icon-active {
+    color: black;
+    cursor: default;
+}
+
+.icon-greyed {
+    color: gray;
+    cursor: pointer;
 }
 
 body-content{
+    max-width: 960px;
+    margin: 100px, 100px;
     margin: auto;
+}
+
+#language-span {
+    overflow-y: scroll;
 }

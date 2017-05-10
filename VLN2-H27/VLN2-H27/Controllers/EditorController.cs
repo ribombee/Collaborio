@@ -229,7 +229,7 @@ namespace VLN2_H27.Controllers
                 {
                     ProjectId = projectId,
                     UserId = tempUser.Id,
-                    EditPermission = permission
+                    EditPermission = permission,
                 };
                 db.Project_Users_Relations.Add(newRelation);
             }
