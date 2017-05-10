@@ -1036,7 +1036,6 @@ function fetchCollaboratorsForModal() {
         dataType: "json",
         data: sendData,
         success: function (response) {
-            console.log(response);
             var collaboratorsHtml = "";
             for (var i in response) {
 
@@ -1045,7 +1044,14 @@ function fetchCollaboratorsForModal() {
                     continue;
                 }
                 //if it's relevant, we add it
-                collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId + "</div>";
+                collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId;
+                
+                if(response[i].EditPermission == true){
+                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-active\"> </i><i class=\"fa fa-eye icon-greyed\"value= \" " + response[i].UserId + " \"></i> </div>";
+                }
+                else{
+                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
+                }
             }
             //and put it in the appropriate div
             $('#collaboratorList').html(collaboratorsHtml);
@@ -1054,7 +1060,6 @@ function fetchCollaboratorsForModal() {
             console.log(xhr.responseText);
         }
     });
-
 }
 
 //when we open the modal, we want to get the latest info on collaborators from the database
@@ -1064,17 +1069,25 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    addUserToProject(projectId, $('#userToAdd').val(), 1);
+    addUserToProject(projectId, $('#userToAdd').val(), true);
     $('#userToAdd').val("");
-
 });
+
 //enter works like the add button 
 $('#userToAdd').keydown(function (event) {
     if (event.keyCode == 13) {
-        addUserToProject(projectId, $('#userToAdd').val(), 1);
+        addUserToProject(projectId, $('#userToAdd').val(), true);
         $('#userToAdd').val("");
     }
 });
+
+//when you click the greyed out icon, the edit mode switches
+$(function () {
+    $('.icon-greyed').click(function () {
+        alert("A");
+    });
+});
+
 
 /*****************************************************
 MISC CODE

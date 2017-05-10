@@ -18,31 +18,31 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-{
+select {
     max-width: 280px;
 }
-
-.jumbotron{
+/*Jumbotron is on the front page, we are just adjusting the placement of it and its contents*/
+.jumbotron {
     background-color: transparent;
     margin-left: auto;
     margin-right: auto;
 }
 
-.jumbotron *{
+.jumbotron * {
     display: block;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
 }
 
-.jumbotron + .row{
+.jumbotron + .row {
     display: flex;
     justify-content: center;
     margin-top: 50px;
     margin-bottom: 100px;
 }
 
+/*This is the rounded square on the front page, adjusting its position and that of its contents*/
 #featureList {
     width: 80%;
     margin: auto;
@@ -69,6 +69,7 @@ select,
     color: RGB(255,66,52);
 }
 
+/*This is used on the login and register pages to change their look*/
 .account-form{
     margin: auto;
     margin-top: 200px;
@@ -103,6 +104,29 @@ select,
     align-items: center;
 }
 
+
+.form-group{
+    width: 100%;
+}
+
+.form-control{
+    width: 80%;
+    margin: auto;
+}
+
+.form-group .btn{
+    width: 50%;
+    margin: auto;
+    background-color: lightgrey;
+}
+
+.registration-fields{
+display: flex;
+flex-direction: row;
+}
+
+/*Navbar adjustments*/
+
 .logo {
     height: 40px;
 }
@@ -127,25 +151,6 @@ select,
     margin: 15px;
 }
 
-.form-group{
-    width: 100%;
-}
-
-.form-control{
-    width: 80%;
-    margin: auto;
-}
-
-.form-group .btn{
-    width: 50%;
-    margin: auto;
-    background-color: lightgrey;
-}
-
-.registration-fields{
-display: flex;
-flex-direction: row;
-}
 
 #main{
     display: flex;
@@ -153,4 +158,23 @@ flex-direction: row;
 
 body-content{
     margin: auto;
+}
+
+/*Misc modals*/
+
+/*Add users modal*/
+
+.collaboratingUser {
+    font-size:14pt;
+
+}
+
+.icon-active {
+    color: black;
+    cursor: default;
+}
+
+.icon-greyed {
+    color: gray;
+    cursor: pointer;
 }
