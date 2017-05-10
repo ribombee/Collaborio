@@ -69,6 +69,15 @@ select,
     margin-bottom: 10px;
 }
 
+.navbar {
+    background-color: #29303d;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: rgb(255,255,255);
+    font-weight: 500;
+}
+
 .navbar-brand {
     background-image: url('../Icons/CollaborioLogo.png');
     width: 300px;
