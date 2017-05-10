@@ -605,7 +605,7 @@ var editList = [];
 var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
-const UPDATE_LINE_DELAY_SECONDS = 1;
+const UPDATE_LINE_DELAY_SECONDS = 100;
 const SEND_UPDATE_DELAY_SECONDS = 0.5;
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
@@ -789,11 +789,12 @@ $(function () {
         }
 
         decorateUsersInLines();
-
+        suppressSync = true;
         //remove cursor position after
         clearTimeout(editingMessageTimeout);
         editingMessageTimeout = setTimeout(function () {
             removeFromCursorPositions(lineNumber, file, user);
+            suppressSync = false;
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
     };
