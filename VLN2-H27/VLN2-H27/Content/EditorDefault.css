@@ -5,6 +5,7 @@
 #filetree {
     height: 150px;
     overflow:scroll;
+    width:40.5%;
 }
 
 .theme-dark {
@@ -28,9 +29,8 @@
 
 #discussionbox
 {
-    margin-top:5px;
     height:300px;
-    width:340px;
+    width:40.5%;
     border:1px solid grey;
     font:15px/20px Georgia, Garamond, Serif;
     overflow-y:auto;
@@ -42,7 +42,7 @@
 {
     resize:none;
     height:50px;
-    width:340px;
+    width:40.5%;
     overflow-x:hidden;
 }
 
