@@ -979,16 +979,13 @@ function addUserToProject(projectId, user, editPermission)
         data: JSON.stringify(sendData),
         dataType: "json",
         success: function (result) {
-            if(!result)
-            {
+            if (!result) {
                 //the controller function returns false if it does not add a user.
                 alert("No such user exists");
             }
-            else
-            {
+            else {
                 fetchCollaboratorsForModal();
             }
-
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -1038,9 +1035,16 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    addUserToProject(projectId, $("#userToAdd").val(), 1);
-    $("#userToAdd").val("");
+    addUserToProject(projectId, $('#userToAdd').val(), 1);
+    $('#userToAdd').val("");
 
+});
+//enter works like the add button 
+$('#userToAdd').keydown(function (event) {
+    if (event.keyCode == 13) {
+        addUserToProject(projectId, $('#userToAdd').val(), 1);
+        $('#userToAdd').val("");
+    }
 });
 
 /*****************************************************
