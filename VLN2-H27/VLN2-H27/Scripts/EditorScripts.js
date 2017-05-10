@@ -33,6 +33,7 @@ var availableLanguages = [];
 var languageExtensions = [];
 
 var opening = true;
+var projectReadOnly = false;
 const EDITOR_DEFAULT_SETTINGS = {
     readOnly: false,
     lineNumbers: true,
@@ -110,6 +111,17 @@ $(document).ready(function () {
             lastTheme = parseInt(lastTheme);
             changeTheme(lastTheme);
             //setThemePicker(lastTheme);
+        }
+        else {
+            changeTheme(0);
+        }
+
+        //convert C# boolean to javascript boolean
+        if(permissionStatus == "True") {
+            projectReadOnly = true;
+        }
+        else {
+            projectReadOnly = false;
         }
         
     });
@@ -529,7 +541,7 @@ $('#tabs').tabs({
 //Open tab in monaco
 function openTabInMonaco(tabId) {
     if (opening) {
-        editor.updateOptions(EDITOR_DEFAULT_SETTINGS);
+        editor.updateOptions({readOnly: projectReadOnly, lineNumbers: true, fontSize:12});
     }
 
     var newModel = getEditorModelOfTab(tabId);
@@ -599,16 +611,15 @@ START
 ******************************************************/
 var hubProxy;
 var suppressModelChangedEvent = 0;
-var hasChanged = false;
 var suppressSync = false;
+var currentlyWriting = true;
+var linesAdded = 0;
 var editList = [];
 var editFileList = [];
 
-const UPDATE_INTERVAL_SECONDS = 0.1;
-const UPDATE_LINE_DELAY_SECONDS = 1;
-const SEND_UPDATE_DELAY_SECONDS = 0.5;
-const SYNC_INTERVAL_SECONDS = 150;
-const SYNC_SUPPRESS_SECONDS = 2;
+const SEND_UPDATE_DELAY_SECONDS = 0.25;
+const SYNC_INTERVAL_SECONDS = 5;
+const SYNC_SUPPRESS_SECONDS = 1;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
 
 $(function () {
@@ -707,12 +718,15 @@ $(function () {
                 }
             }
         }
-       
+        
+        linesAdded = 0;
         suppressSync = true;
+        initializeSyncInterval();
         clearTimeout(syncSuppressTimeout);
         syncSuppressTimeout = setTimeout(function () {
             suppressSync = false;
-        }, SYNC_SUPPRESS_SECONDS * 1000)
+        }, SYNC_SUPPRESS_SECONDS * 1000);
+
     }
 
     //Somebody is sending you an updated line
@@ -739,6 +753,9 @@ $(function () {
 
     //Somebody is sending you their version of a file - sync with theirs
     hubProxy.client.receiveFile = function (file, text) {
+        if (currentlyWriting) {
+            return;
+        }
         //is it the file you're currently working on?
         if (currentlyEditingFile == file) {
             suppressModelChangedEvent++;
@@ -797,7 +814,7 @@ $(function () {
             suppressSync = false;
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
-    };
+    }
 
     // start the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
     $.connection.hub.start().done(function () {
@@ -819,16 +836,18 @@ $(function () {
                 return;
             }
 
-            if (editor.getPosition().lineNumber == e.range.startLineNumber || editor.getPosition().lineNumber == e.range.endLineNumber) {
-                editList.push(e);
-                editFileList.push(currentlyEditingFile);
-                hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
-                hasChanged = true;
+            currentlyWriting = true;
+            editList.push(e);
+            editFileList.push(currentlyEditingFile);
+            hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
+            if (e.text == editor.getModel().getEOL()) {
+                linesAdded++;
             }
 
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(function () {
                 sendUpdate();
+                currentlyWriting = false;
             }, SEND_UPDATE_DELAY_SECONDS*1000);
 
         });
@@ -843,10 +862,11 @@ $(function () {
         });
 
         //Push sync on intervals
-        var editorSyncInterval = setInterval(function () { onSyncInterval() }, SYNC_INTERVAL_SECONDS * 1000);
+        initializeSyncInterval();
 
     });
 });
+
 // This optional function html-encodes messages for display in the page.
 function htmlEncode(value) {
     var encodedValue = $('<div />').text(value).html();
@@ -854,29 +874,24 @@ function htmlEncode(value) {
 }
 
 //send package of updates
-var lineUpdateTimeout;
 function sendUpdate() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
-        var lineToUpdate = editList[editList.length-1].range.startLineNumber;
-        var fileToUpdate = editFileList[editFileList.length-1];
         editList = [];
         editFileList = [];
-
-        //send whole edited line after delay, to ensure sync
-        clearTimeout(lineUpdateTimeout);
-        lineUpdateTimeout = setTimeout(function () {
-            hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
-        }, UPDATE_LINE_DELAY_SECONDS * 1000);
-
     }
+}
+
+var editorSyncInterval;
+function initializeSyncInterval() {
+    clearInterval(editorSyncInterval);
+    editorSyncInterval = setInterval(function () { onSyncInterval() }, SYNC_INTERVAL_SECONDS * 1000);
 }
 
 //This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
-    if (hasChanged || !suppressSync) {
+    if (!suppressSync && cursorPositions.length < 1) {
         hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
-        hasChanged = false;
     }
 }
 

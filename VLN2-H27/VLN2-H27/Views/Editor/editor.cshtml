@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/atelier-cave.light.min.css">
     <link rel="stylesheet" href="../../EditorLibraries/jQuerySimpleContextMenu/jquery.contextmenu.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="../../Content/EditorDefault.css">
+    <link rel="stylesheet" href="../../Content/EditorStyle.css">
 
 </head>
 <body>
@@ -53,8 +53,10 @@
 
 
         <!-- Adding users -->
-        @Html.Partial("addUsersPartial");
+        @Html.Partial("addUsersPartial")
 
+        <!-- Downloading zip users -->
+        @Html.ActionLink("Download project", "getProjectZip", "Editor", new { projectId = ViewBag.projectId  }, null)
 
         <!-- Modal container -->
         <div id="myModal" class="modal fade" role="dialog">
@@ -102,6 +104,7 @@
 
         <!-- Declaring global variables from viewbag-->
         <script> var projectId = @(projectId),
+            permissionStatus = '@(ViewBag.editPermission)',
             userName = '@(userName)',
             baseUrl = '@Url.Content("~")',
             getFileValueUrl = '@Url.Action("getFileValue", "Editor")',

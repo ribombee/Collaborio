@@ -24,48 +24,82 @@ select,
 
 .jumbotron{
     background-color: transparent;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .jumbotron *{
     display: block;
-    position: relative;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-
 }
 
-
-.jumbotron + .row
-{
+.jumbotron + .row{
     display: flex;
     justify-content: center;
     margin-top: 50px;
     margin-bottom: 100px;
 }
 
-.loginFrontPage{
+#featureList {
+    width: 80%;
     margin: auto;
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    border: 2px dashed RGB(97,73,96) ;
+    border-radius: 20px;
+}
+
+#featureList .col-md-4 {
+    width: 500px;
+}
+
+#featureList h2 {
+    margin: auto;
+}
+
+#featureList h2 span:first-of-type{
+    color: RGB(20,129,158);
+}
+
+#featureList h2 span:last-of-type {
+    color: RGB(255,66,52);
+}
+
+.account-form{
+    margin: auto;
+    margin-top: 200px;
     width: 40%;
     display:flex;
     justify-content: center;
     flex-direction:column;
-    border: 2px solid grey;
+    border: 2px dashed RGB(97,73,96) ;
+    border-radius: 20px;
     padding-left: 50px;
     padding-right: 50px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
-.loginFrontPage * {
+.account-form * {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: auto;
 }
 
-.loginFrontPage label{
+.account-form label{
     margin:inherit;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.account-form input[type=submit]{
+    margin-top: 20px;
+    padding: 10px;
+    align-items: center;
 }
 
 .logo {
@@ -101,25 +135,15 @@ select,
     margin: auto;
 }
 
-.checkbox-frontpage{
-    width: 40%;
-    padding: 10px;
-    flex-direction: row;
-}
-
-.checkbox-frontpage *{
-    display: inline;
-    position:relative;
-    background-color: blue;
-    float: clear;
-    margin: 2px;
-}
-
-
 .form-group .btn{
     width: 50%;
     margin: auto;
     background-color: lightgrey;
+}
+
+.registration-fields{
+display: flex;
+flex-direction: row;
 }
 
 #main{
