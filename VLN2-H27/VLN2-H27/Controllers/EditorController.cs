@@ -39,20 +39,33 @@ namespace VLN2_H27.Controllers
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
             var queryResult = (from rel in db.Project_Users_Relations
                               where rel.UserId == userId
+                              && rel.ProjectId == Id
                               select rel).FirstOrDefault();
             IEnumerable<SelectListItem> emptyList = new SelectListItem[] { };
             ViewBag.emptyList = emptyList;
             ViewBag.UserName = User.Identity.GetUserName();
-
-            Debug.WriteLine(queryResult.ProjectId == Id);
-            if (Id.HasValue && (queryResult.ProjectId == Id))
+            
+            if(queryResult != null)
             {
-                ViewBag.projectId = Id;
-                return View();
+                if (Id.HasValue && (queryResult.ProjectId == Id))
+                {
+                    ViewBag.projectId = Id;
+                    return View();
+                }
+            }
+            return RedirectToAction("projects");
+        }
+
+        
+        public JsonResult fileExists(string filePath)
+        {
+            if(System.IO.File.Exists(filePath))
+            {
+                return Json(1);
             }
             else
             {
-                return RedirectToAction("projects");
+                return Json(0);
             }
         }
 
