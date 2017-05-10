@@ -1,10 +1,9 @@
 dsadsada s lllllllkkllfffffffffffffffffffffff
 asdsaasdas
 asadsadsa
-dsfdsdsfdsfdsfdsfsdasdasdasd
+dsfdsdsfdsfdsfdsfsd
 
 asdsadasdsadsadasdsa
 
 for(int i = 0)
-wat a beefy maasdasdasasadsdasdsdasdasdasd
-asdasdasdasdasdasd
+wat a beefy maasdasdasasdasd
