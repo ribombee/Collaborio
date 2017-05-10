@@ -116,6 +116,7 @@
 
         <!-- Declaring global variables from viewbag-->
         <script> var projectId = @(projectId),
+            permissionStatus = '@(ViewBag.editPermission)',
             userName = '@(userName)',
             baseUrl = '@Url.Content("~")',
             getFileValueUrl = '@Url.Action("getFileValue", "Editor")',

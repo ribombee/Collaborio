@@ -33,6 +33,7 @@ var availableLanguages = [];
 var languageExtensions = [];
 
 var opening = true;
+var projectReadOnly = false;
 const EDITOR_DEFAULT_SETTINGS = {
     readOnly: false,
     lineNumbers: true,
@@ -110,6 +111,16 @@ $(document).ready(function () {
             lastTheme = parseInt(lastTheme);
             changeTheme(lastTheme);
             //setThemePicker(lastTheme);
+        }
+
+        //convert C# boolean to javascript boolean
+        if(permissionStatus == "True")
+        {
+            projectReadOnly = true;
+        }
+        else
+        {
+            projectReadOnly = false;
         }
         
     });
@@ -529,7 +540,7 @@ $('#tabs').tabs({
 //Open tab in monaco
 function openTabInMonaco(tabId) {
     if (opening) {
-        editor.updateOptions(EDITOR_DEFAULT_SETTINGS);
+        editor.updateOptions({readOnly: projectReadOnly, lineNumbers: true, fontSize:12});
     }
 
     var newModel = getEditorModelOfTab(tabId);
