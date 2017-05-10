@@ -9,7 +9,7 @@
 
 <div class="row" id="featureList">
     <div class="col-md-4">
-        <h2>Collaborate and create!</h2>
+        <h2><span>Collaborate</span> and <span>create</span>!</h2>
         <ul>
             <li>Collaborate with your friends to create the program of your dreams - together!</li>
             <li>Do your phone-interviews with your potential hires in an environment they'll feel right at home in.</li>
@@ -42,11 +42,6 @@
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                 </div>
-
-                        <div class="checkbox-frontpage">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe, new {@class="checkBoxLabelForlogin" })
-                        </div>
                 <div class="form-group">
                         <input type="submit" value="Log in" class="btn btn-default" />
                 </div>
