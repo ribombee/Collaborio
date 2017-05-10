@@ -606,7 +606,7 @@ var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
-const SYNC_DELAY_SECONDS = 0.5;
+const SEND_UPDATE_DELAY_SECONDS = 0.5;
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
@@ -811,6 +811,7 @@ $(function () {
             + ' connected!</strong></i></li>');
 
         //Editor model changed
+        var updateTimeout;
         editor.onDidChangeModelContent(function (e) {
             if (suppressModelChangedEvent) {
                 suppressModelChangedEvent = false;
@@ -823,6 +824,12 @@ $(function () {
                 hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
                 hasChanged = true;
             }
+
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(function () {
+                sendUpdate();
+            }, SEND_UPDATE_DELAY_SECONDS*1000);
+
         });
 
         //Send chat message on enter
@@ -834,8 +841,6 @@ $(function () {
             }
         });
 
-        //Update editor on intervals
-        var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS * 1000);
         //Push sync on intervals
         var editorSyncInterval = setInterval(function () { onSyncInterval() }, SYNC_INTERVAL_SECONDS * 1000);
 
@@ -847,10 +852,9 @@ function htmlEncode(value) {
     return encodedValue;
 }
 
-//This function runs on an interval to send a package of updates you have done in your editor
+//send package of updates
 var lineUpdateTimeout;
-var syncTimeout;
-function onUpdateInterval() {
+function sendUpdate() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
         var lineToUpdate = editList[editList.length-1].range.startLineNumber;
@@ -863,11 +867,6 @@ function onUpdateInterval() {
         lineUpdateTimeout = setTimeout(function () {
             hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
         }, UPDATE_LINE_DELAY_SECONDS * 1000);
-        //send whole edited file after delay, to ensure sync
-        clearTimeout(syncTimeout);
-        syncTimeout = setTimeout(function () {
-            hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
-        }, SYNC_DELAY_SECONDS*1000);
 
     }
 }
@@ -875,7 +874,7 @@ function onUpdateInterval() {
 //This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
     if (hasChanged || !suppressSync) {
-        //hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
+        hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
         hasChanged = false;
     }
 }
