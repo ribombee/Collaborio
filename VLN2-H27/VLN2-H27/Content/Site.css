@@ -69,6 +69,10 @@ select,
     margin-bottom: 10px;
 }
 
+.logo {
+    height: 40px;
+}
+
 .navbar {
     background-color: #29303d;
 }
