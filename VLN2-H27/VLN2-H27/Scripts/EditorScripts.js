@@ -747,6 +747,9 @@ $(function () {
 
         //advertise that you connected
         hubProxy.server.userConnected(userName);
+        //display in the chat window that you connected
+        $('#discussion').append('<li><i><strong>[' + getTimeStamp() + ']' + htmlEncode(userName)
+            + ' connected!</strong></i></li>');
 
         //Editor model changed
         editor.onDidChangeModelContent(function (e) {
@@ -770,16 +773,6 @@ $(function () {
             }
         });
 
-        //Your cursor position changed. Send clients your new cursor line
-        /*
-        editor.onDidChangeCursorPosition(function (event) {
-            if (currentCursorLine != event.position.lineNumber) {
-                hubProxy.server.sendCursorPosition(event.position.lineNumber, currentlyEditingFile);
-            }
-            currentCursorLine = event.position.lineNumber;
-        });
-        */
-
         //Update editor on intervals
         var editorUpdateInterval = setInterval(function () { onUpdateInterval() }, UPDATE_INTERVAL_SECONDS * 1000);
         //Push sync on intervals
@@ -793,6 +786,7 @@ function htmlEncode(value) {
     return encodedValue;
 }
 
+//This function runs on an interval to send a package of updates you have done in your editor
 function onUpdateInterval() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
@@ -812,6 +806,7 @@ function onUpdateInterval() {
     }
 }
 
+//This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
     if (hasChanged) {
         hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
