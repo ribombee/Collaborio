@@ -35,11 +35,17 @@ namespace VLN2_H27.Controllers
 
         public ActionResult editor(int? Id)
         {
+            var userId = User.Identity.GetUserId();
+            VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+            var queryResult = (from rel in db.Project_Users_Relations
+                              where rel.UserId == userId
+                              select rel).FirstOrDefault();
             IEnumerable<SelectListItem> emptyList = new SelectListItem[] { };
             ViewBag.emptyList = emptyList;
             ViewBag.UserName = User.Identity.GetUserName();
 
-            if (Id.HasValue)
+            Debug.WriteLine(queryResult.ProjectId == Id);
+            if (Id.HasValue && (queryResult.ProjectId == Id))
             {
                 ViewBag.projectId = Id;
                 return View();
