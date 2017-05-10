@@ -797,11 +797,12 @@ $(function () {
         }
 
         decorateUsersInLines();
-
+        suppressSync = true;
         //remove cursor position after
         clearTimeout(editingMessageTimeout);
         editingMessageTimeout = setTimeout(function () {
             removeFromCursorPositions(lineNumber, file, user);
+            suppressSync = false;
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
     }
