@@ -172,5 +172,11 @@ select,
 }
 
 body-content{
+    max-width: 960px;
+    margin: 100px, 100px;
     margin: auto;
+}
+
+#language-span {
+    overflow-y: scroll;
 }
