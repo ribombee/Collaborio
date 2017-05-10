@@ -21,7 +21,9 @@
                     <span class="icon-bar"></span>
                 </button>
                 <!--@Html.ActionLink("Collabor.io", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })-->
-                <img class="logo" src="../../Icons/CollaborioLogo.png" />
+                <a href="@Url.Action("Index", "Home")">
+                    <img class="logo" src="../../Icons/CollaborioLogo.png" />
+                </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
