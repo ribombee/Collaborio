@@ -1,1 +1,4 @@
-cout << "this is my auto-generated text!" << endl
+f
+for(int i = 0; i < arr.length; i++) {
+    if(arr)
+}
