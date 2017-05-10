@@ -586,6 +586,7 @@ var editFileList = [];
 
 const UPDATE_INTERVAL_SECONDS = 0.1;
 const UPDATE_LINE_DELAY_SECONDS = 1;
+const SYNC_DELAY_SECONDS = 0.5;
 const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 2;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
@@ -777,7 +778,7 @@ $(function () {
         
     };
 
-    // Start the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
+    // tart the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
     $.connection.hub.start().done(function () {
         //Initialize things
         initFileTree();
@@ -828,6 +829,7 @@ function htmlEncode(value) {
 
 //This function runs on an interval to send a package of updates you have done in your editor
 var lineUpdateTimeout;
+var syncTimeout;
 function onUpdateInterval() {
     if (editList.length > 0) {
         hubProxy.server.sendEditorUpdates(editFileList, editList);
@@ -841,6 +843,11 @@ function onUpdateInterval() {
         lineUpdateTimeout = setTimeout(function () {
             hubProxy.server.sendEditorUpdatedLine(fileToUpdate, lineToUpdate, editor.getModel().getLineContent(lineToUpdate));
         }, UPDATE_LINE_DELAY_SECONDS * 1000);
+        //send whole edited file after delay, to ensure sync
+        clearTimeout(syncTimeout);
+        syncTimeout = setTimeout(function () {
+            hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
+        }, SYNC_DELAY_SECONDS*1000);
 
     }
 }
@@ -848,7 +855,7 @@ function onUpdateInterval() {
 //This function runs on an interval and sends your version of the file to ensure sync with other users
 function onSyncInterval() {
     if (hasChanged || !suppressSync) {
-        hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
+        //hubProxy.server.sendFile(currentlyEditingFile, editor.getModel().getValue());
         hasChanged = false;
     }
 }
