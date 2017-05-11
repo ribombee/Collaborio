@@ -181,11 +181,6 @@ namespace VLN2_H27.Controllers
             if(!System.IO.File.Exists(filePath))
             {
                 //this file does not already exist so we can create it!
-                VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
-                Project theProject = db.Projects.FirstOrDefault(x => x.Id == Convert.ToInt32(data[0]));
-                theProject.NrOfFiles++;
-                db.SaveChanges();
-
                 System.IO.File.WriteAllText(filePath, text);
             }
             //we return a boolean value that indicates whether or not the file exists so we can display an error if it does!
