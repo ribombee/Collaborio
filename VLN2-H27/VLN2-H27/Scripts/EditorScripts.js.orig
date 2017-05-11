@@ -33,6 +33,7 @@ var availableLanguages = [];
 var languageExtensions = [];
 
 var opening = true;
+var projectReadOnly = false;
 const EDITOR_DEFAULT_SETTINGS = {
     readOnly: false,
     lineNumbers: true,
@@ -83,6 +84,7 @@ $(document).ready(function () {
             $("#language-picker").append(li);
         }
 
+
         //change language with language picker
         $(".language-picker").change(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
@@ -115,6 +117,18 @@ $(document).ready(function () {
             changeTheme(0);
         }
         
+        //convert C# boolean to javascript boolean
+        if(permissionStatus == "True") {
+<<<<<<< HEAD
+            //projectReadOnly = true;
+=======
+            projectReadOnly = false;
+>>>>>>> b5b523b3f23546ad723387cb8c15836bf6e12897
+        }
+        else {
+            projectReadOnly = true;
+        }
+        
     });
 });
 
@@ -131,6 +145,8 @@ function changeTheme(theme) {
     setThemeToElement('#discussionbox', theme);
     setThemeToElement('#discussion', theme);
     setThemeToElement('#message', theme);
+    setThemeToElement('#tabs', theme);
+    setThemeToElement('body', theme);
 }
 
 function setThemeToElement(element, theme) {
@@ -443,6 +459,7 @@ function refreshFileTree() {
         }
     }, 500);
 }
+
 /*****************************************************
 JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 END
@@ -532,7 +549,7 @@ $('#tabs').tabs({
 //Open tab in monaco
 function openTabInMonaco(tabId) {
     if (opening) {
-        editor.updateOptions(EDITOR_DEFAULT_SETTINGS);
+        editor.updateOptions({readOnly: projectReadOnly, lineNumbers: true, fontSize:12});
     }
 
     var newModel = getEditorModelOfTab(tabId);
@@ -604,21 +621,12 @@ var hubProxy;
 var suppressModelChangedEvent = 0;
 var suppressSync = false;
 var currentlyWriting = true;
-var linesAdded = 0;
 var editList = [];
 var editFileList = [];
 
-<<<<<<< HEAD
-const SEND_UPDATE_DELAY_SECONDS = 0.25;
-const SYNC_INTERVAL_SECONDS = 5;
+const SEND_UPDATE_DELAY_SECONDS = 0.1;
+const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 1;
-=======
-const UPDATE_INTERVAL_SECONDS = 0.1;
-const UPDATE_LINE_DELAY_SECONDS = 1;
-const SEND_UPDATE_DELAY_SECONDS = 0.5;
-const SYNC_INTERVAL_SECONDS = 150;
-const SYNC_SUPPRESS_SECONDS = 2;
->>>>>>> 2befd9c9bf3210efc1089b7509f3264ed2f36730
 const EDITING_MESSAGE_TIME_SECONDS = 5;
 
 $(function () {
@@ -718,7 +726,6 @@ $(function () {
             }
         }
         
-        linesAdded = 0;
         suppressSync = true;
         initializeSyncInterval();
         clearTimeout(syncSuppressTimeout);
@@ -839,9 +846,6 @@ $(function () {
             editList.push(e);
             editFileList.push(currentlyEditingFile);
             hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
-            if (e.text == editor.getModel().getEOL()) {
-                linesAdded++;
-            }
 
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(function () {
@@ -849,6 +853,15 @@ $(function () {
                 currentlyWriting = false;
             }, SEND_UPDATE_DELAY_SECONDS*1000);
 
+        });
+
+        //send editor updates on enter/newline
+        editor.onKeyDown(function (e) {
+            if (e.keyCode == 5) {
+                clearTimeout(updateTimeout);
+                sendUpdate();
+                currentlyWriting = false;
+            }
         });
 
         //Send chat message on enter
@@ -933,9 +946,19 @@ $('#filePost').submit(function (event) {
         type: "POST",
         url: createFileUrl,
         data: $('#filePost').serialize(),
+        success: function (data) {
+            if (data == false) {
+                setTimeout(function () { refreshFileTree(); }, 500);
+                $('#addFileError').text("");
+                $('#addFileName').val("");
+                $('#myModal').modal('hide');
+            }
+            else {
+                $('#addFileError').text("A file with this name already exists in this project!");
+            }
+        }
     })
-    setTimeout(function () { refreshFileTree(); }, 500);
-    $('#myModal').modal('hide');
+
     event.preventDefault();
     return false;
 });
@@ -1050,7 +1073,6 @@ function fetchCollaboratorsForModal() {
         dataType: "json",
         data: sendData,
         success: function (response) {
-            console.log(response);
             var collaboratorsHtml = "";
             for (var i in response) {
 
@@ -1059,7 +1081,14 @@ function fetchCollaboratorsForModal() {
                     continue;
                 }
                 //if it's relevant, we add it
-                collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId + "</div>";
+                collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId;
+                
+                if(response[i].EditPermission == true){
+                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-active\"> </i><i class=\"fa fa-eye icon-greyed\"value= \" " + response[i].UserId + " \"></i> </div>";
+                }
+                else{
+                    collaboratorsHtml += " <i id=\"edit\"class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
+                }
             }
             //and put it in the appropriate div
             $('#collaboratorList').html(collaboratorsHtml);
@@ -1068,7 +1097,6 @@ function fetchCollaboratorsForModal() {
             console.log(xhr.responseText);
         }
     });
-
 }
 
 //when we open the modal, we want to get the latest info on collaborators from the database
@@ -1078,17 +1106,28 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    addUserToProject(projectId, $('#userToAdd').val(), 1);
+    addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').find(':selected').attr('editPermissionValue'));
     $('#userToAdd').val("");
-
 });
+
 //enter works like the add button 
 $('#userToAdd').keydown(function (event) {
     if (event.keyCode == 13) {
-        addUserToProject(projectId, $('#userToAdd').val(), 1);
+        addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').val());
         $('#userToAdd').val("");
     }
 });
+
+//when you click the greyed out icon, the edit mode switches
+
+$('#edit').click(function () {
+    alert("A");
+});
+
+$('#save-button').click(function () {
+    saveAllFiles();
+});
+
 
 /*****************************************************
 MISC CODE
