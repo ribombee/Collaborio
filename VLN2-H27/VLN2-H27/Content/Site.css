@@ -157,11 +157,6 @@ select {
     width: 100%;
 }
 
-.form-control{
-    width: 80%;
-    margin: auto;
-}
-
 .form-group .btn{
     width: 50%;
     margin: auto;
@@ -227,7 +222,7 @@ flex-direction: row;
 
 .form-control{
     width: 100%;
-    margin: auto;
+    margin: 0;
 }
 
 body-content{
