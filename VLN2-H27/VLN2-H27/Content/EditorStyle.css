@@ -187,10 +187,14 @@ body {
     border-radius: 4px;
     font-family:inherit;
 }
-<<<<<<< HEAD
+
+.input-group-btn button {
+    border: none;
+}
 
 #invite-modal-header {
     width: 100%;
+    margin-bottom: 10px;
 }
 
 #invite-modal-header input, #invite-modal-header select {
@@ -204,12 +208,20 @@ body {
 #addSingleUser {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+    margin-left: -10px;
+    margin-bottom: 5px;
+    padding-top: 8px;
 }
 
 #edit-permission-select {
     width: 80%;
+    margin-left: -5px;
 }
 
 #addUserButton {
     cursor: pointer;
+}
+
+#collaboratorList, .modal-body h2 {
+    margin-left: 15px;
 }
