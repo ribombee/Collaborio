@@ -8,6 +8,10 @@
     width:100%;
 }
 
+.body-content hr{
+    margin-top: 50px;
+}
+
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
@@ -59,6 +63,7 @@ select {
 
 #featureList h2 {
     margin: auto;
+    margin-bottom: 10px;
 }
 
 #featureList h2 span:first-of-type{
@@ -69,6 +74,48 @@ select {
     color: RGB(255,66,52);
 }
 
+#front-page-buttons {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.front-page-button {
+    margin: 10px;
+    margin-top: 30px;
+    width: 160px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 5px;
+    border: 3px solid;
+    outline: none;
+
+}
+.front-page-button {
+    text-decoration: none;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px rgb(0,0,0);
+}
+
+#register-button-front:hover {
+    background-color: RGB(40,149,178);
+}
+
+#login-button-front:hover {
+    background-color:RGB(255,86,72);
+}
+
+#register-button-front {
+    background-color: RGB(60,169,198);
+    border-color: RGB(20,129,158);
+}
+
+#login-button-front {
+    background-color: RGB(255,106,92);
+    border-color: RGB(255,66,52);
+}
 /*This is used on the login and register pages to change their look*/
 .account-form{
     margin: auto;
@@ -84,6 +131,7 @@ select {
     padding-right: 50px;
     padding-top: 30px;
     padding-bottom: 30px;
+    text-align: center;
 }
 
 .account-form * {
@@ -229,6 +277,7 @@ body-content{
     color: red;
 }
 
+/*Footer*/
 footer {
     margin-top: 20px;
     margin-left: 5px;
