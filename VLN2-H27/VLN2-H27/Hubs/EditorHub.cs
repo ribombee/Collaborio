@@ -5,33 +5,43 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace VLN2_H27.Hubs
 {
     public class EditorHub : Hub
     {
-        public void SendChat(string name, string message, string projectId)
+        public void sendChat(string name, string message, string projectId)
         {
-            // Call the addNewMessageToPage method to update clients.
             Clients.Group(projectId).addNewMessageToPage(name, message);
         }
 
-        public void SendEditorUpdate(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber, string textValue)
+        public void sendLineDelete(string filePath, int startColumn, int endColumn, int startLineNumber, int endLineNumber)
         {
-            Clients.OthersInGroup(Clients.Caller.projectId).updateEditorModel(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveLineDelete(filePath, startColumn, endColumn, startLineNumber, endLineNumber);
         }
 
-        public void SendEditorUpdates(List<string> filePaths, List<editOperation> editOperations)
+        public void sendEditorUpdates(List<string> filePaths, List<editOperation> editOperations)
         {
             Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdateSet(filePaths, editOperations);
         }
 
-        public void SendEditorUpdatedLine(string lineFile, int lineNumber, string text)
+        public void sendEditorUpdatedLine(string file, string text, Range range)
         {
-            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdatedLine(lineFile, lineNumber, text);
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveUpdatedLine(file, text, range);
+        }
+        
+        public void sendNewline(string file, Range range)
+        {
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveNewline(file, range);
         }
 
-        public void SendFile(string file, string text)
+        public void sendDeleteUpdate(string file, int startLineNumber, int startColumn, int offset)
+        {
+            Clients.OthersInGroup(Clients.Caller.projectId).receiveDeleteUpdate(file, startLineNumber, startColumn, offset);
+        }
+
+        public void sendFile(string file, string text)
         {
             Clients.OthersInGroup(Clients.Caller.projectId).receiveFile(file, text);
         }
@@ -42,12 +52,12 @@ namespace VLN2_H27.Hubs
             Clients.OthersInGroup(Clients.CallerState.projectId).newUserConnected(userName);
         }
 
-        public void RequestFile(string file)
+        public void requestFile(string file)
         {
             Clients.OthersInGroup(Clients.CallerState.projectId).userHasRequestedFile(file, Context.ConnectionId);
         }
 
-        public void SendRequestedFile(string file, string text, string connectionId)
+        public void sendRequestedFile(string file, string text, string connectionId)
         {
             Clients.Client(connectionId).receiveRequestedFile(file, text);
         }
@@ -74,7 +84,7 @@ namespace VLN2_H27.Hubs
 
     }
 
-    public class range
+    public class Range
     {
         [JsonProperty("endColumn")]
         public int endColumn { get; set; }
@@ -101,7 +111,7 @@ namespace VLN2_H27.Hubs
         public Boolean isUndoing { get; set; }
 
         [JsonProperty("range")]
-        public range editRange { get; set; }
+        public Range range { get; set; }
 
         [JsonProperty("rangeLength")]
         public int rangeLength { get; set; }
