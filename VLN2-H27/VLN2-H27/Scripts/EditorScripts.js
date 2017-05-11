@@ -142,6 +142,7 @@ function changeTheme(theme) {
     setThemeToElement('#discussion', theme);
     setThemeToElement('#message', theme);
     setThemeToElement('#tabs', theme);
+    setThemeToElement('body', theme);
 }
 
 function setThemeToElement(element, theme) {
