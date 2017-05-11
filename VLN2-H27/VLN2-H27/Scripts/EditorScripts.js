@@ -1079,7 +1079,7 @@ function fetchCollaboratorsForModal() {
                     collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-active\"> </i><i class=\"fa fa-eye icon-greyed\"value= \" " + response[i].UserId + " \"></i> </div>";
                 }
                 else{
-                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
+                    collaboratorsHtml += " <i id=\"edit\"class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
                 }
             }
             //and put it in the appropriate div
@@ -1111,10 +1111,13 @@ $('#userToAdd').keydown(function (event) {
 });
 
 //when you click the greyed out icon, the edit mode switches
-$(document).ready(function () {
-    $('.icon-greyed').click(function () {
-        alert("A");
-    });
+
+$('#edit').click(function () {
+    alert("A");
+});
+
+$('#save-button').click(function () {
+    saveAllFiles();
 });
 
 

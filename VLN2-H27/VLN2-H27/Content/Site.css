@@ -20,6 +20,7 @@ input,
 select {
     max-width: 280px;
 }
+
 /*Jumbotron is on the front page, we are just adjusting the placement of it and its contents*/
 .jumbotron {
     background-color: transparent;
@@ -141,6 +142,10 @@ flex-direction: row;
     background-color: #29303d;
 }
 
+.navbar-nav > li > .dropdown-menu {
+    cursor: pointer;
+}
+
 .navbar-inverse .navbar-nav > li > a {
     color: rgb(255,255,255);
     font-weight: 500;
@@ -159,32 +164,6 @@ flex-direction: row;
 
 #main {
     display: flex;
-}
-#loginForm .loginFrontPage{
-    padding-top: 50px;
-    padding-bottom: 50px;
-    display: block;
-    width: 20%;
-    margin: auto;
-}
-
-#loginForm .loginFrontPage form-control{
-    display: block;
-    width: 100%;
-}
-
-.loginFrontPage h2{
-    text-align: center;
-}
-
-.loginFrontPage p{
-    text-align: center;
-}
-
-#front-page-login-button{
-    display: block;
-    width: 50%;
-    margin-top: 50px;
 }
 
 .form-group{
