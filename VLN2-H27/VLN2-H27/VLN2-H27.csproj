@@ -263,6 +263,7 @@
       <DependentUpon>EditorModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FriendService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
