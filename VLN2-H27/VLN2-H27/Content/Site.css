@@ -1,6 +1,6 @@
 ﻿body {
     padding-top: 40px;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -244,4 +244,9 @@ body-content{
 
 #language-span {
     overflow-y: scroll;
+}
+
+footer {
+    margin-top: 20px;
+    margin-left: 5px;
 }
