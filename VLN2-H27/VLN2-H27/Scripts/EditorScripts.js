@@ -116,7 +116,7 @@ $(document).ready(function () {
         else {
             changeTheme(0);
         }
-
+        
         //convert C# boolean to javascript boolean
         if(permissionStatus == "True") {
             projectReadOnly = true;
@@ -454,6 +454,7 @@ function refreshFileTree() {
         }
     }, 500);
 }
+
 /*****************************************************
 JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 END
