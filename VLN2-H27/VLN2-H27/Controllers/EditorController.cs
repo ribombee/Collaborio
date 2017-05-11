@@ -93,7 +93,7 @@ namespace VLN2_H27.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult saveFile(string filePath, string textValue)
+        public JsonResult saveFile(string filePath, string textValue)
         {
             string path = filePath;
             path = Server.MapPath(path);
@@ -173,8 +173,17 @@ namespace VLN2_H27.Controllers
             var filePath = "~/UserProjects/" + data[0] + "/" + data[1] + data[2];
             filePath = Server.MapPath(filePath);
             var text = "cout << \"this is my auto-generated text!\" << endl";
-            System.IO.File.WriteAllText(filePath, text);
-            return null;
+
+            JsonResult fileExists = new JsonResult { };
+            fileExists.Data = System.IO.File.Exists(filePath);
+
+            if(!System.IO.File.Exists(filePath))
+            {
+                //this file does not already exist so we can create it!
+                System.IO.File.WriteAllText(filePath, text);
+            }
+            //we return a boolean value that indicates whether or not the file exists so we can display an error if it does!
+            return fileExists;
         }
         
         public JsonResult getUsers(int projectId)

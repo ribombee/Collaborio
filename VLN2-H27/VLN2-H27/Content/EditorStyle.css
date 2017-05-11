@@ -1,7 +1,7 @@
 ﻿#monaco-editor {
     float: right;
     height: 80vh;
-    width: 70%;
+    width: 75%;
     border: 1px solid grey;
 }
 
@@ -20,7 +20,7 @@ body {
 }
 
 #filetree {
-    width: 30%;
+    width: 25%;
     height: 40vh;
     float: left;
     overflow: auto;
@@ -101,7 +101,7 @@ body {
     min-width: 10px;
     height: 35vh;
     margin-top:5px;
-    width:30%;
+    width:25%;
     border:1px solid grey;
     font:15px/20px Georgia, Garamond, Serif;
     overflow-y:auto;
@@ -113,7 +113,7 @@ body {
     height: 5vh;
     min-width: 10px;
     resize:none;
-    width:30%;
+    width:25%;
     overflow-x:hidden;
 }
 
