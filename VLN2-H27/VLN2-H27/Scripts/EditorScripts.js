@@ -119,7 +119,7 @@ $(document).ready(function () {
         
         //convert C# boolean to javascript boolean
         if(permissionStatus == "True") {
-            projectReadOnly = true;
+            //projectReadOnly = true;
         }
         else {
             projectReadOnly = false;
@@ -617,12 +617,11 @@ var hubProxy;
 var suppressModelChangedEvent = 0;
 var suppressSync = false;
 var currentlyWriting = true;
-var linesAdded = 0;
 var editList = [];
 var editFileList = [];
 
-const SEND_UPDATE_DELAY_SECONDS = 0.25;
-const SYNC_INTERVAL_SECONDS = 5;
+const SEND_UPDATE_DELAY_SECONDS = 0.1;
+const SYNC_INTERVAL_SECONDS = 15;
 const SYNC_SUPPRESS_SECONDS = 1;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
 
@@ -723,7 +722,6 @@ $(function () {
             }
         }
         
-        linesAdded = 0;
         suppressSync = true;
         initializeSyncInterval();
         clearTimeout(syncSuppressTimeout);
@@ -844,9 +842,6 @@ $(function () {
             editList.push(e);
             editFileList.push(currentlyEditingFile);
             hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
-            if (e.text == editor.getModel().getEOL()) {
-                linesAdded++;
-            }
 
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(function () {
@@ -854,6 +849,15 @@ $(function () {
                 currentlyWriting = false;
             }, SEND_UPDATE_DELAY_SECONDS*1000);
 
+        });
+
+        //send editor updates on enter/newline
+        editor.onKeyDown(function (e) {
+            if (e.keyCode == 5) {
+                clearTimeout(updateTimeout);
+                sendUpdate();
+                currentlyWriting = false;
+            }
         });
 
         //Send chat message on enter
