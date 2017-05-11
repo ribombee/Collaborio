@@ -119,10 +119,10 @@ $(document).ready(function () {
         
         //convert C# boolean to javascript boolean
         if(permissionStatus == "True") {
-            projectReadOnly = true;
+            projectReadOnly = false;
         }
         else {
-            projectReadOnly = false;
+            projectReadOnly = true;
         }
         
     });
@@ -1098,14 +1098,14 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    addUserToProject(projectId, $('#userToAdd').val(), true);
+    addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').find(':selected').attr('editPermissionValue'));
     $('#userToAdd').val("");
 });
 
 //enter works like the add button 
 $('#userToAdd').keydown(function (event) {
     if (event.keyCode == 13) {
-        addUserToProject(projectId, $('#userToAdd').val(), true);
+        addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').val());
         $('#userToAdd').val("");
     }
 });

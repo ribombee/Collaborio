@@ -190,6 +190,7 @@ body-content{
 /*Add users modal*/
 .collaboratingUser {
     font-size: 14pt;
+    color: black;
 }
 
 .registration-fields{

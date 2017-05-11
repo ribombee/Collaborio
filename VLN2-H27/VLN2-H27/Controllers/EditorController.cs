@@ -139,7 +139,8 @@ namespace VLN2_H27.Controllers
             Project_Users_Relations relation = new Project_Users_Relations
             {
                 ProjectId = projectId,
-                UserId = User.Identity.GetUserId()
+                UserId = User.Identity.GetUserId(),
+                EditPermission = true
             };
 
             db.Project_Users_Relations.Add(relation);
@@ -271,7 +272,7 @@ namespace VLN2_H27.Controllers
                 };
                 db.Project_Users_Relations.Add(newRelation);
 
-                Project theProject = db.Projects.FirstOrDefault(x => x.Id == Convert.ToInt32(projectId));
+                Project theProject = db.Projects.FirstOrDefault(x => x.Id == projectId);
                 theProject.NrOfUsers++;
             }
             else
