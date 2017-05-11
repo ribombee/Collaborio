@@ -1,6 +1,6 @@
 ﻿body {
     padding-top: 40px;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -132,7 +132,9 @@ flex-direction: row;
 
 .logo {
     height: 40px;
-    margin-top: 9px;
+    margin: 9px;
+    padding-left: 20px;
+    
 }
 
 .navbar {
@@ -175,7 +177,11 @@ flex-direction: row;
     text-align: center;
 }
 
-.front-page-login-button{
+.loginFrontPage p{
+    text-align: center;
+}
+
+#front-page-login-button{
     display: block;
     width: 50%;
     margin-top: 50px;
@@ -242,4 +248,9 @@ body-content{
 /*The error messages for the modals*/
 #addUserError, #addFileError {
     color: red;
+}
+
+footer {
+    margin-top: 20px;
+    margin-left: 5px;
 }

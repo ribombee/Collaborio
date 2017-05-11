@@ -116,7 +116,7 @@ $(document).ready(function () {
         else {
             changeTheme(0);
         }
-
+        
         //convert C# boolean to javascript boolean
         if(permissionStatus == "True") {
             projectReadOnly = true;
@@ -141,6 +141,8 @@ function changeTheme(theme) {
     setThemeToElement('#discussionbox', theme);
     setThemeToElement('#discussion', theme);
     setThemeToElement('#message', theme);
+    setThemeToElement('#tabs', theme);
+    setThemeToElement('body', theme);
 }
 
 function setThemeToElement(element, theme) {
@@ -453,6 +455,7 @@ function refreshFileTree() {
         }
     }, 500);
 }
+
 /*****************************************************
 JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 END
