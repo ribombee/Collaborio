@@ -295,19 +295,25 @@ function decorateUsersInLines() {
     for (var i = 0; i < fileDecorations.length; i++) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == fileDecorations[i].file) {
-            newDecorations.push({
-                decorations: editor.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                file: fileDecorations[i].file
-            });
+            var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations;
+            if (typeof oldFileDecorations != "undefined") {
+                newDecorations.push({
+                    decorations: editor.deltaDecorations(oldFileDecorations, fileDecorations[i].decorations),
+                    file: fileDecorations[i].file
+                });
+            }
         }
         //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(fileDecorations[i].file);
             if (tab != null) {
-                newDecorations.push({
-                    decorations: tab.tabModel.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                    file: fileDecorations[i].file
-                });
+                var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations;
+                if (typeof oldFileDecorations != "undefined") {
+                    newDecorations.push({
+                        decorations: tab.tabModel.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
+                        file: fileDecorations[i].file
+                    });
+                }
             }
         }
     }
