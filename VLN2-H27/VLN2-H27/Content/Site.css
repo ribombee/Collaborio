@@ -224,6 +224,10 @@ body-content{
 #language-span {
     overflow-y: scroll;
 }
+/*The error messages for the modals*/
+#addUserError, #addFileError {
+    color: red;
+}
 
 footer {
     margin-top: 20px;

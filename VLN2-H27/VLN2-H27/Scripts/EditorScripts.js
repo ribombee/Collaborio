@@ -938,9 +938,19 @@ $('#filePost').submit(function (event) {
         type: "POST",
         url: createFileUrl,
         data: $('#filePost').serialize(),
+        success: function (data) {
+            if (data == false) {
+                setTimeout(function () { refreshFileTree(); }, 500);
+                $('#addFileError').text("");
+                $('#addFileName').val("");
+                $('#myModal').modal('hide');
+            }
+            else {
+                $('#addFileError').text("A file with this name already exists in this project!");
+            }
+        }
     })
-    setTimeout(function () { refreshFileTree(); }, 500);
-    $('#myModal').modal('hide');
+
     event.preventDefault();
     return false;
 });
@@ -1101,7 +1111,7 @@ $('#userToAdd').keydown(function (event) {
 });
 
 //when you click the greyed out icon, the edit mode switches
-$(function () {
+$(document).ready(function () {
     $('.icon-greyed').click(function () {
         alert("A");
     });

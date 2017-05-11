@@ -69,8 +69,12 @@
                         @using (Html.BeginForm("createFile", "Editor", FormMethod.Post, new { Id = "filePost" }))
                         {
                             @Html.Hidden("projectId", projectId)
-                            @Html.TextBox("fileName","" , new { @class = "input-form" , @placeholder = "Enter filename" })
-                            <input type="submit" value="Create file" class="btn" id="filePostBtn"/> <br />
+                            @Html.TextBox("fileName","" , new { @class = "form-control", @id = "addFileName", @placeholder = "Enter filename" })
+                            <span class="input-group-btn">
+                                <input type="submit" value="Create file" class="btn btn-secondary" id="filePostBtn" />
+                            </span>
+                            <p id="addFileError"></p>
+                             <br />
                             <p>File type: @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" }) </p>
 
                         }
