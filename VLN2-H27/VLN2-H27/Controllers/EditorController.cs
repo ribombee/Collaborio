@@ -180,12 +180,41 @@ namespace VLN2_H27.Controllers
             if(!System.IO.File.Exists(filePath))
             {
                 //this file does not already exist so we can create it!
+                VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
+                Project theProject = db.Projects.FirstOrDefault(x => x.Id == Convert.ToInt32(data[0]));
+                theProject.NrOfFiles++;
+                db.SaveChanges();
+
                 System.IO.File.WriteAllText(filePath, text);
             }
             //we return a boolean value that indicates whether or not the file exists so we can display an error if it does!
             return fileExists;
         }
-        
+
+        public JsonResult renameFile(FormCollection data)
+        {
+            /*
+            string oldFilePath = 
+
+            path = Server.MapPath(path);
+            Debug.WriteLine(textValue);
+            try
+            {
+                System.IO.File.Replace(oldFilePath, newFilePath);
+                System.IO.File.WriteAllText(path, textValue);
+            }
+            catch
+            {
+                Debug.WriteLine("Writing to " + filePath + "failed");
+            }
+
+            return null;
+
+            
+            */
+            return null;
+        }
+
         public JsonResult getUsers(int projectId)
         {
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
@@ -241,6 +270,9 @@ namespace VLN2_H27.Controllers
                     EditPermission = permission,
                 };
                 db.Project_Users_Relations.Add(newRelation);
+
+                Project theProject = db.Projects.FirstOrDefault(x => x.Id == Convert.ToInt32(projectId));
+                theProject.NrOfUsers++;
             }
             else
             {
