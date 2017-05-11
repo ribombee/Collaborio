@@ -919,10 +919,29 @@ function setActiveFileAndTab(file, tabIndex) {
 }
 
 function deleteFile(file) {
-    //TODO IMPLEMENT
     //remember to update tabInfo array
+    var sendData = {
+        'fileName': file
+    };
 
-    alert(file + ' would be deleted now');
+    $.ajax({
+        type: "POST",
+        url: deleteFileUrl,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            if (data == false) {
+                alert("writing to " + file + " failed!");
+            }
+            else {
+                setTimeout(function () { refreshFileTree(); }, 300);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 function renameFile(file) {

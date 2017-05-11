@@ -210,6 +210,24 @@ namespace VLN2_H27.Controllers
             */
             return null;
         }
+        public JsonResult deleteFile(string fileName)
+        {
+            string filePath = "~" + fileName;
+            filePath = Server.MapPath(filePath);
+            Debug.WriteLine(fileName);
+            JsonResult isDeleted = new JsonResult { };
+            try
+            {
+                System.IO.File.Delete(filePath);
+                isDeleted.Data = true;
+            }
+            catch
+            {
+                isDeleted.Data = false;
+                Debug.WriteLine("deleting " + fileName + " failed");
+            }
+            return isDeleted;
+        }
 
         public JsonResult getUsers(int projectId)
         {
