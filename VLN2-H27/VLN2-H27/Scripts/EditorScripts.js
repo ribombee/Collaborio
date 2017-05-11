@@ -295,19 +295,25 @@ function decorateUsersInLines() {
     for (var i = 0; i < fileDecorations.length; i++) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == fileDecorations[i].file) {
-            newDecorations.push({
-                decorations: editor.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                file: fileDecorations[i].file
-            });
+            var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)];
+            if (typeof oldFileDecorations != "undefined") {
+                newDecorations.push({
+                    decorations: editor.deltaDecorations(oldFileDecorations.decorations, fileDecorations[i].decorations),
+                    file: fileDecorations[i].file
+                });
+            }
         }
         //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(fileDecorations[i].file);
             if (tab != null) {
-                newDecorations.push({
-                    decorations: tab.tabModel.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                    file: fileDecorations[i].file
-                });
+                var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)];
+                if (typeof oldFileDecorations != "undefined") {
+                    newDecorations.push({
+                        decorations: tab.tabModel.deltaDecorations(oldFileDecorations.decorations, fileDecorations[i].decorations),
+                        file: fileDecorations[i].file
+                    });
+                }
             }
         }
     }
@@ -835,6 +841,7 @@ $(document).ready(function () {
                 return;
             }
 
+            hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
 
             if (lineDifference < 0) {
                 hubProxy.server.sendLineDelete(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber);
@@ -854,8 +861,6 @@ $(document).ready(function () {
             }
 
             currentlyWriting = true;
-
-            hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
 
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(function () {
