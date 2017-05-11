@@ -187,6 +187,29 @@ body {
     border-radius: 4px;
     font-family:inherit;
 }
+<<<<<<< HEAD
+
+#invite-modal-header {
+    width: 100%;
+}
+
+#invite-modal-header input, #invite-modal-header select {
+    width: 49%;
+}
+
+#invite-modal-header > div {
+    height: 40px;
+}
+
+#addSingleUser {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+#edit-permission-select {
+    width: 80%;
+}
+
 #addUserButton {
     cursor: pointer;
 }
