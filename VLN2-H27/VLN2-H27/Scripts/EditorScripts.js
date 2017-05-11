@@ -935,10 +935,29 @@ function setActiveFileAndTab(file, tabIndex) {
 }
 
 function deleteFile(file) {
-    //TODO IMPLEMENT
     //remember to update tabInfo array
+    var sendData = {
+        'fileName': file
+    };
 
-    alert(file + ' would be deleted now');
+    $.ajax({
+        type: "POST",
+        url: deleteFileUrl,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(sendData),
+        dataType: "json",
+        success: function (data) {
+            if (data == false) {
+                alert("writing to " + file + " failed!");
+            }
+            else {
+                setTimeout(function () { refreshFileTree(); }, 300);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 function renameFile(file) {
@@ -1055,10 +1074,11 @@ function addUserToProject(projectId, user, editPermission)
         success: function (result) {
             if (!result) {
                 //the controller function returns false if it does not add a user.
-                alert("No such user exists");
+                $("#addUserError").val("No such user exists!");
             }
             else {
                 fetchCollaboratorsForModal();
+                $("#addUserError").val("");
             }
         },
         error: function (xhr, status, error) {
@@ -1092,10 +1112,10 @@ function fetchCollaboratorsForModal() {
                 collaboratorsHtml += "<div class=\"collaboratingUser\" >" + response[i].UserId;
                 
                 if(response[i].EditPermission == true){
-                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-active\"> </i><i class=\"fa fa-eye icon-greyed\"value= \" " + response[i].UserId + " \"></i> </div>";
+                    collaboratorsHtml += "   <i class=\"fa fa-pencil-square-o icon-active\"></i></div>";
                 }
                 else{
-                    collaboratorsHtml += " <i id=\"edit\"class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
+                    collaboratorsHtml += "   <i class=\"fa fa-eye icon-active\"></i></div>";
                 }
             }
             //and put it in the appropriate div
@@ -1121,7 +1141,7 @@ $('#addSingleUser').click(function () {
 //enter works like the add button 
 $('#userToAdd').keydown(function (event) {
     if (event.keyCode == 13) {
-        addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').val());
+        addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').find(':selected').attr('editPermissionValue'));
         $('#userToAdd').val("");
     }
 });

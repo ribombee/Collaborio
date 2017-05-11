@@ -17,12 +17,13 @@
                 <h4 class="modal-title">Add project</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("createProject", "Editor", FormMethod.Post))
-                {
-                    @Html.TextBox("test")
-                    <input type="submit" value="Add" class="button" />
-                }
-            </div>
+                @using(Html.BeginForm("createProject", "Editor", FormMethod.Post)) {
+                    <div class="input-group">
+                        @Html.TextBox("Project name", null, new { @class = "form-control", id = "projectName", placeholder = "Name your project...", autofocus = "" })
+                        <span class="input-group-btn"><button type="submit" class="btn btn-secondary">Add</button></span>
+                        </div>
+                        }
+                    </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>

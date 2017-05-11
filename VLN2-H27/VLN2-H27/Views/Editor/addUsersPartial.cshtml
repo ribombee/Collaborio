@@ -16,11 +16,11 @@
             </div>
             <div class="modal-body">
 
-                <div class="col-lg-6">
+                <div class="col-lg-6" id="invite-modal-header">
                     <div class="input-group">
                         <input type="text" id ="userToAdd" class="form-control" placeholder="Enter username">
-                        <span>
-                            <select id="editPermissionSelect">
+                        <span id="edit-permission-select">
+                            <select id="editPermissionSelect" class="form-control">
                                 <option editPermissionValue="true">Edit permission</option>
                                 <option editPermissionValue="false">View-only permission</option>
                             </select>
@@ -29,7 +29,7 @@
                             <button class="btn btn-secondary" id="addSingleUser" type="button">Add</button>
                         </span>
                     </div>
-                    <p id="userAddError">No such user exists!</p>
+                    <p id="addUserError"></p>
                 </div>
 
                 <h2>Current Collaborators</h2>
