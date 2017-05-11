@@ -119,10 +119,10 @@ $(document).ready(function () {
         
         //convert C# boolean to javascript boolean
         if(permissionStatus == "True") {
-            //projectReadOnly = true;
+            projectReadOnly = false;
         }
         else {
-            projectReadOnly = false;
+            projectReadOnly = true;
         }
         
     });
@@ -942,9 +942,19 @@ $('#filePost').submit(function (event) {
         type: "POST",
         url: createFileUrl,
         data: $('#filePost').serialize(),
+        success: function (data) {
+            if (data == false) {
+                setTimeout(function () { refreshFileTree(); }, 500);
+                $('#addFileError').text("");
+                $('#addFileName').val("");
+                $('#myModal').modal('hide');
+            }
+            else {
+                $('#addFileError').text("A file with this name already exists in this project!");
+            }
+        }
     })
-    setTimeout(function () { refreshFileTree(); }, 500);
-    $('#myModal').modal('hide');
+
     event.preventDefault();
     return false;
 });
@@ -1073,7 +1083,7 @@ function fetchCollaboratorsForModal() {
                     collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-active\"> </i><i class=\"fa fa-eye icon-greyed\"value= \" " + response[i].UserId + " \"></i> </div>";
                 }
                 else{
-                    collaboratorsHtml += " <i class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
+                    collaboratorsHtml += " <i id=\"edit\"class=\"fa fa-pencil-square-o icon-greyed\"value= \"" + response[i].UserId + "\"></i> <i class=\"fa fa-eye icon-active\"></i>  </div>";
                 }
             }
             //and put it in the appropriate div
@@ -1092,23 +1102,26 @@ $('#addUserButton').click(function () {
 
 //upon submitting the form we add the user entered and reload the list of collaborators
 $('#addSingleUser').click(function () {
-    addUserToProject(projectId, $('#userToAdd').val(), true);
+    addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').find(':selected').attr('editPermissionValue'));
     $('#userToAdd').val("");
 });
 
 //enter works like the add button 
 $('#userToAdd').keydown(function (event) {
     if (event.keyCode == 13) {
-        addUserToProject(projectId, $('#userToAdd').val(), true);
+        addUserToProject(projectId, $('#userToAdd').val(), $('#editPermissionSelect').val());
         $('#userToAdd').val("");
     }
 });
 
 //when you click the greyed out icon, the edit mode switches
-$(function () {
-    $('.icon-greyed').click(function () {
-        alert("A");
-    });
+
+$('#edit').click(function () {
+    alert("A");
+});
+
+$('#save-button').click(function () {
+    saveAllFiles();
 });
 
 

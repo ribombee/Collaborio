@@ -20,34 +20,9 @@
         <img src="~/Icons/pointClick.png" alt="Collaborate and create together" />
     </div>
 </div>
+<div id="front-page-buttons">
+    <input class="front-page-button" id="register-button-front" type="button" onclick="window.location.href='../Account/Register'" value="Sign up"/>
+    <input class="front-page-button" id="login-button-front" type="button" onclick="window.location.href='../Account/Login'" value="Log in" />
+</div>
 
 @using VLN2_H27.Models
-@model LoginViewModel
-
-<div class="row">
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "Index" }, FormMethod.Post, new { @class = "loginFrontPage", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <h2>Log in</h2>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
-                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group">
-                        <input type="submit" value="Log in" class="btn btn-default" id="front-page-login-button"/>
-                </div>
-                <p>
-                    @Html.ActionLink("Don't have an account? Register here", "Register")
-                </p>
-            }
-        </section>
-</div>

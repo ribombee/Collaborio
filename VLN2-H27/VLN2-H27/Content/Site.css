@@ -1,11 +1,15 @@
 ﻿body {
     padding-top: 40px;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     width:100%;
+}
+
+.body-content hr{
+    margin-top: 50px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -20,6 +24,7 @@ input,
 select {
     max-width: 280px;
 }
+
 /*Jumbotron is on the front page, we are just adjusting the placement of it and its contents*/
 .jumbotron {
     background-color: transparent;
@@ -58,6 +63,7 @@ select {
 
 #featureList h2 {
     margin: auto;
+    margin-bottom: 10px;
 }
 
 #featureList h2 span:first-of-type{
@@ -68,6 +74,48 @@ select {
     color: RGB(255,66,52);
 }
 
+#front-page-buttons {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.front-page-button {
+    margin: 10px;
+    margin-top: 30px;
+    width: 160px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 5px;
+    border: 3px solid;
+    outline: none;
+
+}
+.front-page-button {
+    text-decoration: none;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px rgb(0,0,0);
+}
+
+#register-button-front:hover {
+    background-color: RGB(40,149,178);
+}
+
+#login-button-front:hover {
+    background-color:RGB(255,86,72);
+}
+
+#register-button-front {
+    background-color: RGB(60,169,198);
+    border-color: RGB(20,129,158);
+}
+
+#login-button-front {
+    background-color: RGB(255,106,92);
+    border-color: RGB(255,66,52);
+}
 /*This is used on the login and register pages to change their look*/
 .account-form{
     margin: auto;
@@ -83,6 +131,7 @@ select {
     padding-right: 50px;
     padding-top: 30px;
     padding-bottom: 30px;
+    text-align: center;
 }
 
 .account-form * {
@@ -132,11 +181,17 @@ flex-direction: row;
 
 .logo {
     height: 40px;
-    margin-top: 9px;
+    margin: 9px;
+    padding-left: 20px;
+    
 }
 
 .navbar {
     background-color: #29303d;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    cursor: pointer;
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -157,32 +212,6 @@ flex-direction: row;
 
 #main {
     display: flex;
-}
-#loginForm .loginFrontPage{
-    padding-top: 50px;
-    padding-bottom: 50px;
-    display: block;
-    width: 20%;
-    margin: auto;
-}
-
-#loginForm .loginFrontPage form-control{
-    display: block;
-    width: 100%;
-}
-
-.loginFrontPage h2{
-    text-align: center;
-}
-
-.loginFrontPage p{
-    text-align: center;
-}
-
-#front-page-login-button{
-    display: block;
-    width: 50%;
-    margin-top: 50px;
 }
 
 .form-group{
@@ -209,6 +238,7 @@ body-content{
 /*Add users modal*/
 .collaboratingUser {
     font-size: 14pt;
+    color: black;
 }
 
 .registration-fields{
@@ -242,4 +272,14 @@ body-content{
 
 #language-span {
     overflow-y: scroll;
+}
+/*The error messages for the modals*/
+#addUserError, #addFileError {
+    color: red;
+}
+
+/*Footer*/
+footer {
+    margin-top: 20px;
+    margin-left: 5px;
 }

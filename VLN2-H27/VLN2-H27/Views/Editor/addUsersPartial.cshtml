@@ -2,9 +2,6 @@
 <!--Getting fontawesome-->
 <script src="https://use.fontawesome.com/5646c05ef4.js"></script>
 
-<!-- Register button to trigger modal -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addUsersModal" id="addUserButton">Add Collaborators</button>
-
 @using VLN2_H27.Models
 @model Project_Users_Relations
 <!-- Modal container -->
@@ -22,10 +19,17 @@
                 <div class="col-lg-6">
                     <div class="input-group">
                         <input type="text" id ="userToAdd" class="form-control" placeholder="Enter username">
+                        <span>
+                            <select id="editPermissionSelect">
+                                <option editPermissionValue="true">Edit permission</option>
+                                <option editPermissionValue="false">View-only permission</option>
+                            </select>
+                        </span>
                         <span class="input-group-btn">
                             <button class="btn btn-secondary" id="addSingleUser" type="button">Add</button>
                         </span>
                     </div>
+                    <p id="userAddError">No such user exists!</p>
                 </div>
 
                 <h2>Current Collaborators</h2>

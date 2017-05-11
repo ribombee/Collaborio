@@ -20,7 +20,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <!--@Html.ActionLink("Collabor.io", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })-->
                 <a href = "@Url.Action("Index", "Home")">
                     <img class="logo" src="../../Icons/CollaborioLogo.png"/>
                 </a>
@@ -28,7 +27,18 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Projects", "projects", "Editor")</li>
-                    <li><a href="#" data-toggle="modal" data-target="#myModal" id="file-modal">New File</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            File
+                            <span class="caret" id="language-span"></span>
+                        </a>
+                        <ul class="dropdown-menu" id="">
+                            <li><a href="#" data-toggle="modal" data-target="#myModal" id="file-modal">New File</a></li>
+                            <li><a href="#" id="save-button">Save</a></li>
+                            <li><a data-toggle="modal" data-target="#addUsersModal" id="addUserButton">Add Collaborators</a></li>
+                            <li>@Html.ActionLink("Download project", "getProjectZip", "Editor", new { projectId = ViewBag.projectId }, null)</li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             Language
@@ -56,7 +66,6 @@
     </div>
     <div class="container body-content" id="editor-body">
         @RenderBody()
-        <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Collabor.io</p>
         </footer>

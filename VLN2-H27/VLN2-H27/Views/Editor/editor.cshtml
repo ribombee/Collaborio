@@ -10,7 +10,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 
-
     <!-- FONT
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
@@ -55,10 +54,7 @@
         <!-- Adding users -->
         @Html.Partial("addUsersPartial")
 
-        <!-- Downloading zip users -->
-        @Html.ActionLink("Download project", "getProjectZip", "Editor", new { projectId = ViewBag.projectId  }, null)
-
-        <!-- Modal container -->
+        <!-- Modal container for new file-->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
 
@@ -72,8 +68,12 @@
                         @using (Html.BeginForm("createFile", "Editor", FormMethod.Post, new { Id = "filePost" }))
                         {
                             @Html.Hidden("projectId", projectId)
-                            @Html.TextBox("fileName","" , new { @class = "input-form" , @placeholder = "Enter filename" })
-                            <input type="submit" value="Create file" class="btn" id="filePostBtn"/> <br />
+                            @Html.TextBox("fileName","" , new { @class = "form-control", @id = "addFileName", @placeholder = "Enter filename" })
+                            <span class="input-group-btn">
+                                <input type="submit" value="Create file" class="btn btn-secondary" id="filePostBtn" />
+                            </span>
+                            <p id="addFileError"></p>
+                             <br />
                             <p>File type: @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" }) </p>
 
                         }
