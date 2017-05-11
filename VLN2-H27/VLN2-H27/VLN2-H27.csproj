@@ -310,6 +310,7 @@
     <Content Include="Models\EditorModels.edmx.diagram">
       <DependentUpon>EditorModels.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\collaborio - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\EditorScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
