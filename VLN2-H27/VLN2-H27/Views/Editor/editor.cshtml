@@ -59,7 +59,7 @@
             <div class="modal-dialog">
 
                 <!-- Modal content-->
-                <div class="modal-content">
+                <div class="modal-content" id="add-file">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Add a new file to project</h4>
@@ -69,13 +69,12 @@
                         {
                             @Html.Hidden("projectId", projectId)
                             @Html.TextBox("fileName","" , new { @class = "form-control", @id = "addFileName", @placeholder = "Enter filename" })
+                            <p id="addFileError"></p>
+                             <br />
+                            <p>File type: @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker form-control" }) </p>
                             <span class="input-group-btn">
                                 <input type="submit" value="Create file" class="btn btn-secondary" id="filePostBtn" />
                             </span>
-                            <p id="addFileError"></p>
-                             <br />
-                            <p>File type: @Html.DropDownList("emptyList", (IEnumerable<SelectListItem>)ViewBag.emptyList, new { @class = "language-picker" }) </p>
-
                         }
                     </div>
                     <div class="modal-footer">

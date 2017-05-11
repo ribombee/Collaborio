@@ -225,3 +225,13 @@ body {
 #collaboratorList, .modal-body h2 {
     margin-left: 15px;
 }
+
+#filePostBtn {
+    margin-top: 20px;
+    margin-left: 170px;
+    border-radius: 4px;
+}
+
+#add-file {
+    width: 300px;
+}
