@@ -55,10 +55,7 @@
         <!-- Adding users -->
         @Html.Partial("addUsersPartial")
 
-        <!-- Downloading zip users -->
-        @Html.ActionLink("Download project", "getProjectZip", "Editor", new { projectId = ViewBag.projectId  }, null)
-
-        <!-- Modal container -->
+        <!-- Modal container for new file-->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
 
