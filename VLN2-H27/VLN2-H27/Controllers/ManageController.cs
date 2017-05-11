@@ -72,7 +72,7 @@ namespace VLN2_H27.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
-            return View(model);
+            return RedirectToAction("Index", "Home");
         }
 
         //
