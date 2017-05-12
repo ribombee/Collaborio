@@ -829,11 +829,9 @@ $(document).ready(function () {
 
             if (lineDifference < 0) {
                 hubProxy.server.sendLineDelete(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber);
-                return;
             }
             else if (lineDifference > 0) {
                 hubProxy.server.sendNewline(currentlyEditingFile, e.range);
-                return;
             }
 
             if (e.rangeLength == 0)
