@@ -232,8 +232,12 @@ body-content{
 
 /*Misc modals*/
 /*Add users modal*/
-.collaboratingUser {
+.collaboratingUser{
     font-size: 14pt;
+    color: black;
+}
+
+.modal-dialog *{
     color: black;
 }
 
