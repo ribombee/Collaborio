@@ -106,7 +106,12 @@ $(document).ready(function () {
         else {
             projectReadOnly = true;
         }
-        
+
+        //fade out collaborio logo
+        setTimeout(function () {
+            $('.monaco-editor').fadeOut(300);
+        }, 700);
+            
     });
 });
 
@@ -518,6 +523,9 @@ function openTabInMonaco(tabId) {
     var newModel = getEditorModelOfTab(tabId);
     editor.setModel(newModel);
     lineCount = editor.getModel().getLineCount();
+    
+    $('.overflow-guard').fadeOut(0);
+    $('.overflow-guard').fadeIn(400);
 }
 
 //Get monaco model of tab
