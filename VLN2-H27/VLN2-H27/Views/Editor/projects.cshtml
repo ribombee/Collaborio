@@ -4,8 +4,8 @@
     var projectIdsJson = ViewBag.projectIdsJson;
 }
 <!-- Link project page CSS to HTML-->
-<link rel="stylesheet" href="../../Content/ProjectStyle.css"/>
-<link rel="stylesheet" href="../../Content/Site.css"/>
+<link rel="stylesheet" href="~/Content/ProjectStyle.css"/>
+<link rel="stylesheet" href="~/Content/Site.css"/>
 <div id="projects-body">
     @Html.Partial("NewProjectPartial")
     <hr id="projects-body-hr" />
@@ -41,5 +41,5 @@
     var projectIds = @(projectIdsJson);
 </script>
 <!-- JS CODE GOES HERE -->
-<script src="../../Scripts/ProjectsScripts.js" type="text/javascript"></script>
+<script src="~/Scripts/ProjectsScripts.js" type="text/javascript"></script>
     }

@@ -67,7 +67,7 @@ $(document).ready(function () {
             var o = document.createElement('option');
             o.textContent = availableLanguages[i];
             o.value = languageExtensions[i];
-            $(".language-picker").append(o);
+            $('.language-picker').append(o);
         }
 
         for (var i = 0; i < availableLanguages.length; i++) {
@@ -77,27 +77,17 @@ $(document).ready(function () {
             a.setAttribute('class', 'language-item');
             a.textContent = availableLanguages[i];
             li.appendChild(a)
-            $("#language-picker").append(li);
+            $('#language-picker').append(li);
         }
 
 
         //change language with language picker
-        $(".language-picker").change(function () {
-            monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.selectedIndex]);
-        });
-
-        $(".language-item").click(function () {
+        $('.language-item').click(function () {
             monaco.editor.setModelLanguage(editor.getModel(), availableLanguages[this.getAttribute('data-index')]);
         });
 
         //change theme with theme picker
-        $(".theme-picker").change(function () {
-            //create cookie for new theme setting
-            setCookie('theme', this.selectedIndex, 100);
-            changeTheme(this.selectedIndex);
-        });
-
-        $(".theme-item").click(function () {
+        $('.theme-item').click(function () {
             //create cookie for new theme setting
             setCookie('theme', this.getAttribute("data-index"), 100);
             changeTheme(this.getAttribute("data-index"));
@@ -165,7 +155,7 @@ function getLanguage(file) {
         }
     }
     //if its is not a supported filetype we default to plaintext (no highlighting)
-    return 'plaintext';
+    return "plaintext";
 }
 
 //Open file in monaco, adds tab
@@ -223,8 +213,6 @@ function openDataInMonaco(data, file, signalR) {
 
     //changes the language so that the syntax highlighting is correct
     var language = getLanguage(file);
-    setLanguagePicker(language);
-
     var newModel = monaco.editor.createModel(data, language);
     editor.setModel(newModel);
     var filename = currentlyOpeningFile.replace(/^.*[\\\/]/, '')
@@ -241,16 +229,6 @@ function createNewEditOperation(filePath, startColumn, endColumn, startLineNumbe
     var op = [{ identifier: id, range: range, text: text, forceMoveMarkers: false }];
 
     return op;
-}
-
-//Set language picker dropdown
-function setLanguagePicker(language) {
-    $(".language-picker")[0].selectedIndex = availableLanguages.indexOf(language);
-}
-
-//Set theme picker dropdown
-function setThemePicker(theme) {
-    $(".theme-picker")[0].selectedIndex = theme;
 }
 
 //Decorate lines other users are editing
@@ -459,7 +437,7 @@ START
 var tabInfo = [];
 var tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
       tabCounter = 0;
-var tabs = $("#tabs").tabs();
+var tabs = $('#tabs').tabs();
 
 //Initialize tab events when document is ready
 $(document).ready(function() {
@@ -467,7 +445,7 @@ $(document).ready(function() {
     tabs.on("click", "span.ui-icon-close", function () {
         var closeTabFile = currentlyEditingFile;
         var panelId = $(this).closest("li").remove().attr("aria-controls");
-        $("#" + panelId).remove();
+        $('#' + panelId).remove();
         tabRemovalCleanup(panelId, closeTabFile);
         tabs.tabs("refresh");
     });
@@ -475,7 +453,7 @@ $(document).ready(function() {
     tabs.on("keyup", function (event) {
         if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {
             var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
-            $("#" + panelId).remove();
+            $('#' + panelId).remove();
             tabs.tabs("refresh");
         }
     });
@@ -492,7 +470,7 @@ $(document).ready(function() {
     $('#tabs').droppable({
         activeClass: "ui-state-highlight",
         drop: function (event, ui) {
-            $("#tabs ul").append("<li>" + ui.draggable.html() + "</li>");
+            $('#tabs ul').append("<li>" + ui.draggable.html() + "</li>");
             tabs.tabs("refresh");
             $(ui.draggable).remove()
             var tabId = ui.draggable.attr('id');
@@ -539,7 +517,6 @@ function openTabInMonaco(tabId) {
 
     var newModel = getEditorModelOfTab(tabId);
     editor.setModel(newModel);
-    setLanguagePicker(newModel.getModeId());
     lineCount = editor.getModel().getLineCount();
 }
 
@@ -633,7 +610,6 @@ $(document).ready(function () {
 
     //a new user has connected to current project
     hubProxy.client.newUserConnected = function (user) {
-        console.log(user + " connected");
         //display that the user connected in chat
         $('#discussion').append('<li><i><strong>[' + getTimeStamp() + ']' + htmlEncode(user)
             + ' connected!</strong></i></li>');
@@ -641,7 +617,7 @@ $(document).ready(function () {
 
     //somebody requested a file
     hubProxy.client.userHasRequestedFile = function (file, connectionId) {
-        console.log('searching for requested file ' + file);
+        console.log("searching for requested file " + file);
         //its the file youre currently working on
         if (file == currentlyEditingFile) {
             hubProxy.server.sendRequestedFile(file, editor.getModel().getValue(), connectionId);
@@ -658,8 +634,7 @@ $(document).ready(function () {
 
     //receive file you previously requested
     hubProxy.client.receiveRequestedFile = function (file, text) {
-        console.log('received file');
-        console.log(text);
+        console.log("received " + file);
         //is the editor completely empty? just insert the text and open a new tab
         if (editor.getModel() == null) {
             openDataInMonaco(text, file, true);
@@ -1080,11 +1055,11 @@ function addUserToProject(projectId, user, editPermission) {
         success: function (result) {
             if (!result) {
                 //the controller function returns false if it does not add a user.
-                $("#addUserError").text("No such user exists!");
+                $('#addUserError').text("No such user exists!");
             }
             else {
                 fetchCollaboratorsForModal();
-                $("#addUserError").text("");
+                $('#addUserError').text("");
             }
         },
         error: function (xhr, status, error) {
@@ -1152,16 +1127,10 @@ $('#userToAdd').keydown(function (event) {
     }
 });
 
-//when you click the greyed out icon, the edit mode switches
-$('#edit').click(function () {
-    alert("A");
-});
-
 //clicking save button saves all files
 $('#save-button').click(function () {
     saveAllFiles();
 });
-
 
 /*****************************************************
 MISC CODE
