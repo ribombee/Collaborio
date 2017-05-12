@@ -173,6 +173,7 @@ function openFileInMonaco(file) {
         return;
     }
 
+    currentlyEditingFile = file;
     currentlyOpeningFile = file;
     //Request file from server, so if no other client is working on the file it opens from server.
     requestFileFromServer(file);
