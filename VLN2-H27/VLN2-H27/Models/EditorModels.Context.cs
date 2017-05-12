@@ -19,7 +19,11 @@ namespace VLN2_H27.Models
             : base("name=VLN2_2017_H27Entities2")
         {
         }
-    
+
+        public VLN2_2017_H27Entities2(IAppDataContext context)
+        {
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

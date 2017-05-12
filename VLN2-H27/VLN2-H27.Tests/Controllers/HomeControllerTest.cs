@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System.Security.Principal;
+using System.Web;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VLN2_H27;
 using VLN2_H27.Controllers;
 
 namespace VLN2_H27.Tests.Controllers
@@ -13,42 +11,34 @@ namespace VLN2_H27.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
-        public void Index()
+        public void TestNotLoggedIn()
         {
-            // Arrange
-            HomeController controller = new HomeController();
+            var controller = new HomeController();
 
-            // Act
-            ViewResult result = controller.Index() as ViewResult;
+            var controllerContext = new Mock<ControllerContext>();
+            var principal = new Mock<IPrincipal>();
+            principal.SetupGet(x => x.Identity.IsAuthenticated).Returns(false);
+            controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+            controller.ControllerContext = controllerContext.Object;
 
-            // Assert
-            Assert.IsNotNull(result);
+            var result = controller.Index() as ViewResult;
+            Assert.AreEqual("Index", result.ViewName);
         }
 
         [TestMethod]
-        public void About()
+        public void TestLoggedIn()
         {
-            // Arrange
-            HomeController controller = new HomeController();
+            var homeController = new HomeController();
 
-            // Act
-            ViewResult result = controller.About() as ViewResult;
+            var controllerContext = new Mock<ControllerContext>();
+            var principal = new Mock<IPrincipal>();
+            principal.SetupGet(x => x.Identity.IsAuthenticated).Returns(true);
+            controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+            homeController.ControllerContext = controllerContext.Object;
 
-            // Assert
-            Assert.AreEqual("Your application description page.", result.ViewBag.Message);
-        }
-
-        [TestMethod]
-        public void Contact()
-        {
-            // Arrange
-            HomeController controller = new HomeController();
-
-            // Act
-            ViewResult result = controller.Contact() as ViewResult;
-
-            // Assert
+            var result = homeController.Index() as RedirectToRouteResult;
             Assert.IsNotNull(result);
         }
     }
+
 }
