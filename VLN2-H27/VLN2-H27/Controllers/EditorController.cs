@@ -303,7 +303,7 @@ namespace VLN2_H27.Controllers
         {
             using (ZipFile zip = new ZipFile())
             {
-                zip.AddDirectory(Server.MapPath("~/UserProjects/" + projectId + "/"));
+                zip.AddDirectory(Server.MapPath("~/UserProjects/" + projectId));
 
                 MemoryStream output = new MemoryStream();
                 zip.Save(output);

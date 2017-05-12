@@ -945,7 +945,7 @@ function deleteFile(file) {
                 alert("writing to " + file + " failed!");
             }
             else {
-                setTimeout(function () { refreshFileTree(); }, 300);
+                setTimeout(function () { refreshFileTree(); }, 1000);
             }
         },
         error: function (xhr, status, error) {
