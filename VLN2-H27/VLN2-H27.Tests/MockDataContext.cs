@@ -11,14 +11,18 @@ namespace VLN2_H27.Tests
 		public MockDataContext()
 		{
 			// We're setting our DbSets to be InMemoryDbSets rather than using SQL Server.
-			FriendConnections  = new InMemoryDbSet<FriendConnection>();
+			this.AspNetUsers  = new InMemoryDbSet<AspNetUser>();
+            this.Projects = new InMemoryDbSet<Project>();
+            this.Project_Users_Relations = new InMemoryDbSet<Project_Users_Relations>();
 		}
 
-        public IDbSet<FriendConnection> FriendConnections { get; set; }
+        public IDbSet<AspNetUser> AspNetUsers { get; set; }
+        public IDbSet<Project> Projects { get; set; }
+        public IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
         // TODO: bætið við fleiri færslum hér
         // eftir því sem þeim fjölgar í AppDataContext klasanum ykkar!
 
-		public int SaveChanges()
+        public int SaveChanges()
 		{
 			// Pretend that each entity gets a database id when we hit save.
 			int changes = 0;

@@ -18,16 +18,11 @@ namespace VLN2_H27.Models
         }
     }
 
-    public class FriendConnection
-    {
-        public int ID { get; set; }
-        public string Friend1 { get; set; }
-        public string Friend2 { get; set; }
-    }
-
     public interface IAppDataContext
     {
-        IDbSet<FriendConnection> FriendConnections { get; set; }
+        IDbSet<AspNetUser> AspNetUsers { get; set; }
+        IDbSet<Project> Projects { get; set; }
+        IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
         int SaveChanges();
     }
 

@@ -57,7 +57,6 @@ namespace VLN2_H27.Controllers
             }
             return RedirectToAction("projects");
         }
-
         
         public JsonResult fileExists(string filePath)
         {
