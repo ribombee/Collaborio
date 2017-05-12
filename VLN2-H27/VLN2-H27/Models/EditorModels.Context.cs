@@ -10,11 +10,14 @@
 namespace VLN2_H27.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Data.Entity.Infrastructure;
-    
+
     public partial class VLN2_2017_H27Entities2 : DbContext
     {
+        //public IAppDataContext _db;
         public VLN2_2017_H27Entities2()
             : base("name=VLN2_2017_H27Entities2")
         {
@@ -22,12 +25,23 @@ namespace VLN2_H27.Models
 
         public VLN2_2017_H27Entities2(IAppDataContext context)
         {
+            //_db = context;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
+
+        /*public List<Project> getUserRelatedProjects(string userId)
+        {
+
+            var queryResult = (from rel in _db.Project_Users_Relations
+                               where rel.UserId == userId
+                               join pro in _db.Projects on rel.ProjectId equals pro.Id
+                               select pro).ToList();
+            return queryResult;
+        }*/
     
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }

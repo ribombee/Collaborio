@@ -26,8 +26,12 @@ namespace VLN2_H27.Models
         int SaveChanges();
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IAppDataContext
     {
+        public IDbSet<AspNetUser> AspNetUsers { get; set; }
+        public IDbSet<Project> Projects { get; set; }
+        public IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

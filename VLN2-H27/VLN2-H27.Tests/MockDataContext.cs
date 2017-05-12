@@ -19,8 +19,7 @@ namespace VLN2_H27.Tests
         public IDbSet<AspNetUser> AspNetUsers { get; set; }
         public IDbSet<Project> Projects { get; set; }
         public IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
-        // TODO: bætið við fleiri færslum hér
-        // eftir því sem þeim fjölgar í AppDataContext klasanum ykkar!
+
 
         public int SaveChanges()
 		{
