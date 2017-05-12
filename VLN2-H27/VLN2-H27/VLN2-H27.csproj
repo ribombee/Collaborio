@@ -439,6 +439,9 @@
     <Content Include="EditorLibraries\jQueryFileTree\gulpfile.js" />
     <Content Include="EditorLibraries\Monaco\ThirdPartyNotices.txt" />
     <Content Include="Icons\CollaborioLogo.png" />
+    <Content Include="Icons\collaborioLogoLarge.png" />
+    <Content Include="Icons\pointClick.png" />
+    <Content Include="Icons\PointClickFavicon.png" />
     <Content Include="Models\EditorModels.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EditorModels.edmx</DependentUpon>
