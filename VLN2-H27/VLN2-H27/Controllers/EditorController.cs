@@ -120,6 +120,7 @@ namespace VLN2_H27.Controllers
                 ProjectName = fileName,
                 DateAdded = DateTime.Now,
                 LastModified = DateTime.Now,
+                NrOfUsers = 1,
             };
 
             VLN2_2017_H27Entities2 db = new VLN2_2017_H27Entities2 { };
