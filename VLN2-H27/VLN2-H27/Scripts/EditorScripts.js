@@ -173,7 +173,6 @@ function openFileInMonaco(file) {
         return;
     }
 
-    currentlyEditingFile = file;
     currentlyOpeningFile = file;
     //Request file from server, so if no other client is working on the file it opens from server.
     requestFileFromServer(file);
@@ -796,8 +795,8 @@ $(document).ready(function () {
         initFileTree();
         initFileTreeContextMenu();
         setTimeout(function () {
-            var firstFile = $('.jqueryFileTree:first-child a');
-            firstFile.trigger('dblclick');
+            var firstFile = $('.jqueryFileTree').children().first().children().attr('rel');
+            openFileInMonaco(firstFile);
         }, 1000);
         
 
