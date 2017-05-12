@@ -15,7 +15,7 @@ namespace VLN2_H27.Tests
             this.Projects = new InMemoryDbSet<Project>();
             this.Project_Users_Relations = new InMemoryDbSet<Project_Users_Relations>();
 		}
-
+        public IDbSet<AspNetUserLogin> AspNetLogins { get; set; }
         public IDbSet<AspNetUser> AspNetUsers { get; set; }
         public IDbSet<Project> Projects { get; set; }
         public IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }

@@ -17,7 +17,7 @@ namespace VLN2_H27.Models
 
     public partial class VLN2_2017_H27Entities2 : DbContext
     {
-        //public IAppDataContext _db;
+        public IAppDataContext _db;
         public VLN2_2017_H27Entities2()
             : base("name=VLN2_2017_H27Entities2")
         {
@@ -25,7 +25,7 @@ namespace VLN2_H27.Models
 
         public VLN2_2017_H27Entities2(IAppDataContext context)
         {
-            //_db = context;
+            _db = context;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace VLN2_H27.Models
             throw new UnintentionalCodeFirstException();
         }
 
-        /*public List<Project> getUserRelatedProjects(string userId)
+        public List<Project> getUserRelatedProjects(string userId)
         {
 
             var queryResult = (from rel in _db.Project_Users_Relations
@@ -41,8 +41,27 @@ namespace VLN2_H27.Models
                                join pro in _db.Projects on rel.ProjectId equals pro.Id
                                select pro).ToList();
             return queryResult;
-        }*/
-    
+        }
+
+        public Project_Users_Relations getUserProjectRelation(string userId,int projectId)
+        {
+
+            var queryResult = (from rel in _db.Project_Users_Relations
+                               where rel.UserId == userId
+                               && rel.ProjectId == projectId
+                               select rel).FirstOrDefault();
+            return queryResult;
+        }
+
+        public AspNetUser getUser(string userId)
+        {
+
+            var queryResult = (from user in _db.AspNetUsers
+                               where user.Id == userId
+                               select user).FirstOrDefault();
+            return queryResult;
+        }
+
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }

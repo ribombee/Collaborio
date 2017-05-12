@@ -23,15 +23,16 @@ namespace VLN2_H27.Models
         IDbSet<AspNetUser> AspNetUsers { get; set; }
         IDbSet<Project> Projects { get; set; }
         IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
+        IDbSet<AspNetUserLogin> AspNetLogins { get; set; }
         int SaveChanges();
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IAppDataContext
     {
+        public IDbSet<AspNetUserLogin> AspNetLogins { get; set; }
         public IDbSet<AspNetUser> AspNetUsers { get; set; }
         public IDbSet<Project> Projects { get; set; }
         public IDbSet<Project_Users_Relations> Project_Users_Relations { get; set; }
-
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

@@ -11,7 +11,7 @@ namespace VLN2_H27.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
-        public void TestNotLoggedIn()
+        public void TestNotAuthenticated()
         {
             var controller = new HomeController();
 
@@ -26,7 +26,7 @@ namespace VLN2_H27.Tests.Controllers
         }
 
         [TestMethod]
-        public void TestLoggedIn()
+        public void TestAuthenticated()
         {
             var homeController = new HomeController();
 

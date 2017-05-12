@@ -54,61 +54,70 @@ namespace VLN2_H27.Tests.Controllers
                 ProjectId = 1,
             };
             mockDb.Project_Users_Relations.Add(relation2);
-
+            var user1 = new AspNetUser
+            {
+                Id = "testId1"
+            };
+            mockDb.AspNetUsers.Add(user1);
+            var user2 = new AspNetUser
+            {
+                Id = "testId2"
+            };
+            mockDb.AspNetUsers.Add(user2);
+            var user3 = new AspNetUser
+            {
+                Id = "testId4"
+            };
+            mockDb.AspNetUsers.Add(user3);
             db = new VLN2_2017_H27Entities2(mockDb);
         }
         [TestMethod]
         public void TestProjectsExist()
         {
-           
-
             var controller = new EditorController();
 
             string userid = "testId";
 
-            var controllerContext = new Mock<ControllerContext>();
-            var principal = new Mock<IPrincipal>();
-            principal.SetupGet(x => x.Identity.IsAuthenticated).Returns(true);
-            controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
-            controller.ControllerContext = controllerContext.Object;
-
-
-            //var projectList = db.getUserRelatedProjects(userid);
+            var projectList = db.getUserRelatedProjects(userid);
             Assert.AreEqual(2, projectList.Count());
         }
         [TestMethod]
-        public void TestCreateExistsDeleteFile()
+        public void TestEditorWithoutPermission()
         {
             var controller = new EditorController();
 
-            var controllerContext = new Mock<ControllerContext>();
-            var principal = new Mock<IPrincipal>();
-            principal.SetupGet(x => x.Identity.IsAuthenticated).Returns(true);
-            controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
-            controller.ControllerContext = controllerContext.Object;
+            string userid = "wrongTestId";
 
-            var filePath = "~/UserProjects/testProject/testProject.cpp";
-            filePath = controller.Server.MapPath(filePath);
-            //FormCollection projectData = new FormCollection();
-            //projectData.Add("Project name", "testProject");
-            //var result = controller.createFile(projectData) as ViewResult;
+            int projectid = 0;
+
+            var projectList = db.getUserProjectRelation(userid, projectid);
+            Assert.IsNull(projectList);
         }
-        /*
         [TestMethod]
-        public void TestLoggedIn()
+        public void TestEditorWithPermission()
         {
-            var homeController = new HomeController();
-            var editController = new EditorController();
+            var controller = new EditorController();
 
-            var controllerContext = new Mock<ControllerContext>();
-            var principal = new Mock<IPrincipal>();
-            principal.SetupGet(x => x.Identity.IsAuthenticated).Returns(true);
-            controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
-            homeController.ControllerContext = controllerContext.Object;
-            editController.ControllerContext = controllerContext.Object;
+            string userid = "testId";
 
-            var result = homeController.Index() as RedirectToRouteResult;
-            Assert.IsNotNull(result);
-        }*/
+            int projectid = 0;
+
+            var projectList = db.getUserProjectRelation(userid, projectid);
+            Assert.IsNotNull(projectList);
+        }
+        
+        [TestMethod]
+        public void TestUsersExist()
+        {
+            var user1 = db.getUser("testId1");
+            var user2 = db.getUser("testId2");
+            var user3 = db.getUser("testId3");
+            var user4 = db.getUser("testId4");
+
+            Assert.IsNotNull(user1);
+            Assert.IsNotNull(user2);
+            Assert.IsNull(user3);
+            Assert.IsNotNull(user4);
+        }
     }
 }
