@@ -562,8 +562,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Editor\projects.cshtml" />
     <Content Include="Views\Editor\editor.cshtml" />
-    <Content Include="Views\Home\DeleteMe.cshtml" />
-    <Content Include="Views\Shared\RegisterPopupPartial.cshtml" />
     <Content Include="Views\Shared\NewProjectPartial.cshtml" />
     <Content Include="Views\Editor\demoEditor.cshtml" />
     <Content Include="Views\Shared\_EditorLayout.cshtml" />
