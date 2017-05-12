@@ -1080,11 +1080,11 @@ function addUserToProject(projectId, user, editPermission) {
         success: function (result) {
             if (!result) {
                 //the controller function returns false if it does not add a user.
-                $("#addUserError").val("No such user exists!");
+                $("#addUserError").text("No such user exists!");
             }
             else {
                 fetchCollaboratorsForModal();
-                $("#addUserError").val("");
+                $("#addUserError").text("");
             }
         },
         error: function (xhr, status, error) {
