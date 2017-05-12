@@ -215,8 +215,6 @@ function requestFileFromServer(file) {
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
-            console.log("why is this horrible thing happening?");
-            alert(status);
         }
     });
 }
@@ -297,19 +295,25 @@ function decorateUsersInLines() {
     for (var i = 0; i < fileDecorations.length; i++) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == fileDecorations[i].file) {
-            newDecorations.push({
-                decorations: editor.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                file: fileDecorations[i].file
-            });
+            var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)];
+            if (typeof oldFileDecorations != "undefined") {
+                newDecorations.push({
+                    decorations: editor.deltaDecorations(oldFileDecorations.decorations, fileDecorations[i].decorations),
+                    file: fileDecorations[i].file
+                });
+            }
         }
         //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(fileDecorations[i].file);
             if (tab != null) {
-                newDecorations.push({
-                    decorations: tab.tabModel.deltaDecorations(oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)].decorations, fileDecorations[i].decorations),
-                    file: fileDecorations[i].file
-                });
+                var oldFileDecorations = oldDecorations[findOldDecorationsOfFile(fileDecorations[i].file)];
+                if (typeof oldFileDecorations != "undefined") {
+                    newDecorations.push({
+                        decorations: tab.tabModel.deltaDecorations(oldFileDecorations.decorations, fileDecorations[i].decorations),
+                        file: fileDecorations[i].file
+                    });
+                }
             }
         }
     }
@@ -551,6 +555,7 @@ function openTabInMonaco(tabId) {
     var newModel = getEditorModelOfTab(tabId);
     editor.setModel(newModel);
     setLanguagePicker(newModel.getModeId());
+    lineCount = editor.getModel().getLineCount();
 }
 
 //Get monaco model of tab
@@ -617,15 +622,15 @@ var hubProxy;
 var suppressModelChangedEvent = 0;
 var suppressSync = false;
 var currentlyWriting = true;
-var editList = [];
-var editFileList = [];
+var editCount = 0;
+var lineCount = 0;
 
-const SEND_UPDATE_DELAY_SECONDS = 0.1;
-const SYNC_INTERVAL_SECONDS = 15;
+const SEND_UPDATE_DELAY_SECONDS = 1;
+const SYNC_INTERVAL_SECONDS = 100;
 const SYNC_SUPPRESS_SECONDS = 1;
 const EDITING_MESSAGE_TIME_SECONDS = 5;
 
-$(function () {
+$(document).ready(function () {
     // Reference the auto-generated proxy for the hub.  
     hubProxy = $.connection.editorHub;
     //user info
@@ -679,9 +684,9 @@ $(function () {
         }
     }
 
-    //somebody made an edit in their editor
-    hubProxy.client.updateEditorModel = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue) {
-        var editOperation = createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, textValue);
+    //somebody deleted a line on their end
+    hubProxy.client.receiveLineDelete = function (filePath, startColumn, endColumn, startLineNumber, endLineNumber) {
+        var editOperation = createNewEditOperation(filePath, startColumn, endColumn, startLineNumber, endLineNumber, "");
 
         //is it the file you're currently working on?
         if (currentlyEditingFile == filePath) {
@@ -698,57 +703,19 @@ $(function () {
         }
     }
 
-    //someboy sent a set of updates
-    var syncSuppressTimeout;
-    hubProxy.client.receiveUpdateSet = function (filePaths, editOperations) {
-        for (var i = 0; i < filePaths.length; i++) {
-            var editOperation = createNewEditOperation(filePaths[i], editOperations[i].range.startColumn,
-                    editOperations[i].range.endColumn, editOperations[i].range.startLineNumber, editOperations[i].range.endLineNumber,
-                    editOperations[i].text);
-            
-            //is it the file you're currently working on?
-            if (currentlyEditingFile == filePaths[i]) {
-                suppressModelChangedEvent++;
-                editor.executeEdits(userName, editOperation);
-            }
-            //or is it in a tab?
-            else {
-                var tab = fileAlreadyOpenInTab(filePaths[i]);
-                if (tab != null) {
-                    for (var i = 0; i < editOperations.length; i++) {
-                        tab.tabModel.pushEditOperations(null, editOperation);
-                    }
-                }
-            }
-        }
-        
-        suppressSync = true;
-        initializeSyncInterval();
-        clearTimeout(syncSuppressTimeout);
-        syncSuppressTimeout = setTimeout(function () {
-            suppressSync = false;
-        }, SYNC_SUPPRESS_SECONDS * 1000);
-
-    }
 
     //Somebody is sending you an updated line
-    hubProxy.client.receiveUpdatedLine = function (file, lineNumber, lineText) {
+    hubProxy.client.receiveUpdatedLine = function (file, text, range) {
         //is it the file you're currently working on?
         if (currentlyEditingFile == file) {
             suppressModelChangedEvent++;
-            var editOperation = createNewEditOperation(file, 0,
-                    editor.getModel().getLineMaxColumn(lineNumber), lineNumber, lineNumber,
-                    lineText);
-            editor.executeEdits("", editOperation);
+            editor.executeEdits("", [{forceMoveMarkers: true, identifier: "", range: range, text: text }]);
         }
         //or is it in a tab?
         else {
             var tab = fileAlreadyOpenInTab(file);
             if (tab != null) {
-                var editOperation = createNewEditOperation(file, 0,
-                    tab.tabModel.getLineMaxColumn(lineNumber), lineNumber, lineNumber,
-                    lineText);
-                tab.tabModel.pushEditOperations(null, editOperation);
+                tab.tabModel.pushEditOperations(null, [{ forceMoveMarkers: true, identifier: "", range: range, text: text }]);
             }
         }
     }
@@ -786,6 +753,8 @@ $(function () {
         // Add the message to the page. 
         $('#discussion').append('<li><strong>[' + htmlEncode(getTimeStamp()) + '] ' + htmlEncode(name)
             + ':</strong> ' + htmlEncode(message) + '</li>');
+        //scroll the chat to the bottom
+        $('#discussionbox').animate({ scrollTop: $('#discussionbox').prop("scrollHeight") }, 500);
     };
 
     //somebody sent their cursor position
@@ -818,6 +787,39 @@ $(function () {
         
     }
 
+    //somebody made a new line
+    hubProxy.client.receiveNewline = function (file, range) {
+        //is it the file you're currently working on?
+        if (currentlyEditingFile == file) {
+            suppressModelChangedEvent++;
+            editor.executeEdits("", [{ forceMoveMarkers: true, identifier: "", range: range, text: editor.getModel().getEOL() }]);
+        }
+        //or is it in a tab?
+        else {
+            var tab = fileAlreadyOpenInTab(file);
+            if (tab != null) {
+                tab.tabModel.pushEditOperations(null, [{ forceMoveMarkers: true, identifier: "", range: range, text: editor.getModel().getEOL() }]);
+            }
+        }
+    }
+
+    //somebody deleted from their editor
+    hubProxy.client.receiveDeleteUpdate = function (file, startLineNumber, startColumn, offset) {
+        var startPosition = new monaco.Position(startLineNumber, startColumn);
+        var startPositionOffset = editor.getModel().getOffsetAt(startPosition);
+        var endPosition = editor.getModel().getPositionAt(startPositionOffset + offset);
+        if (file == currentlyEditingFile) {
+            suppressModelChangedEvent++;
+            editor.executeEdits("", [{ forceMoveMarkers: true, identifier: "", range: new monaco.Range(startLineNumber, startColumn, endPosition.lineNumber, endPosition.column), text: "" }]);
+        }
+        else {
+            var tab = fileAlreadyOpenInTab(file);
+            if (tab != null) {
+                tab.tabModel.pushEditOperations(null, [{ forceMoveMarkers: true, identifier: "", range: new monaco.Range(startLineNumber, startColumn, endPosition.lineNumber, endPosition.column), text: "" }]);
+            }
+        }
+    }
+
     // start the connection. CODE THAT HAPPENS AFTER SIGNALR CONNECTION IS ESTABLISHED HAPPENS HERE BELOW
     $.connection.hub.start().done(function () {
         //Initialize things
@@ -833,15 +835,34 @@ $(function () {
         //Editor model changed
         var updateTimeout;
         editor.onDidChangeModelContent(function (e) {
+            var lineDifference = editor.getModel().getLineCount() - lineCount;
+            lineCount = editor.getModel().getLineCount();
+
             if (suppressModelChangedEvent > 0) {
                 suppressModelChangedEvent--;
                 return;
             }
 
-            currentlyWriting = true;
-            editList.push(e);
-            editFileList.push(currentlyEditingFile);
             hubProxy.server.sendCursorPosition(editor.getPosition().lineNumber, currentlyEditingFile);
+
+            if (lineDifference < 0) {
+                hubProxy.server.sendLineDelete(currentlyEditingFile, e.range.startColumn, e.range.endColumn, e.range.startLineNumber, e.range.endLineNumber);
+                return;
+            }
+            else if (lineDifference > 0) {
+                hubProxy.server.sendNewline(currentlyEditingFile, e.range);
+                return;
+            }
+
+            if (e.rangeLength == 0)
+            {
+                editCount = editCount + e.text.length;
+            }
+            else {
+                editCount = editCount - e.rangeLength;
+            }
+
+            currentlyWriting = true;
 
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(function () {
@@ -851,18 +872,9 @@ $(function () {
 
         });
 
-        //send editor updates on enter/newline
-        editor.onKeyDown(function (e) {
-            if (e.keyCode == 5) {
-                clearTimeout(updateTimeout);
-                sendUpdate();
-                currentlyWriting = false;
-            }
-        });
-
         //Send chat message on enter
-        $('#message').keydown(function (event) {
-            if (event.keyCode == 13) {
+        $('#message').keydown(function (e) {
+            if (e.keyCode == 13) {
                 hubProxy.server.sendChat(userName, $('#message').val(), projectId.toString());
                 $('#message').val('');
                 return false;
@@ -883,11 +895,18 @@ function htmlEncode(value) {
 
 //send package of updates
 function sendUpdate() {
-    if (editList.length > 0) {
-        hubProxy.server.sendEditorUpdates(editFileList, editList);
-        editList = [];
-        editFileList = [];
+    if (editCount < 0) {
+        var startPosition = editor.getPosition();
+        hubProxy.server.sendDeleteUpdate(currentlyEditingFile, startPosition.lineNumber, startPosition.column, Math.abs(editCount));
     }
+    else {
+        var endPosition = editor.getPosition();
+        var endOffset = editor.getModel().getOffsetAt(endPosition);
+        var startPosition = editor.getModel().getPositionAt(endOffset - editCount);
+        var editRange = new monaco.Range(startPosition.lineNumber, startPosition.column, endPosition.lineNumber, endPosition.column);
+        hubProxy.server.sendEditorUpdatedLine(currentlyEditingFile, editor.getModel().getValueInRange(editRange), editRange);
+    }
+    editCount = 0;
 }
 
 var editorSyncInterval;
