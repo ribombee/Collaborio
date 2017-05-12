@@ -38,6 +38,19 @@ body {
     background-color:dimgrey;
     border-radius: 0px;
 }
+
+#discussionbox::-webkit-scrollbar {
+    width: 12px;
+}
+
+#discussionbox::-webkit-scrollbar-track {
+    border-radius: 0px;
+}
+
+#discussionbox::-webkit-scrollbar-thumb {
+    background-color:dimgrey;
+    border-radius: 0px;
+}
 ​
 #tabs {
     display: block;

@@ -753,6 +753,8 @@ $(document).ready(function () {
         // Add the message to the page. 
         $('#discussion').append('<li><strong>[' + htmlEncode(getTimeStamp()) + '] ' + htmlEncode(name)
             + ':</strong> ' + htmlEncode(message) + '</li>');
+        //scroll the chat to the bottom
+        $('#discussionbox').animate({ scrollTop: $('#discussionbox').prop("scrollHeight") }, 500);
     };
 
     //somebody sent their cursor position
