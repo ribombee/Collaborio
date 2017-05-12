@@ -795,8 +795,8 @@ $(document).ready(function () {
         initFileTree();
         initFileTreeContextMenu();
         setTimeout(function () {
-            var firstFile = $('.jqueryFileTree:first-child a');
-            firstFile.trigger('dblclick');
+            var firstFile = $('.jqueryFileTree').children().first().children().attr('rel');
+            openFileInMonaco(firstFile);
         }, 1000);
         
 
