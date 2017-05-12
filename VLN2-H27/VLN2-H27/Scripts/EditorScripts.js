@@ -15,7 +15,6 @@ startingText.push("        /yy-``     yyo       :yy- `yy+       /yy.    /yy.    
 startingText.push("         ``syo     ``:sssssss+``   ``/sssssss+``     /yy.    +yy`  ``+sssssssyyy  -yyssssssss:``  ```osssssss-``  /yy.         .ooooo`    /oo   ``/+++++++-``          /hh-               yyo``         ");
 startingText.push("           --/++-    `:::::::-       .:::::::.       .::`    .::     .::::::::::  `::::::::::`       -:::::::`    .::`         `-----     .--     .-------`            .::`            :++:-.           ");
 startingText.push("             .++-                                                                                                                                                                      :++`             ");
-             
 
 /*****************************************************
 MONACO EDITOR SPECIFIC CODE
@@ -25,20 +24,15 @@ START
 var editor = null;
 //Filename of file currently being edited
 var currentlyEditingFile = "";
-//cursor info
-var currentCursorLine = -1;
+//cursor positions of other users
 var cursorPositions = [];
 //available languages in monaco
 var availableLanguages = [];
+//available extensions for languages
 var languageExtensions = [];
 
 var opening = true;
 var projectReadOnly = false;
-const EDITOR_DEFAULT_SETTINGS = {
-    readOnly: false,
-    lineNumbers: true,
-    fontSize: 12
-}
 
 //Initialize Monaco editor when document is ready
 $(document).ready(function () {
@@ -46,25 +40,27 @@ $(document).ready(function () {
     require(['vs/editor/editor.main'], function () {
         editor = monaco.editor.create(document.getElementById('monaco-editor'),{
             value: startingText.join('\n'),
-            //Hardcoded for now
             language: 'plaintext',
             readOnly: true,
             lineNumbers: false,
             fontWeight: 'bolder',
-            fontSize: 7            
+            fontSize: 7,
+            theme: 'vs'
         });
+
         //set logo colors
         var decorations = [];
         decorations = inlineDecorateLines(decorations, 1, 16, 1, 18, "collaborio-logo-purple");
         decorations = inlineDecorateLines(decorations, 1, 16, 17, 127, "collaborio-logo-blue");
         decorations = inlineDecorateLines(decorations, 1, 16, 128, 160, "collaborio-logo-orange");
         decorations = inlineDecorateLines(decorations, 1, 16, 161, 250, "collaborio-logo-purple");
+        //set new project info font size
+        decorations = inlineDecorateLines(decorations, 17, 19, 1, 250, "new-project-info");
         editor.deltaDecorations([], decorations);
 
         //Get available programming languages
         availableLanguages = monaco.languages.getLanguages().map(function (language) { return language.id });
         languageExtensions = monaco.languages.getLanguages().map(function (language) { return language.extensions[0]})
-        //availableLanguages.sort();
 
         //Populate language list
         for (var i = 0; i < availableLanguages.length; i++) {
@@ -108,13 +104,9 @@ $(document).ready(function () {
         });
 
         var lastTheme = getCookie("theme");
-        if (lastTheme != "") {
+        if (typeof lastTheme != "undefined") {
             lastTheme = parseInt(lastTheme);
             changeTheme(lastTheme);
-            //setThemePicker(lastTheme);
-        }
-        else {
-            changeTheme(0);
         }
         
         //convert C# boolean to javascript boolean
@@ -145,6 +137,7 @@ function changeTheme(theme) {
     setThemeToElement('body', theme);
 }
 
+//set theme to specified element
 function setThemeToElement(element, theme) {
     if (theme == 1) {
         $(element).removeClass('theme-black');
@@ -335,6 +328,7 @@ function decorateUsersInLines() {
     oldDecorations = newDecorations;
 }
 
+//create a new decoration
 function createDecoration(user, lineNumber) {
     var decoration = {
         id: user, isForValidation: false, ownerId: 1,
@@ -344,6 +338,7 @@ function createDecoration(user, lineNumber) {
     return decoration;
 }
 
+//find old decorations for file
 function findOldDecorationsOfFile(file) {
     for (var i = 0; i < oldDecorations.length; i++) {
         if (oldDecorations[i].file == file) {
@@ -352,6 +347,7 @@ function findOldDecorationsOfFile(file) {
     }
 }
 
+//create inline decorations
 function inlineDecorateLines(decorations, lineFrom, lineTo, startColumn, endColumn, classType) {
     for (var i = lineFrom; i <= lineTo; i++) {
         decorations.push({ range: new monaco.Range(i, startColumn, i, endColumn), options: { inlineClassName: classType } });
@@ -360,7 +356,8 @@ function inlineDecorateLines(decorations, lineFrom, lineTo, startColumn, endColu
     return decorations;
 }
 
-function removeFromCursorPositions(lineNumber, file, user) {
+//remove user from cursor positions arry
+function removeFromCursorPositions(user) {
     for (var i = 0; i < cursorPositions.length; i++) {
         if (cursorPositions[i].user == user) {
             cursorPositions.splice(i, 1);
@@ -379,7 +376,6 @@ END
 JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 START
 ******************************************************/
-
 //jQueryFileTree initialization function - this is called when SignalR connects to the hub
 var fileTreeHtml = "";
 function initFileTree() {
@@ -418,7 +414,6 @@ function initFileTreeContextMenu() {
         title: '',
         items: [
           { label: 'Delete', icon: '', action: function () { deleteFile(rightClickedFile) } },
-          { label: 'Rename', icon: '', action: function () { renameFile(rightClickedFile) } },
           { label: 'Refresh', icon: '', action: function () { refreshFileTree() } }],
         secondaryItems: [
           { label: 'New File', icon: '', action: function () { $('#file-modal').trigger('click'); } },
@@ -427,14 +422,6 @@ function initFileTreeContextMenu() {
     });
     //contextmenu settings can be accessed through the global variable contextMenuSettings
 }
-
-//Hide file tree
-function hideFileTree() {
-    //TODO make this work
-    var fileTreeHtml = $('#filetree-parent').html();
-    $('#filetree').html('');
-}
-
 
 //Refresh File Tree
 function refreshFileTree() {
@@ -451,7 +438,6 @@ function refreshFileTree() {
     tree.showTree($('.filetree'), escape(tree.options.root), function () {});
 
     //re-expand the folders
-    //has to be called again to reexpand subfolders TODO
     setTimeout(function () {
         for (i = 0; i < expandedFolders.length; i++) {
             var folderElement = $("a[rel='" + expandedFolders[i] + "']");
@@ -459,7 +445,6 @@ function refreshFileTree() {
         }
     }, 500);
 }
-
 /*****************************************************
 JQUERYFILETREE & CONTEXTMENU SPECIFIC CODE
 END
@@ -560,7 +545,7 @@ function openTabInMonaco(tabId) {
 
 //Get monaco model of tab
 function getEditorModelOfTab(tabId) {
-    for (i = 0; i < tabInfo.length; i++) {
+    for (var i = 0; i < tabInfo.length; i++) {
         if (tabInfo[i].tabId == tabId) {
             return tabInfo[i].tabModel;
         }
@@ -569,9 +554,18 @@ function getEditorModelOfTab(tabId) {
 
 //Get file from tabId
 function getFileFromTabId(tabId) {
-    for (i = 0; i < tabInfo.length; i++) {
+    for (var i = 0; i < tabInfo.length; i++) {
         if (tabInfo[i].tabId == tabId) {
             return tabInfo[i].filePath;
+        }
+    }
+}
+
+//get tabId from file
+function getTabIdFromFile(file) {
+    for (var i = 0; i < tabInfo.length; i++) {
+        if (tabInfo[i].filePath == file) {
+            return tabInfo[i].tabId;
         }
     }
 }
@@ -781,7 +775,7 @@ $(document).ready(function () {
         //remove cursor position after
         clearTimeout(editingMessageTimeout);
         editingMessageTimeout = setTimeout(function () {
-            removeFromCursorPositions(lineNumber, file, user);
+            removeFromCursorPositions(user);
             suppressSync = false;
         }, EDITING_MESSAGE_TIME_SECONDS * 1000);
         
@@ -825,6 +819,11 @@ $(document).ready(function () {
         //Initialize things
         initFileTree();
         initFileTreeContextMenu();
+        setTimeout(function () {
+            var firstFile = $('.jqueryFileTree:first-child a');
+            firstFile.trigger('dblclick');
+        }, 1000);
+        
 
         //advertise that you connected
         hubProxy.server.userConnected(userName);
@@ -909,6 +908,7 @@ function sendUpdate() {
     editCount = 0;
 }
 
+//intitialize editor hard sync
 var editorSyncInterval;
 function initializeSyncInterval() {
     clearInterval(editorSyncInterval);
@@ -941,8 +941,12 @@ function setActiveFileAndTab(file, tabIndex) {
     currentlyEditingFile = file;
 }
 
+//delete file (context menu)
 function deleteFile(file) {
-    //remember to update tabInfo array
+    //first close the tab
+    var tabId = getTabIdFromFile(file);
+    $('#tabs a[href="#' + tabId + '"]').parent().children('.ui-icon-close').click();
+
     var sendData = {
         'fileName': file
     };
@@ -965,13 +969,6 @@ function deleteFile(file) {
             console.log(xhr.responseText);
         }
     });
-}
-
-function renameFile(file) {
-    //TODO IMPLEMENT
-    //remember to update tabInfo array
-
-    alert(file + ' would be renamed now');
 }
 
 //create file on server when newFile post is submitted
@@ -1030,6 +1027,7 @@ function saveAllFiles() {
     }
 }
 
+//get timestamp for chat
 function getTimeStamp() {
     var currentDate = new Date();
     var hours = currentDate.getHours(),
@@ -1057,6 +1055,7 @@ function getCookie(name) {
     if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
+//set preference to new cookie
 function setCookie(attribute, value, exdays) {
     var date = new Date();
     date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -1064,8 +1063,8 @@ function setCookie(attribute, value, exdays) {
     document.cookie = attribute + "=" + value + ";" + expires + ";path=/";
 }
 
-function addUserToProject(projectId, user, editPermission)
-{
+//add user to project
+function addUserToProject(projectId, user, editPermission) {
     var sendData = {
         'projectId': projectId,
         'userName': user,
@@ -1094,8 +1093,8 @@ function addUserToProject(projectId, user, editPermission)
     });
 }
 
+//fetching collaborators for 
 function fetchCollaboratorsForModal() {
-
     var sendData = JSON.stringify({
         'projectId': projectId,
     });
@@ -1154,11 +1153,11 @@ $('#userToAdd').keydown(function (event) {
 });
 
 //when you click the greyed out icon, the edit mode switches
-
 $('#edit').click(function () {
     alert("A");
 });
 
+//clicking save button saves all files
 $('#save-button').click(function () {
     saveAllFiles();
 });
